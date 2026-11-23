@@ -40,7 +40,7 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
 - **AUTH-002** — teste manual de cadastro/login por e-mail → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`
-- **CAT-002** — forks das três fontes no GitHub do usuário → `specs/009-catalogo-exercicios.md`
+- **CAT-002** — forks de Workout Free Videos e Exercise Library → `specs/009-catalogo-exercicios.md`
 
 ---
 
