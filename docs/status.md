@@ -15,6 +15,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Concluído recentemente
 
+- **0.8 Layout base** — tema escuro oliva, navegação inferior, rotas com estado vazio (merge na `main`, PR #1) → `specs/008-layout-base.md`
 - **Projeto Next.js criado** — Next.js 16 + React 19, TypeScript, Tailwind, App Router, `src/`
 - **0.6 Schema + RLS** — 14 tabelas do MVP com RLS, aplicadas no Supabase (merge na `main`) → `specs/006-schema-inicial-rls.md`
 - **0.5 Supabase** — clientes servidor/navegador, config pública, `.env.example` (merge na `main`) → `specs/005-supabase-clientes.md`
@@ -28,7 +29,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 ## Em Progresso
 
 - **0.7 Autenticação** — código na `main`; etapa pendente até AUTH-001/AUTH-002 (configuração do Google e teste manual) → `specs/007-autenticacao.md`
-- **0.8 Layout base** — tema escuro oliva, navegação inferior, rotas `/`, `/workout`, `/schedule`, `/profile` com estado vazio; aguardando "pode subir" (branch `feat/base-layout-008`) → `specs/008-layout-base.md`
+- **1.1 Catálogo de exercícios** — spec + análise das fontes (iniciando) → `reference/001-checklist-implementacao.md`
 
 ---
 
