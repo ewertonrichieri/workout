@@ -9,7 +9,7 @@
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
-2. **0.8** — Layout base com navegação (esforço `medium`) → `reference/001-checklist-implementacao.md`
+2. **1.1** — Spec do catálogo + análise das fontes (esforço `medium`) → `reference/001-checklist-implementacao.md`
 
 ---
 
@@ -27,7 +27,8 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
-- **0.7 Autenticação** — proxy (sessão + acesso), `/login` (Google + e-mail/senha), `/auth/callback`, sair; falta configuração do Google e teste manual (branch `feat/auth-007`) → `specs/007-autenticacao.md`
+- **0.7 Autenticação** — código na `main`; etapa pendente até AUTH-001/AUTH-002 (configuração do Google e teste manual) → `specs/007-autenticacao.md`
+- **0.8 Layout base** — tema escuro oliva, navegação inferior, rotas `/`, `/workout`, `/schedule`, `/profile` com estado vazio; aguardando "pode subir" (branch `feat/base-layout-008`) → `specs/008-layout-base.md`
 
 ---
 
@@ -68,7 +69,7 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 
 ## Observações
 
-- Repositório local, sem remoto no GitHub ainda; sem deploy automático configurado.
+- Repositório no GitHub: `ewertonrichieri/workout` (**público**); sem deploy automático configurado.
 - Branch principal: `main` (renomeada de `master`).
 - Ambiente: Windows 11, PowerShell, Node 20.19 e npm 8.18 (antigo). O npm 8 falha ao instalar pacotes (`edgesOut`); usar `npx -y npm@10 install ...` até atualizar o Node/npm.
 - Segredos: `.env` local (ignorado pelo Git). Em sessões na nuvem, as variáveis ficam nas configurações do ambiente de nuvem do Claude Code, nunca no repositório. Nomes das variáveis em `.env.example` (etapa 0.5).

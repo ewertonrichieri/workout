@@ -31,7 +31,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 0.5 | Supabase: projeto, clientes servidor/navegador, `.env.example` | `medium` | [x] |
 | 0.6 | Migrations do schema inicial + RLS | `high` | [x] |
 | 0.7 | Autenticação Supabase: botão Google (OAuth) + e-mail/senha, proteção central de rotas (páginas → login, API → 401) — código pronto; aguarda AUTH-001/AUTH-002 | `high` | [ ] |
-| 0.8 | Layout base com navegação Início / Treino / Agenda / Perfil | `medium` | [ ] |
+| 0.8 | Layout base com navegação Início / Treino / Agenda / Perfil | `medium` | [x] |
 
 ### Fase 1 — Catálogo de exercícios
 
