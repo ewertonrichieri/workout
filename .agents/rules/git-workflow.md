@@ -55,6 +55,10 @@ O agente **sempre** faz merge na **`main`** (squash), sem pedir confirmação ex
 5. `git checkout main && git pull origin main`
 6. **Verificar o deploy de produção**, se o projeto tiver deploy automático: usar o comando/processo de verificação documentado no projeto (README ou Observações do `docs/status.md`) e informar o resultado ao usuário. Se falhar, investigar e avisar. **Nunca** promover ou forçar um deploy sem perguntar.
 
+## Preferência do usuário: subir a etapa anterior ao iniciar a próxima
+
+Neste projeto, quando o usuário pedir para iniciar a próxima etapa do checklist e a etapa anterior ainda estiver numa branch sem merge, o agente faz o fluxo de "pode subir" da anterior **sem perguntar** e só então cria a branch nova a partir da `main` atualizada. (Autorizado pelo usuário em 2026-11-23.)
+
 ## Checklist do PR
 
 - Branch criada a partir da `main` atualizada
