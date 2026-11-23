@@ -11,6 +11,7 @@ const CATALOG_TABLES = [
   "exercise_muscles",
   "exercise_equipment",
   "exercise_media",
+  "exercise_source_refs",
 ];
 
 const USER_TABLES = [

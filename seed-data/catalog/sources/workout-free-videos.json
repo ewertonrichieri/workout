@@ -1,0 +1,1592 @@
+[
+  {
+    "source": "workout-free-videos",
+    "externalId": "a01",
+    "nameEn": "Sit-Up",
+    "aliases": [],
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Feet anchored, knees bent",
+      "Curl up one vertebra at a time",
+      "Lower slowly to the floor"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/sit-up.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "a02",
+    "nameEn": "Lying Leg Raise",
+    "aliases": [],
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "hipFlexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Press the lower back into the floor",
+      "Raise straight legs to vertical",
+      "Lower until just above the floor"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/lying-floor-leg-raise.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "a03",
+    "nameEn": "Weighted Plate Crunch",
+    "aliases": [],
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "plate"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Hold the plate over the chest",
+      "Crunch the ribs toward the hips",
+      "Exhale hard at the top"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/weighted-crunch.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "b01",
+    "nameEn": "Standing Barbell Curl",
+    "aliases": [],
+    "primaryMuscles": [
+      "biceps"
+    ],
+    "secondaryMuscles": [
+      "forearm"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Elbows stay pinned to the sides",
+      "Curl without leaning back",
+      "Lower all the way to full extension"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/standing-barbell-curl.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "b02",
+    "nameEn": "Incline Dumbbell Curl",
+    "aliases": [],
+    "primaryMuscles": [
+      "biceps"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Let the arms hang straight down behind the torso",
+      "Curl while keeping elbows still",
+      "Squeeze at the top, lower slowly"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/incline-dumbbell-curl.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "b03",
+    "nameEn": "Hammer Preacher Curl",
+    "aliases": [],
+    "primaryMuscles": [
+      "biceps"
+    ],
+    "secondaryMuscles": [
+      "forearm"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Neutral grip, thumb on top",
+      "Armpit snug against the pad",
+      "Stop just short of vertical at the top"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/dumbbell-hammer-preacher-curl.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "c01",
+    "nameEn": "Dumbbell Bench Press",
+    "aliases": [],
+    "primaryMuscles": [
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "dumbbell",
+      "bench"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Press from mid-chest with wrists stacked over elbows",
+      "Keep shoulder blades pinned to the bench",
+      "Lower for two seconds, press without bouncing"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/dumbbell-bench-press.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "c02",
+    "nameEn": "Incline Bench Press",
+    "aliases": [],
+    "primaryMuscles": [
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Set the bench to 30-45 degrees",
+      "Touch the bar to the upper chest",
+      "Drive the bar up and slightly back"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/incline-bench-press.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "c03",
+    "nameEn": "Stability Ball Dumbbell Press",
+    "aliases": [],
+    "primaryMuscles": [
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "abs",
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbell",
+      "ball"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Rest head and upper back on the ball, hips level",
+      "Squeeze glutes to keep a flat bridge",
+      "Press dumbbells up over the chest"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/exercise-ball-dumbbell-bench-press.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "c04",
+    "nameEn": "Chest Dip",
+    "aliases": [],
+    "primaryMuscles": [
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "triceps",
+      "shoulders"
+    ],
+    "equipment": [
+      "dipBars"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Lean the torso slightly forward",
+      "Lower until shoulders are just below elbows",
+      "Press up without locking out hard"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/chest-dip.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "d01",
+    "nameEn": "Hip Adduction Machine",
+    "aliases": [],
+    "primaryMuscles": [
+      "adductors"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Sit upright against the pad",
+      "Squeeze the legs together",
+      "Open slowly to a comfortable stretch"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/hip-adduction-machine.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "d02",
+    "nameEn": "Lateral Lunge with Reach",
+    "aliases": [],
+    "primaryMuscles": [
+      "adductors"
+    ],
+    "secondaryMuscles": [
+      "glutes",
+      "quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Step wide and sit into one hip",
+      "Reach both arms overhead",
+      "Alternate sides with control"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/alternating-lateral-lunge-with-overhead-reach.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "d03",
+    "nameEn": "Deep Squat Pry",
+    "aliases": [],
+    "primaryMuscles": [
+      "adductors"
+    ],
+    "secondaryMuscles": [
+      "hipFlexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Sink into a deep squat, heels down",
+      "Use the elbows to press the knees out",
+      "Shift side to side slowly"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/deep-squat-prying.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "e02",
+    "nameEn": "Cable Hip Abduction",
+    "aliases": [],
+    "primaryMuscles": [
+      "abductors"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Cuff on the outside ankle",
+      "Sweep the leg out without leaning",
+      "Return over two seconds"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/cable-hip-abduction.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "f01",
+    "nameEn": "Seated Wrist Curl",
+    "aliases": [],
+    "primaryMuscles": [
+      "forearm"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Forearms rest on the thighs, palms up",
+      "Let the bar roll to the fingertips",
+      "Curl the wrists up and squeeze"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/seated-barbell-wrist-curl.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "f02",
+    "nameEn": "Reverse-Grip EZ Curl",
+    "aliases": [],
+    "primaryMuscles": [
+      "forearm"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "ezBar"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Overhand grip on the angled part of the bar",
+      "Keep wrists neutral as you curl",
+      "Lower under control"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/reverse-grip-barbell-curl.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "f03",
+    "nameEn": "Plate Pinch Carry",
+    "aliases": [],
+    "primaryMuscles": [
+      "forearm"
+    ],
+    "secondaryMuscles": [
+      "traps"
+    ],
+    "equipment": [
+      "plate"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Pinch two plates smooth side out",
+      "Walk tall with short steps",
+      "Set down before the grip fails"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/plate-pinch-carry.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "g01",
+    "nameEn": "Barbell Hip Thrust",
+    "aliases": [],
+    "primaryMuscles": [
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Upper back on the bench edge, bar over the hips",
+      "Drive through the heels to full hip extension",
+      "Chin tucked, ribs down at the top"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/barbell-hip-thrust.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "g02",
+    "nameEn": "Back Extension",
+    "aliases": [],
+    "primaryMuscles": [
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings",
+      "lowerBack"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Pad just below the hip crease",
+      "Hinge down with a flat back",
+      "Rise until the body forms a line"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/hyperextension.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "g03",
+    "nameEn": "Good Morning",
+    "aliases": [],
+    "primaryMuscles": [
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings",
+      "lowerBack"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "advanced",
+    "instructionSteps": [
+      "Bar on the upper back, soft knees",
+      "Push the hips back until the torso nears parallel",
+      "Stand up by squeezing the glutes"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/good-mornings.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "h01",
+    "nameEn": "Stiff-Leg Deadlift",
+    "aliases": [],
+    "primaryMuscles": [
+      "hamstrings"
+    ],
+    "secondaryMuscles": [
+      "glutes",
+      "lowerBack"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Soft knees, bar close to the legs",
+      "Hinge until you feel a strong hamstring stretch",
+      "Return by driving the hips forward"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/stiff-leg-deadlift.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "h02",
+    "nameEn": "Seated Leg Curl",
+    "aliases": [],
+    "primaryMuscles": [
+      "hamstrings"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Line the knee up with the machine pivot",
+      "Curl the pad under the seat",
+      "Return slowly, keep tension"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/seated-leg-curl.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "h03",
+    "nameEn": "Stability Ball Leg Curl",
+    "aliases": [],
+    "primaryMuscles": [
+      "hamstrings"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "ball"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Heels on the ball, hips lifted",
+      "Curl the ball toward the glutes",
+      "Keep the hips up throughout"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/exercise-ball-leg-curl.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "h04",
+    "nameEn": "Nordic Hamstring Curl",
+    "aliases": [],
+    "primaryMuscles": [
+      "hamstrings"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "advanced",
+    "instructionSteps": [
+      "Kneel with ankles anchored",
+      "Lower the body forward as slowly as possible",
+      "Catch with the hands, push back up"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/nordic-hamstring-curl.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "k01",
+    "nameEn": "Superman",
+    "aliases": [],
+    "primaryMuscles": [
+      "lowerBack"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Lie face down, arms extended",
+      "Lift arms and legs together",
+      "Hold two seconds at the top"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/superman.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "l01",
+    "nameEn": "Lat Pulldown",
+    "aliases": [],
+    "primaryMuscles": [
+      "lats"
+    ],
+    "secondaryMuscles": [
+      "biceps",
+      "upperBack"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Grip just outside the shoulders",
+      "Pull the bar to the upper chest",
+      "Control the bar all the way up"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/lat-pull-down.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "l02",
+    "nameEn": "Wide-Grip Pull-Up",
+    "aliases": [],
+    "primaryMuscles": [
+      "lats"
+    ],
+    "secondaryMuscles": [
+      "biceps",
+      "upperBack"
+    ],
+    "equipment": [
+      "pullupBar"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Start from a dead hang",
+      "Pull the chest toward the bar",
+      "Lower all the way each rep"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/wide-grip-pull-up.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "l03",
+    "nameEn": "Straight-Arm Pulldown",
+    "aliases": [],
+    "primaryMuscles": [
+      "lats"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Arms nearly straight, slight hinge",
+      "Sweep the bar down to the thighs",
+      "Feel the lats, not the triceps"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/straight-arm-lat-pull-down.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "m01",
+    "nameEn": "Cradle Walk",
+    "aliases": [],
+    "primaryMuscles": [
+      "hipFlexors"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Lift one shin and hug it toward the chest",
+      "Rise onto the standing toes",
+      "Step forward and switch sides"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/cradle-walk.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "m02",
+    "nameEn": "Fire Hydrant Circles",
+    "aliases": [],
+    "primaryMuscles": [
+      "hipFlexors"
+    ],
+    "secondaryMuscles": [
+      "abductors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Hands under shoulders, knees under hips",
+      "Draw big circles with one knee",
+      "Keep the torso still"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/fire-hydrant-circles.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "m03",
+    "nameEn": "Kneeling Hip Capsule Mobilization",
+    "aliases": [],
+    "primaryMuscles": [
+      "hipFlexors"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Kneel with one leg crossed behind",
+      "Shift the hips back and to the side",
+      "Breathe into the stretch"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/kneeling-posterior-hip-capsule-mobilization.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "o01",
+    "nameEn": "Kneeling Cable Lift",
+    "aliases": [],
+    "primaryMuscles": [
+      "obliques"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Kneel tall, hips square",
+      "Lift the rope diagonally across the body",
+      "Resist rotation on the way back"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/tall-kneeling-cable-lift.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "o02",
+    "nameEn": "Kneeling Cable Chop",
+    "aliases": [],
+    "primaryMuscles": [
+      "obliques"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Start high on one side",
+      "Chop down across the body",
+      "Keep the hips facing forward"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/tall-kneeling-cable-chop.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "o03",
+    "nameEn": "Split-Stance Cable Lift",
+    "aliases": [],
+    "primaryMuscles": [
+      "obliques"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Narrow split stance",
+      "Lift from low to high across the body",
+      "Stay balanced through the front foot"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/split-stance-cable-lift.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "q01",
+    "nameEn": "Barbell Back Squat",
+    "aliases": [],
+    "primaryMuscles": [
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "glutes",
+      "adductors"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Brace before you descend",
+      "Knees track over the toes",
+      "Drive up through the whole foot"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/barbell-back-squat.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "q02",
+    "nameEn": "Leg Press",
+    "aliases": [],
+    "primaryMuscles": [
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Feet shoulder-width, mid platform",
+      "Lower until knees reach about 90 degrees",
+      "Do not lock the knees at the top"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/leg-press.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "q03",
+    "nameEn": "Hack Squat",
+    "aliases": [],
+    "primaryMuscles": [
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Back flat against the pad",
+      "Sink deep with control",
+      "Push through the mid-foot"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/machine-hack-squat.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "q04",
+    "nameEn": "Stability Ball Wall Squat",
+    "aliases": [],
+    "primaryMuscles": [
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "ball"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Ball between the lower back and the wall",
+      "Squat down with the ball rolling with you",
+      "Stand tall and squeeze the glutes"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/exercise-ball-wall-squat.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "r01",
+    "nameEn": "Barbell Shrug",
+    "aliases": [],
+    "primaryMuscles": [
+      "traps"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Stand tall, arms straight",
+      "Lift shoulders toward the ears",
+      "Hold one second, no rolling"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/barbell-shrug.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "r02",
+    "nameEn": "Dumbbell Shrug",
+    "aliases": [],
+    "primaryMuscles": [
+      "traps"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Dumbbells at the sides, neutral grip",
+      "Shrug straight up",
+      "Lower to a full stretch"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/dumbbell-shrug.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "r03",
+    "nameEn": "Barbell Upright Row",
+    "aliases": [],
+    "primaryMuscles": [
+      "traps"
+    ],
+    "secondaryMuscles": [
+      "shoulders"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Grip just outside shoulder-width",
+      "Pull the bar up leading with the elbows",
+      "Stop at lower-chest height"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/barbell-upright-row.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "s01",
+    "nameEn": "Overhead Press",
+    "aliases": [],
+    "primaryMuscles": [
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "triceps",
+      "traps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Brace abs and squeeze glutes before each rep",
+      "Press in a straight line past the face",
+      "Finish with biceps beside the ears"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/military-press.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "s02",
+    "nameEn": "Dumbbell Lateral Raise",
+    "aliases": [],
+    "primaryMuscles": [
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "traps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Soft bend in the elbows",
+      "Raise to shoulder height, lead with the elbows",
+      "Lower slowly, no swinging"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/dumbbell-lateral-raise.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "s03",
+    "nameEn": "Cable Rear Delt Fly",
+    "aliases": [],
+    "primaryMuscles": [
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "upperBack"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Hinge forward with a flat back",
+      "Sweep arms wide in an arc",
+      "Pause when hands reach shoulder line"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/bent-over-low-pulley-rear-delt-fly.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "t01",
+    "nameEn": "Close-Grip Bench Press",
+    "aliases": [],
+    "primaryMuscles": [
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "chest"
+    ],
+    "equipment": [
+      "barbell",
+      "bench"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Hands shoulder-width apart",
+      "Keep elbows tucked close to the body",
+      "Touch the lower chest, press to lockout"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/close-grip-bench-press.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "t02",
+    "nameEn": "EZ Bar Skullcrusher",
+    "aliases": [],
+    "primaryMuscles": [
+      "triceps"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "ezBar",
+      "bench"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Upper arms stay vertical",
+      "Lower the bar toward the forehead",
+      "Extend through the elbows only"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/ez-bar-skullcrusher.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "t03",
+    "nameEn": "Weighted Tricep Dip",
+    "aliases": [],
+    "primaryMuscles": [
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "chest"
+    ],
+    "equipment": [
+      "dipBars"
+    ],
+    "difficulty": "advanced",
+    "instructionSteps": [
+      "Keep the torso upright",
+      "Lower to a 90-degree elbow angle",
+      "Press up and lock out the triceps"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/weighted-tricep-dips.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "u01",
+    "nameEn": "Seated Cable Row",
+    "aliases": [],
+    "primaryMuscles": [
+      "upperBack"
+    ],
+    "secondaryMuscles": [
+      "lats",
+      "biceps"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Sit tall with a slight knee bend",
+      "Pull the handle to the lower ribs",
+      "Let the shoulder blades reach forward on the return"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/seated-cable-row.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "u02",
+    "nameEn": "Chest-Supported T-Bar Row",
+    "aliases": [],
+    "primaryMuscles": [
+      "upperBack"
+    ],
+    "secondaryMuscles": [
+      "lats",
+      "biceps"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Chest stays on the pad",
+      "Drive elbows back past the torso",
+      "Pause and squeeze the shoulder blades"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/machine-t-bar-row.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "u03",
+    "nameEn": "Barbell Bent-Over Row",
+    "aliases": [],
+    "primaryMuscles": [
+      "upperBack"
+    ],
+    "secondaryMuscles": [
+      "lats",
+      "lowerBack"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": "intermediate",
+    "instructionSteps": [
+      "Hinge to about 45 degrees, flat back",
+      "Row the bar to the belly button",
+      "Lower without losing the hinge"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/bent-over-row.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "v01",
+    "nameEn": "Standing Calf Raise",
+    "aliases": [],
+    "primaryMuscles": [
+      "calves"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Balls of the feet on the edge",
+      "Rise as high as possible",
+      "Lower into a full stretch"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/standing-machine-calf-raise.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "v02",
+    "nameEn": "Seated Calf Raise",
+    "aliases": [],
+    "primaryMuscles": [
+      "calves"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Pad snug above the knees",
+      "Press up through the big toe",
+      "Pause in the stretch"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/seated-calf-raise.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "v03",
+    "nameEn": "Leg Press Calf Raise",
+    "aliases": [],
+    "primaryMuscles": [
+      "calves"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Only the balls of the feet on the platform",
+      "Knees straight but not locked",
+      "Full range, slow tempo"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/45-degree-leg-press-calf-raise.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "z01",
+    "nameEn": "IT Band Foam Rolling",
+    "aliases": [],
+    "primaryMuscles": [
+      "itBand"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "roller"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Lie on your side over the roller",
+      "Roll from hip to just above the knee",
+      "Pause on tight spots for a breath"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/it-band-foam-rolling.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "z02",
+    "nameEn": "Plantar Fascia Release",
+    "aliases": [],
+    "primaryMuscles": [
+      "plantar"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "lacrosse"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Stand and place the ball under the arch",
+      "Roll heel to toe with light pressure",
+      "Spend extra time on tender spots"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/plantar-fascia-lacrosse-ball.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "z03",
+    "nameEn": "Palm Release",
+    "aliases": [],
+    "primaryMuscles": [
+      "palmar"
+    ],
+    "secondaryMuscles": [
+      "forearm"
+    ],
+    "equipment": [
+      "lacrosse"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Pin the ball under the palm on a table",
+      "Roll in small circles",
+      "Open and close the fingers as you roll"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/palmar-fascia-lacrosse-ball.mp4"
+      }
+    ]
+  },
+  {
+    "source": "workout-free-videos",
+    "externalId": "z04",
+    "nameEn": "Neck Release",
+    "aliases": [],
+    "primaryMuscles": [
+      "neck"
+    ],
+    "secondaryMuscles": [
+      "traps"
+    ],
+    "equipment": [
+      "roller"
+    ],
+    "difficulty": "beginner",
+    "instructionSteps": [
+      "Roll the stick along the side of the neck",
+      "Use gentle pressure only",
+      "Turn the head slowly while rolling"
+    ],
+    "media": [
+      {
+        "location": "repository_path",
+        "mediaType": "video",
+        "path": "media/video/neck-tiger-tail.mp4"
+      }
+    ]
+  }
+]

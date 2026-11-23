@@ -61,10 +61,27 @@ Importar e unificar o catálogo de exercícios das fontes de mídia, com nomes e
 - Traduções pt-BR de músculos, equipamentos e nomes: arquivo curado e versionado no repositório; o que faltar fica `TODO: popular`, nunca inventado
 - Scripts de importação rodam só localmente/CI com credencial administrativa; nada disso vai ao cliente
 
+## Parsers (1.2)
+
+- Código: `src/lib/catalog/` — `source-exercise.ts` (schema comum `SourceExercise`), `catalog-sources.ts` (ids das fontes) e `parsers/` (um parser por fonte + `parse-source-items.ts`)
+- Cada item é validado pelo schema da fonte **e** pelo schema comum; item inválido ou com id repetido vai para `rejected` (com índice e motivo) sem derrubar a fonte; arquivo que não é lista → `CatalogSourceFormatError`
+- Mídia: `location = 'url'` (Free Exercise DB, com `variant` male/female e `thumbnailUrl`) ou `location = 'repository_path'` (Workout Free Videos e Exercise Library; vira URL do jsDelivr na 1.4). Caminhos com `..` são rejeitados
+- Free Exercise DB: as duas variantes de vídeo são mantidas no arquivo parseado; a escolha de **um** vídeo por exercício acontece na 1.4
+- Script: `npm run catalog:parse -- --free-exercise-db <dir> --workout-free-videos <dir> --exercise-library <dir>` → grava `seed-data/catalog/sources/<source>.json` (versionado, ordenado por `externalId`)
+- Migration `20261124000000_exercise_source_refs.sql`: tabela `exercise_source_refs (exercise_id, source, external_id)`, PK `(source, external_id)`, RLS só leitura para autenticados
+
+Resultado sobre os dados reais (2026-11-23):
+
+| Fonte | Commit lido | Exercícios | Rejeitados |
+|---|---|---|---|
+| free-exercise-db-with-videos | `8df685f` | 317 | 0 |
+| workout-free-videos | `346c970` (tag `v2.0.0`) | 57 | 0 |
+| exercise-library | `a63d9e0` | 1.112 | 0 |
+
 ## Checklist de aceite
 
 - [x] 1.1 — Fontes analisadas (formato, campos, mídia, licença) e decisões registradas nesta spec
-- [ ] 1.2 — Parsers das três fontes com schema e testes
+- [x] 1.2 — Parsers das três fontes com schema e testes
 - [ ] 1.3 — Normalização, dedup e tradução
 - [ ] 1.4 — URLs das mídias com `source`/`license`/`priority`
 - [ ] 1.5 — Seed versionado aplicado
@@ -91,4 +108,5 @@ O banco guarda apenas a `url` em `exercise_media`; trocar a hospedagem depois é
 |---|---|---|---|
 | CAT-001 | Copiar vídeos do Free Exercise DB para um Cloudflare R2 próprio (hoje dependemos do R2 do autor) e reapontar as URLs — fase futura (etapa 6.5) | `exercise_media.url` | Média (antes da abertura) |
 | CAT-003 | Licença dos GIFs da Exercise Library: README diz MIT, mas não há LICENSE e a origem é o ExerciseDB (comercial). Confirmar ou desligar a fonte antes da abertura (6.1) | `exercise_media.license` | Alta (antes da abertura) |
+| CAT-004 | Aplicar a migration `20261124000000_exercise_source_refs.sql` no Supabase (sem credencial do banco nesta sessão): `npx supabase db push` | `supabase/migrations/` | Alta (antes da 1.5) |
 | CAT-002 | Fork de Workout Free Videos e Exercise Library na conta do usuário (seguro contra remoção da mídia) | GitHub | Alta (antes da 1.2) |
