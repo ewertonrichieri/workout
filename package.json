@@ -8,7 +8,8 @@
         "start": "next start",
         "lint": "eslint",
         "test": "vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "catalog:parse": "tsx scripts/parse-catalog-sources.ts"
     },
     "dependencies": {
         "@supabase/ssr": "^0.12.7",
@@ -33,6 +34,7 @@
         "jsdom": "^26.1.0",
         "postgres": "^4.1.1",
         "tailwindcss": "4.3.3",
+        "tsx": "^4.20.6",
         "typescript": "^5",
         "vite-tsconfig-paths": "^5.1.4",
         "vitest": "^4.1.12"
