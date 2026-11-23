@@ -9,12 +9,14 @@
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
-2. **1.1** — Spec do catálogo + análise das fontes (esforço `medium`) → `reference/001-checklist-implementacao.md`
+2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
+3. **1.2** — Parsers das fontes (esforço `high`) → `specs/009-catalogo-exercicios.md`
 
 ---
 
 ## Concluído recentemente
 
+- **1.1 Catálogo — análise das fontes** — formatos, campos, mídia e licenças das 3 fontes; regras de prioridade, dedup e rastreabilidade → `specs/009-catalogo-exercicios.md`
 - **0.8 Layout base** — tema escuro oliva, navegação inferior, rotas com estado vazio (merge na `main`, PR #1) → `specs/008-layout-base.md`
 - **Projeto Next.js criado** — Next.js 16 + React 19, TypeScript, Tailwind, App Router, `src/`
 - **0.6 Schema + RLS** — 14 tabelas do MVP com RLS, aplicadas no Supabase (merge na `main`) → `specs/006-schema-inicial-rls.md`
@@ -29,7 +31,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 ## Em Progresso
 
 - **0.7 Autenticação** — código na `main`; etapa pendente até AUTH-001/AUTH-002 (configuração do Google e teste manual) → `specs/007-autenticacao.md`
-- **1.1 Catálogo de exercícios** — spec + análise das fontes (iniciando; decisão de hospedagem registrada) → `specs/009-catalogo-exercicios.md`
 
 ---
 
@@ -40,6 +41,7 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
 - **AUTH-002** — teste manual de cadastro/login por e-mail → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`
+- **CAT-003** — licença dos GIFs da Exercise Library a confirmar → `specs/009-catalogo-exercicios.md`
 - **CAT-002** — forks de Workout Free Videos e Exercise Library → `specs/009-catalogo-exercicios.md`
 
 ---
