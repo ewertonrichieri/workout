@@ -8,20 +8,20 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **0.2** — Configurar testes (esforço `low`) → `reference/001-checklist-implementacao.md`
+1. **0.3** — Módulos base: config, logger, errors, constants (esforço `medium`) → `reference/001-checklist-implementacao.md`
 
 ---
 
 ## Concluído recentemente
 
 - **Projeto Next.js criado** — Next.js 16 + React 19, TypeScript, Tailwind, App Router, `src/`
-- **Regras de agentes** — `AGENTS.md`, `.agents/` e adaptador `CLAUDE.md` configurados (branch `chore/setup-agents-001`)
+- **Regras de agentes e docs** — `AGENTS.md`, `.agents/`, `CLAUDE.md`, PRD, checklist e logical-context (merge na `main`) → `specs/001-prd.md`
 
 ---
 
 ## Em Progresso
 
-- **Setup de agentes e docs** — PRD, checklist e logical-context criados; aguardando "pode subir" (branch `chore/setup-agents-001`) → `specs/001-prd.md`
+- **0.2 Configuração de testes** — Vitest 4 + Testing Library + jsdom; aguardando "pode subir" (branch `chore/test-setup-002`) → `specs/002-configuracao-testes.md`
 
 ---
 
@@ -63,4 +63,5 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 
 - Repositório local, sem remoto no GitHub ainda; sem deploy automático configurado.
 - Branch principal: `main` (renomeada de `master`).
-- Ambiente: Windows 11, PowerShell, npm.
+- Ambiente: Windows 11, PowerShell, Node 20.19 e npm 8.18 (antigo). O npm 8 falha ao instalar pacotes (`edgesOut`); usar `npx -y npm@10 install ...` até atualizar o Node/npm.
+- Vitest fixado na v4 porque a v5 exige Node 22+.

@@ -25,7 +25,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | # | Etapa | Esforço | Status |
 |---|---|---|---|
 | 0.1 | Criar projeto Next.js 16 (TypeScript, Tailwind, App Router, `src/`) | `low` | [x] |
-| 0.2 | Configurar testes (Vitest + Testing Library) e documentar comandos | `low` | [ ] |
+| 0.2 | Configurar testes (Vitest + Testing Library) e documentar comandos | `low` | [x] |
 | 0.3 | Módulos base: config com env validado, logger, errors, constants | `medium` | [ ] |
 | 0.4 | Mensagens pt-BR (`messages/pt-BR.json`) + helper de i18n | `low` | [ ] |
 | 0.5 | Supabase: projeto, clientes servidor/navegador, `.env.example` | `medium` | [ ] |
