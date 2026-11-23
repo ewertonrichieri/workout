@@ -9,7 +9,7 @@
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
-2. **0.8** — Layout base com navegação (esforço `medium`) → `reference/001-checklist-implementacao.md`
+2. **1.1** — Spec do catálogo + análise das fontes (esforço `medium`) → `reference/001-checklist-implementacao.md`
 
 ---
 
@@ -27,7 +27,8 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
-- **0.7 Autenticação** — proxy (sessão + acesso), `/login` (Google + e-mail/senha), `/auth/callback`, sair; falta configuração do Google e teste manual (branch `feat/auth-007`) → `specs/007-autenticacao.md`
+- **0.7 Autenticação** — código na `main`; etapa pendente até AUTH-001/AUTH-002 (configuração do Google e teste manual) → `specs/007-autenticacao.md`
+- **0.8 Layout base** — tema escuro oliva, navegação inferior, rotas `/`, `/workout`, `/schedule`, `/profile` com estado vazio; aguardando "pode subir" (branch `feat/base-layout-008`) → `specs/008-layout-base.md`
 
 ---
 

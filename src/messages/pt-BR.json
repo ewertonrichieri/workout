@@ -3,6 +3,7 @@
     "name": "Workout"
   },
   "navigation": {
+    "label": "Navegação principal",
     "home": "Início",
     "workout": "Treino",
     "schedule": "Agenda",
@@ -32,6 +33,28 @@
       "rateLimited": "Muitas tentativas. Aguarde um pouco e tente de novo.",
       "callbackFailed": "Não foi possível concluir o login. Tente novamente.",
       "generic": "Não foi possível entrar agora. Tente novamente."
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Início",
+      "emptyTitle": "Nenhum plano de treino ainda",
+      "emptyDescription": "Em breve a IA vai montar seu plano a partir de uma anamnese rápida."
+    },
+    "workout": {
+      "title": "Treino",
+      "emptyTitle": "Nenhum treino disponível",
+      "emptyDescription": "Seus treinos A, B, C aparecem aqui quando você tiver um plano."
+    },
+    "schedule": {
+      "title": "Agenda",
+      "emptyTitle": "Nenhum treino registrado",
+      "emptyDescription": "O histórico dos treinos finalizados vai aparecer aqui."
+    },
+    "profile": {
+      "title": "Perfil",
+      "emptyTitle": "Seus dados",
+      "emptyDescription": "Objetivo, nível e preferências vão ficar aqui."
     }
   },
   "errors": {
