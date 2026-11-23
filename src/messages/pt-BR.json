@@ -8,6 +8,32 @@
     "schedule": "Agenda",
     "profile": "Perfil"
   },
+  "auth": {
+    "title": "Entrar",
+    "subtitle": "Seu personal trainer com IA",
+    "googleButton": "Entrar com Google",
+    "divider": "ou",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Senha",
+    "passwordHint": "Mínimo de 8 caracteres",
+    "signInButton": "Entrar",
+    "signUpButton": "Criar conta",
+    "signOutButton": "Sair",
+    "pending": "Aguarde...",
+    "confirmEmailSent": "Enviamos um link de confirmação para o seu e-mail. Abra-o para ativar a conta.",
+    "signedInPlaceholder": "Você está conectado. As telas do app chegam nas próximas etapas.",
+    "errors": {
+      "invalidEmail": "Informe um e-mail válido.",
+      "passwordTooShort": "A senha precisa ter pelo menos 8 caracteres.",
+      "invalidCredentials": "E-mail ou senha incorretos.",
+      "emailNotConfirmed": "Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.",
+      "userAlreadyExists": "Já existe uma conta com este e-mail. Tente entrar.",
+      "weakPassword": "Senha fraca. Use uma senha mais forte.",
+      "rateLimited": "Muitas tentativas. Aguarde um pouco e tente de novo.",
+      "callbackFailed": "Não foi possível concluir o login. Tente novamente.",
+      "generic": "Não foi possível entrar agora. Tente novamente."
+    }
+  },
   "errors": {
     "internal": "Ocorreu um erro inesperado. Tente novamente.",
     "invalidInput": "Dados inválidos. Confira os campos e tente novamente.",

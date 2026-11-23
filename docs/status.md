@@ -8,13 +8,16 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **0.6** — Migrations do schema inicial + RLS (esforço `high`) → `reference/001-checklist-implementacao.md`
+1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
+2. **0.8** — Layout base com navegação (esforço `medium`) → `reference/001-checklist-implementacao.md`
 
 ---
 
 ## Concluído recentemente
 
 - **Projeto Next.js criado** — Next.js 16 + React 19, TypeScript, Tailwind, App Router, `src/`
+- **0.6 Schema + RLS** — 14 tabelas do MVP com RLS, aplicadas no Supabase (merge na `main`) → `specs/006-schema-inicial-rls.md`
+- **0.5 Supabase** — clientes servidor/navegador, config pública, `.env.example` (merge na `main`) → `specs/005-supabase-clientes.md`
 - **0.4 Mensagens pt-BR** — `src/messages/pt-BR.json` + `translate()` tipado (merge na `main`) → `specs/004-mensagens-i18n.md`
 - **0.3 Módulos base** — config (zod), logger, errors, constants (merge na `main`) → `specs/003-modulos-base.md`
 - **0.2 Configuração de testes** — Vitest 4 + Testing Library + jsdom (merge na `main`) → `specs/002-configuracao-testes.md`
@@ -24,7 +27,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
-- **0.5 Supabase** — clientes servidor/navegador, config pública, `.env.example`; conexão validada (auth health 200); aguardando "pode subir" (branch `chore/supabase-clients-005`) → `specs/005-supabase-clientes.md`
+- **0.7 Autenticação** — proxy (sessão + acesso), `/login` (Google + e-mail/senha), `/auth/callback`, sair; falta configuração do Google e teste manual (branch `feat/auth-007`) → `specs/007-autenticacao.md`
 
 ---
 
@@ -32,7 +35,8 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- Nenhuma pendência aberta.
+- **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
+- **AUTH-002** — teste manual de cadastro/login por e-mail → `specs/007-autenticacao.md`
 
 ---
 
