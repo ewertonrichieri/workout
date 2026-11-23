@@ -27,7 +27,7 @@ Uso inicial: pessoal (1 usuário). Arquitetura pronta para múltiplos usuários.
 3. **Exercise Library** — 1.100+ GIFs (cobertura onde não houver vídeo)
 4. Embed do YouTube — opção manual
 
-Os arquivos são baixados e hospedados no nosso storage, sem depender de CDN de terceiros.
+No MVP, as mídias são servidas por fork + jsDelivr ou pela origem (decisão em `specs/009-catalogo-exercicios.md`); storage próprio (R2) fica para fase futura.
 
 ## Modelo de dados (inicial)
 - `profiles` — usuário, papel, objetivo, nível, limitações

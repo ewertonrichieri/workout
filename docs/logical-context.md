@@ -21,7 +21,7 @@ Resumo de como o sistema funciona, derivado de `docs/specs/001-prd.md`.
 
 - **Servidor:** banco, Claude API, validação, regras de negócio.
 - **Cliente:** exibe dados, player de mídia, timer, envio de ações.
-- **Mídia:** servida do storage próprio; fallback de prioridade vídeo → GIF → YouTube.
+- **Mídia:** servida por fork + CDN ou pela origem no MVP (R2 próprio no futuro); fallback de prioridade vídeo → GIF → YouTube.
 
 ## Fora do MVP (não implementar, só deixar pontos de extensão)
 

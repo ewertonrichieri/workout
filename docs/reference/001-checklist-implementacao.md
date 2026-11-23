@@ -40,7 +40,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 1.1 | Spec do catálogo + análise das fontes (formatos, licenças, campos) | `medium` | [ ] |
 | 1.2 | Parsers de cada fonte (Free Exercise DB with Videos, Workout Free Videos, Exercise Library) | `high` | [ ] |
 | 1.3 | Normalização, deduplicação e tradução pt-BR de exercícios, equipamentos e músculos | `xhigh` | [ ] |
-| 1.4 | Upload das mídias para o storage, com `source` e `license` | `medium` | [ ] |
+| 1.4 | Mapear URLs das mídias (fork + jsDelivr / origem), com `source` e `license` | `medium` | [ ] |
 | 1.5 | Seed versionado do catálogo no banco | `medium` | [ ] |
 | 1.6 | Repositório + API de exercícios (busca, filtros, paginação) | `medium` | [ ] |
 | 1.7 | Tela de busca/visualização de exercícios | `medium` | [ ] |
@@ -104,3 +104,4 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 6.2 | Limites de uso de IA por usuário | `medium` | [ ] |
 | 6.3 | Modo personal (profissional revisa treinos) | `high` | [ ] |
 | 6.4 | Termos de uso e política de privacidade (LGPD) | `medium` | [ ] |
+| 6.5 | Copiar vídeos do Free Exercise DB para R2 próprio e reapontar URLs (CAT-001) | `medium` | [ ] |
