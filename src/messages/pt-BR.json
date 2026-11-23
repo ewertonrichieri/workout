@@ -1,0 +1,20 @@
+{
+  "app": {
+    "name": "Workout"
+  },
+  "navigation": {
+    "home": "Início",
+    "workout": "Treino",
+    "schedule": "Agenda",
+    "profile": "Perfil"
+  },
+  "errors": {
+    "internal": "Ocorreu um erro inesperado. Tente novamente.",
+    "invalidInput": "Dados inválidos. Confira os campos e tente novamente.",
+    "unauthorized": "Sua sessão expirou. Entre novamente.",
+    "forbidden": "Você não tem permissão para fazer isso.",
+    "notFound": "{resource} não encontrado.",
+    "rateLimited": "Muitas tentativas. Aguarde um pouco e tente de novo.",
+    "externalService": "O serviço está indisponível no momento. Tente novamente em instantes."
+  }
+}

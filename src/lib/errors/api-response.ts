@@ -1,5 +1,6 @@
 import { HTTP_STATUS, type HttpStatus } from "@/lib/constants/http";
 import { AppError } from "@/lib/errors/app-errors";
+import { translate } from "@/lib/i18n/translate";
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -12,9 +13,6 @@ export interface ErrorResponse {
   body: ApiResponse<never>;
 }
 
-// TODO(BASE-001): replace with the messages file key once i18n exists (step 0.4).
-const GENERIC_INTERNAL_ERROR_MESSAGE = "Ocorreu um erro inesperado. Tente novamente.";
-
 export function buildSuccessResponse<T>(data: T): ApiResponse<T> {
   return { success: true, data };
 }
@@ -26,6 +24,6 @@ export function buildErrorResponse(error: unknown): ErrorResponse {
   }
   return {
     httpStatus: HTTP_STATUS.INTERNAL_SERVER_ERROR,
-    body: { success: false, error: GENERIC_INTERNAL_ERROR_MESSAGE },
+    body: { success: false, error: translate("errors.internal") },
   };
 }

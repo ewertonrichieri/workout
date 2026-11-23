@@ -27,7 +27,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 0.1 | Criar projeto Next.js 16 (TypeScript, Tailwind, App Router, `src/`) | `low` | [x] |
 | 0.2 | Configurar testes (Vitest + Testing Library) e documentar comandos | `low` | [x] |
 | 0.3 | Módulos base: config com env validado, logger, errors, constants | `medium` | [x] |
-| 0.4 | Mensagens pt-BR (`messages/pt-BR.json`) + helper de i18n | `low` | [ ] |
+| 0.4 | Mensagens pt-BR (`messages/pt-BR.json`) + helper de i18n | `low` | [x] |
 | 0.5 | Supabase: projeto, clientes servidor/navegador, `.env.example` | `medium` | [ ] |
 | 0.6 | Migrations do schema inicial + RLS | `high` | [ ] |
 | 0.7 | Autenticação Supabase: botão Google (OAuth) + e-mail/senha, proteção central de rotas (páginas → login, API → 401) | `high` | [ ] |

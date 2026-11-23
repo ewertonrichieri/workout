@@ -35,6 +35,6 @@ Criar a infraestrutura compartilhada exigida pelo `AGENTS.md` antes de qualquer 
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| BASE-001 | Trocar a mensagem genérica de erro interno pela chave do arquivo de mensagens | `src/lib/errors/api-response.ts` | Alta (etapa 0.4) |
+| ~~BASE-001~~ | ~~Trocar a mensagem genérica de erro interno pela chave do arquivo de mensagens~~ — **resolvida na etapa 0.4** (`translate("errors.internal")`) | `src/lib/errors/api-response.ts` | — |
 
 ## Fim da spec

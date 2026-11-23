@@ -8,13 +8,14 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **0.4** — Mensagens pt-BR + helper de i18n (esforço `low`) → `reference/001-checklist-implementacao.md`
+1. **0.5** — Supabase: clientes servidor/navegador + `.env.example` (esforço `medium`) → `reference/001-checklist-implementacao.md`
 
 ---
 
 ## Concluído recentemente
 
 - **Projeto Next.js criado** — Next.js 16 + React 19, TypeScript, Tailwind, App Router, `src/`
+- **0.3 Módulos base** — config (zod), logger, errors, constants (merge na `main`) → `specs/003-modulos-base.md`
 - **0.2 Configuração de testes** — Vitest 4 + Testing Library + jsdom (merge na `main`) → `specs/002-configuracao-testes.md`
 - **Regras de agentes e docs** — `AGENTS.md`, `.agents/`, `CLAUDE.md`, PRD, checklist e logical-context (merge na `main`) → `specs/001-prd.md`
 
@@ -22,7 +23,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
-- **0.3 Módulos base** — config (zod), logger, errors, constants; aguardando "pode subir" (branch `chore/base-modules-003`) → `specs/003-modulos-base.md`
+- **0.4 Mensagens pt-BR** — `src/messages/pt-BR.json` + `translate()` tipado; aguardando "pode subir" (branch `chore/messages-i18n-004`) → `specs/004-mensagens-i18n.md`
 
 ---
 
@@ -30,7 +31,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **BASE-001** — mensagem genérica de erro interno → arquivo de mensagens (etapa 0.4) → `specs/003-modulos-base.md`
+- Nenhuma pendência aberta.
 
 ---
 
