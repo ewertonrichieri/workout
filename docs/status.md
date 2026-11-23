@@ -69,7 +69,7 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 
 ## Observações
 
-- Repositório local, sem remoto no GitHub ainda; sem deploy automático configurado.
+- Repositório no GitHub: `ewertonrichieri/workout` (**público**); sem deploy automático configurado.
 - Branch principal: `main` (renomeada de `master`).
 - Ambiente: Windows 11, PowerShell, Node 20.19 e npm 8.18 (antigo). O npm 8 falha ao instalar pacotes (`edgesOut`); usar `npx -y npm@10 install ...` até atualizar o Node/npm.
 - Segredos: `.env` local (ignorado pelo Git). Em sessões na nuvem, as variáveis ficam nas configurações do ambiente de nuvem do Claude Code, nunca no repositório. Nomes das variáveis em `.env.example` (etapa 0.5).
