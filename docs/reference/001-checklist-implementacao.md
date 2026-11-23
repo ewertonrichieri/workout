@@ -28,7 +28,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 0.2 | Configurar testes (Vitest + Testing Library) e documentar comandos | `low` | [x] |
 | 0.3 | Módulos base: config com env validado, logger, errors, constants | `medium` | [x] |
 | 0.4 | Mensagens pt-BR (`messages/pt-BR.json`) + helper de i18n | `low` | [x] |
-| 0.5 | Supabase: projeto, clientes servidor/navegador, `.env.example` | `medium` | [ ] |
+| 0.5 | Supabase: projeto, clientes servidor/navegador, `.env.example` | `medium` | [x] |
 | 0.6 | Migrations do schema inicial + RLS | `high` | [ ] |
 | 0.7 | Autenticação Supabase: botão Google (OAuth) + e-mail/senha, proteção central de rotas (páginas → login, API → 401) | `high` | [ ] |
 | 0.8 | Layout base com navegação Início / Treino / Agenda / Perfil | `medium` | [ ] |
