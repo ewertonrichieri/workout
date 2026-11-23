@@ -59,6 +59,10 @@ O agente **sempre** faz merge na **`main`** (squash), sem pedir confirmação ex
 
 Neste projeto, quando o usuário pedir para iniciar a próxima etapa do checklist e a etapa anterior ainda estiver numa branch sem merge, o agente faz o fluxo de "pode subir" da anterior **sem perguntar** e só então cria a branch nova a partir da `main` atualizada. (Autorizado pelo usuário em 2026-11-23.)
 
+## Preferência do usuário: subir ao terminar cada etapa
+
+Ao concluir uma etapa do checklist (testes passando), o agente faz o fluxo de "pode subir" (PR + squash na `main`) **sem pedir autorização**. (Autorizado pelo usuário em 2026-11-23.)
+
 ## Checklist do PR
 
 - Branch criada a partir da `main` atualizada
