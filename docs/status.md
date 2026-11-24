@@ -9,7 +9,7 @@
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
 1. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
-2. **ADP-001** — confirmar as decisões D1 a D7 da Fase 3B (usuário) → `specs/012-treino-adaptativo.md`
+2. **ADP-001** — confirmar as decisões D1–D4, D6 e D7 da Fase 3B (D5 confirmada) (usuário) → `specs/012-treino-adaptativo.md`
 3. **3B.1 Check-in antes do treino** — depois da AUTH-002 e da ADP-001 → `specs/012-treino-adaptativo.md`
 4. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 5. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
@@ -67,7 +67,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
-- **ADP-001** — confirmar as decisões D1 a D7 da Fase 3B → `specs/012-treino-adaptativo.md`
+- **ADP-001** — confirmar as decisões D1–D4, D6 e D7 da Fase 3B (D5 confirmada) → `specs/012-treino-adaptativo.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`
 - **CAT-003** — licença dos GIFs da Exercise Library a confirmar → `specs/009-catalogo-exercicios.md`

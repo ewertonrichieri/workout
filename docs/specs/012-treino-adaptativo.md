@@ -99,12 +99,13 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 ## 3B.3 — Percepção de esforço e autorregulação
 
 - **Por série:** depois do check da série, três botões opcionais "fácil / ok / no limite" (`role="radiogroup"`, toque ≥ 44 px). Não marcar é permitido (`effort` nulo). Fica no rascunho e vai em `POST /api/workout-sessions` (campo `effort` opcional por série; `finish_workout_session` grava em `set_logs.effort`)
-- **Autorregulação (a confirmar)**, só para exercícios com "Salvar carga para progredir" ligado, sempre a partir da última sessão com carga (mesma base das 2.7 e 3.5):
-  1. **Sobe** (+5%, arredondado para 0,5 kg, mínimo +1 kg, igual à 3.5) quando a regra da 3.5 vale **e** nenhuma série foi "no limite"; **ou** quando todas as séries foram "fácil" com a mesma carga e pelo menos `reps_min` repetições
+- **Autorregulação (D5 confirmada pelo usuário em 2026-11-24, versão simplificada)**, só para exercícios com "Salvar carga para progredir" ligado, sempre a partir da última sessão com carga (mesma base das 2.7 e 3.5):
+  1. **Subir** continua sendo só pela regra da 3.5 (todas as séries no máximo de repetições, com a mesma carga), **e agora só se nenhuma série foi "no limite"**. Não existe subida por "fácil"
   2. **Desce** (−5%, arredondado para 0,5 kg, mínimo −1 kg, nunca abaixo de 0) quando 2 ou mais séries foram "no limite" com menos que `reps_min` repetições
   3. **Mantém** a última carga nos outros casos
   4. Sem esforço marcado, vale só a regra da 3.5 (nada muda para quem não usa)
-- **Card:** o motivo sempre aparece, por exemplo "Você marcou 'fácil' em todas as séries com 20 kg. Sugestão: 21 kg." ou "2 séries no limite abaixo de 8 repetições com 30 kg. Sugestão: 28,5 kg."
+  5. Interruptor desligado → nenhuma sugestão de carga (nem subir nem descer). É a forma de o usuário travar a carga de um exercício (ex.: histórico de lesão)
+- **Card:** o motivo sempre aparece, por exemplo "Você marcou 'no limite' em uma série. A carga fica em 20 kg." ou "2 séries no limite abaixo de 8 repetições com 30 kg. Sugestão: 28,5 kg."
 - **Nunca automática no plano:** é só o valor inicial do campo, editável, e só preenche um rascunho ainda não editado (regra da 2.7)
 - Constantes nomeadas: `PROGRESSION_DECREASE_RATIO`, `MIN_MAX_EFFORT_SETS_FOR_DECREASE`
 
@@ -138,7 +139,7 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 | D2 | Quando o check-in pede ajuste da IA | Sono ruim, energia baixa, alguma dor, ou tempo menor que o da anamnese |
 | D3 | Tempo disponível | Opções rápidas, com o padrão vindo da anamnese |
 | D4 | A IA pode aumentar o volume em dia bom? | Não: só reduz, remove ou troca |
-| D5 | Regra de autorregulação (subir, descer, manter) | A da 3B.3 |
+| D5 | Regra de autorregulação | **Confirmada (2026-11-24):** versão simplificada ("no limite" impede a subida; 2+ séries no limite abaixo do mínimo → −5%) |
 | D6 | Troca na hora | Pré-filtro no servidor + IA escolhe 3, com fallback sem IA |
 | D7 | Ordem das etapas | 3B.1 → 3B.2 → 3B.3 → 3B.4 (a 3B.3 e a 3B.4 não dependem do check-in e podem vir antes, se preferir) |
 
@@ -146,7 +147,7 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| ADP-001 | Confirmar as decisões D1 a D7 | Esta spec | Alta (bloqueia a 3B.1) |
+| ADP-001 | Confirmar as decisões D1 a D4, D6 e D7 (D5 confirmada) | Esta spec | Alta (bloqueia a 3B.1) |
 
 ## Checklist de aceite
 
