@@ -136,6 +136,22 @@
     "loading": "Carregando treino...",
     "loadError": "Não foi possível carregar o treino.",
     "retryButton": "Tentar novamente",
-    "showDemo": "Ver demonstração"
+    "showDemo": "Ver demonstração",
+    "repsTargetOne": "{count}",
+    "repsTargetRange": "{min} a {max}",
+    "setColumn": "Série",
+    "repsColumn": "Reps",
+    "loadColumn": "Carga (kg)",
+    "doneColumn": "Feito",
+    "setsLabel": "Séries de {name}",
+    "repsDoneLabel": "Repetições da série {number} de {name}",
+    "loadLabel": "Carga (kg) da série {number} de {name}",
+    "completeSetLabel": "Concluir série {number} de {name}",
+    "completeSetHint": "Preencha as repetições para marcar a série.",
+    "invalidReps": "Use um número inteiro de 0 a 999.",
+    "invalidLoad": "Use um número de 0 a 9999,99 kg, com até 2 casas decimais.",
+    "exerciseCompleted": "Concluído",
+    "completedSummary": "{done} de {total} exercícios concluídos",
+    "draftNotice": "Os registros ficam salvos neste aparelho até você finalizar o treino."
   }
 }

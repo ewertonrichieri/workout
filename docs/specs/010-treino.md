@@ -76,6 +76,18 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - **Arquivos:** `src/lib/catalog/media/media-fallback.ts` (lógica pura); `src/components/exercises/exercise-media-player.tsx` (cliente); `src/components/workout/exercise-demo-disclosure.tsx`
 - **Fora da 2.3:** vídeos no R2 próprio (CAT-001), cadastro de vídeos do YouTube
 
+## Registro de séries (2.4)
+
+- **Por série:** cada card tem uma linha por série prescrita (`sets`), com repetições feitas, carga (kg) e check de concluída — espelha `set_logs` (`set_number`, `reps_done`, `load_kg`)
+- **Repetições:** inteiro de 0 a 999 (`MAX_REPS_DONE`); campo vazio com a prescrição como dica
+- **Carga:** opcional (peso corporal), decimal com vírgula ou ponto, até 2 casas, de 0 a 9.999,99 kg (`MAX_LOAD_KG`, limite de `numeric(6,2)`)
+- **Check:** só com repetições preenchidas e campos válidos; editar a série para um valor vazio/inválido desmarca o check
+- **Erro de campo:** mensagem em pt-BR ligada ao campo (`aria-invalid` + `aria-describedby`)
+- **Exercício concluído:** todas as séries marcadas → "Concluído"; resumo no topo "N de M exercícios concluídos"
+- **Rascunho:** só no aparelho (`localStorage`, chave por treino e dia em `APP_TIME_ZONE`), restaurado ao recarregar; rascunho de outro dia, de outro treino ou fora do schema é descartado; quantidade de séries alinhada à prescrição atual; storage indisponível → o registro funciona sem persistir. Nada vai ao banco antes do "Finalizar treino" (2.6), que reaproveita o schema e o parse
+- **Arquivos:** `src/lib/training/set-log-draft.ts` (schema, parse, regras), `src/lib/training/draft-storage.ts` (leitura/gravação segura), `src/components/workout/use-workout-draft.ts`, `workout-tracker.tsx`, `set-log-row.tsx`
+- **Fora da 2.4:** gravar no banco/finalizar (2.6), carga sugerida (2.7)
+
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
@@ -89,7 +101,7 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - [x] 2.1 — Spec + leitura do plano ativo e validade, com testes
 - [x] 2.2 — Tela de treino, com testes (teste manual com dados reais depende do TRN-001)
 - [x] 2.3 — Player com fallback, com testes
-- [ ] 2.4 — Registro de séries
+- [x] 2.4 — Registro de séries, com testes (rascunho no aparelho; gravação no banco na 2.6)
 - [ ] 2.6 — Finalizar treino
 - [ ] 2.7 — Salvar carga para progredir
 - [ ] 2.8 — Histórico e gráfico

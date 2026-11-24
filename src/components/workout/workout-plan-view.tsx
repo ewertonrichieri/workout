@@ -3,7 +3,7 @@ import { translate } from "@/lib/i18n/translate";
 import type { ActivePlanOverview, Workout } from "@/lib/training/plan-types";
 import { selectWorkout } from "@/lib/training/workout-display";
 import { PlanValiditySummary } from "./plan-validity-summary";
-import { WorkoutExerciseGroups } from "./workout-exercise-groups";
+import { WorkoutTracker } from "./workout-tracker";
 import { WorkoutTabs } from "./workout-tabs";
 
 interface WorkoutPlanViewProps {
@@ -18,7 +18,7 @@ function EmptyWorkout() {
 
 function SelectedWorkout({ workout }: { workout: Workout }) {
   if (workout.exercises.length === 0) return <EmptyWorkout />;
-  return <WorkoutExerciseGroups exercises={workout.exercises} />;
+  return <WorkoutTracker key={workout.id} workout={workout} />;
 }
 
 function WorkoutHeading({ workouts, selected }: { workouts: readonly Workout[]; selected: Workout }) {
