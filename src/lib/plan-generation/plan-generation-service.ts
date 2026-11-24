@@ -41,6 +41,8 @@ export interface PlanGenerationService {
 export interface GenerationStatus {
   hasAssessment: boolean;
   hasActivePlan: boolean;
+  /** The latest assessment reports injuries or limitations (health notice, step 3.7). */
+  hasLimitations: boolean;
   /** Set when the active plan is in its last days or expired (step 3.6). */
   renewal: RenewalInfo | null;
 }
@@ -119,7 +121,12 @@ export function createPlanGenerationService(dependencies: PlanGenerationDependen
         dependencies.assessmentRepository.findLatestAssessment(userId),
         dependencies.planRepository.findActivePlan(userId),
       ]);
-      return { hasAssessment: assessment !== null, hasActivePlan: activePlan !== null, renewal: describeRenewal(activePlan, dependencies.now()) };
+      return {
+        hasAssessment: assessment !== null,
+        hasActivePlan: activePlan !== null,
+        hasLimitations: Boolean(assessment?.limitations),
+        renewal: describeRenewal(activePlan, dependencies.now()),
+      };
     },
   };
 }

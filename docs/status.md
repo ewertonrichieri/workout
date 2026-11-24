@@ -17,6 +17,8 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Concluído recentemente
 
+- **3.8 PWA instalável** — recurso nativo do Next.js: `manifest.ts`, ícones gerados (`icon.tsx` 192/512/mascarável, `apple-icon.tsx`), `themeColor`; manifest e ícones públicos no proxy; conferido com o app rodando (sem login) → `specs/011-geracao-treino-ia.md`
+- **3.7 Aviso de saúde** — na anamnese e na tela de treino, com reforço quando há limitação informada → `specs/011-geracao-treino-ia.md`
 - **3.6 Sugestão de renovação** — aviso nos últimos 7 dias e depois de vencer (Início e treino) com "Renovar plano com a IA" (confirmação, plano antigo arquivado); a renovação envia à IA o histórico do plano (`plan_history_summary`); migration aplicada → `specs/011-geracao-treino-ia.md`
 - **3.5 Sugestão de progressão** — todas as séries no máximo de repetições com a mesma carga → sugere +5% (arredondado para 0,5 kg, mínimo +1 kg), com o motivo no card; `latest_set_loads` devolve as repetições; migration aplicada → `specs/010-treino.md`
 - **3.3 Geração do plano pela IA** — chamada real medida (PLN-001): Haiku 5.5, esforço `medium`, 1.068 candidatos, ~16–19 s e ~US$ 0,002–0,005 por plano, plano válido e limitação respeitada; o app passa a usar `claude-haiku-5-5` como modelo padrão (`CLAUDE_MODEL`, decisão do usuário) → `specs/011-geracao-treino-ia.md`

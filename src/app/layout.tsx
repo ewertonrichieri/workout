@@ -1,4 +1,5 @@
-﻿import type { Metadata } from "next";
+﻿import type { Metadata, Viewport } from "next";
+import { APP_THEME_COLOR } from "@/lib/constants/app";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -15,7 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Workout",
   description: "Personal trainer com IA",
+  appleWebApp: { capable: true, title: "Workout", statusBarStyle: "black-translucent" },
 };
+
+/** Browser UI color of the installed app (step 3.8). */
+export const viewport: Viewport = { themeColor: APP_THEME_COLOR };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

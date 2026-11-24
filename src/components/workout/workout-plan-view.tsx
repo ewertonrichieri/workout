@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { EmptyState } from "@/components/layout/empty-state";
+import { HealthNotice } from "@/components/layout/health-notice";
 import { RenewalNotice } from "@/components/plan-generation/renewal-notice";
 import { isRenewalDue } from "@/lib/training/plan-renewal";
 import { APP_ROUTES } from "@/lib/constants/routes";
@@ -17,6 +18,8 @@ interface WorkoutPlanViewProps {
   requestedLabel?: string;
   /** Right after an AI generation: invite the user to review and adjust (step 3.4). */
   showReviewNotice?: boolean;
+  /** Latest assessment reports injuries or limitations (step 3.7). */
+  hasLimitations?: boolean;
 }
 
 const EDIT_LINK_CLASS =
@@ -46,7 +49,7 @@ function WorkoutHeading({ workouts, selected }: { workouts: readonly Workout[]; 
 }
 
 /** Daily workout screen: tabs (when split), plan validity and exercise cards by category. */
-export function WorkoutPlanView({ overview, requestedLabel, showReviewNotice = false }: WorkoutPlanViewProps) {
+export function WorkoutPlanView({ overview, requestedLabel, showReviewNotice = false, hasLimitations = false }: WorkoutPlanViewProps) {
   const { plan, validity } = overview;
   const selected = selectWorkout(plan.workouts, requestedLabel);
   return (
@@ -54,6 +57,7 @@ export function WorkoutPlanView({ overview, requestedLabel, showReviewNotice = f
       {showReviewNotice && <ReviewNotice />}
       {isRenewalDue(validity) && <RenewalNotice renewal={{ validUntil: plan.validUntil, remainingDays: validity.remainingDays, isExpired: validity.isExpired }} />}
       <PlanValiditySummary validity={validity} validUntil={plan.validUntil} />
+      <HealthNotice hasLimitations={hasLimitations} />
       {selected ? (
         <>
           <WorkoutHeading workouts={plan.workouts} selected={selected} />

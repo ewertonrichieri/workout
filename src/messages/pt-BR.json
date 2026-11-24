@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "Workout"
+    "name": "Workout",
+    "description": "Personal trainer com IA: plano de treino, registro de cargas e evolução."
   },
   "navigation": {
     "label": "Navegação principal",
@@ -346,5 +347,10 @@
       "restSeconds": "Deixe vazio ou use de 0 a {max} segundos.",
       "notes": "Use no máximo {max} caracteres."
     }
+  },
+  "health": {
+    "title": "Aviso de saúde",
+    "notice": "Este plano é gerado por IA e não substitui a orientação de um profissional de educação física ou de saúde. Se você tem lesões, dores ou alguma condição médica, consulte um profissional antes de começar. Pare o exercício se sentir dor.",
+    "limitationsNotice": "Você informou uma lesão ou limitação: procure orientação profissional antes de seguir o plano."
   }
 }

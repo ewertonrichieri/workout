@@ -8,6 +8,7 @@ import { getAuthenticatedUserId } from "@/lib/auth/server-auth";
 import { APP_ROUTES, REVIEW_QUERY_PARAM, REVIEW_QUERY_VALUE } from "@/lib/constants/routes";
 import { WORKOUT_QUERY_PARAM } from "@/lib/constants/training";
 import { translate } from "@/lib/i18n/translate";
+import { createServerPlanGenerationService } from "@/lib/plan-generation/server-plan-generation-service";
 import { createServerPlanService } from "@/lib/training/server-plan-service";
 
 type WorkoutSearchParams = PageProps<"/workout">["searchParams"];
@@ -16,7 +17,8 @@ async function WorkoutContent({ searchParams }: { searchParams: WorkoutSearchPar
   const params = await searchParams;
   const requested = params[WORKOUT_QUERY_PARAM];
   const userId = await getAuthenticatedUserId();
-  const overview = await (await createServerPlanService()).getActivePlanOverview(userId);
+  const [planService, generationService] = await Promise.all([createServerPlanService(), createServerPlanGenerationService()]);
+  const [overview, status] = await Promise.all([planService.getActivePlanOverview(userId), generationService.getGenerationStatus(userId)]);
   if (!overview) {
     return <EmptyState title={translate("pages.workout.emptyTitle")} description={translate("pages.workout.emptyDescription")} />;
   }
@@ -25,6 +27,7 @@ async function WorkoutContent({ searchParams }: { searchParams: WorkoutSearchPar
       overview={overview}
       requestedLabel={typeof requested === "string" ? requested : undefined}
       showReviewNotice={params[REVIEW_QUERY_PARAM] === REVIEW_QUERY_VALUE}
+      hasLimitations={status.hasLimitations}
     />
   );
 }

@@ -4,7 +4,9 @@ export const HOME_PATH = "/";
 export const REDIRECT_QUERY_PARAMETER = "next";
 
 const API_PATH_PREFIX = "/api/";
-const PUBLIC_PATH_PREFIXES = ["/auth/"];
+const PUBLIC_PATH_PREFIXES = ["/auth/", "/icon/"];
+/** Installable app files (step 3.8): the browser fetches them without a session. */
+const PUBLIC_EXACT_PATHS = ["/manifest.webmanifest", "/apple-icon"];
 
 export type RouteAccessDecision =
   | { type: "allow" }
@@ -17,7 +19,8 @@ interface RouteAccessInput {
 }
 
 function isPublicPath(pathname: string): boolean {
-  return pathname === LOGIN_PATH || PUBLIC_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  if (pathname === LOGIN_PATH || PUBLIC_EXACT_PATHS.includes(pathname)) return true;
+  return PUBLIC_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
 }
 
 function buildLoginLocation(destination: string): string {
