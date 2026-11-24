@@ -90,10 +90,10 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 #### Regras da 3.2
 
 - **Somente servidor:** `ANTHROPIC_API_KEY` lida e validada só no servidor (`server-only`); nunca vai ao cliente nem aos logs
-- **Modelo:** `claude-opus-5-5` (constante `CLAUDE_MODEL`); esforço por chamada (`low` a `max`, padrão `high`); pensamento adaptativo (padrão do modelo)
+- **Modelo:** `claude-haiku-5-5` (constante `CLAUDE_MODEL`; trocado do Opus 5.5 por custo — decisão do usuário em 2026-11-24); esforço por chamada (`low` a `max`, padrão `high`); pensamento adaptativo (padrão do modelo)
 - **Saída estruturada:** o schema zod vira JSON Schema (`betaZodOutputFormat`) e a API é obrigada a segui-lo; o servidor revalida com o mesmo schema. JSON inválido ou fora do schema = falha (sem retry), mensagem amigável
 - **Parada:** `refusal` (mesmo depois do fallback) e `max_tokens` (resposta cortada) = falha, sem retry
-- **Fallback de recusa:** `fallbacks: "default"` (beta `server-side-fallback-2026-07-01`): a própria API refaz a chamada noutro modelo quando o primeiro recusa por política; vale o texto depois do último bloco `fallback`
+- **Recusa:** o Haiku 5.5 não tem fallback no servidor; recusa = falha com mensagem amigável (o fallback `fallbacks: "default"` usado com o Opus foi removido)
 - **Streaming:** sempre, com `finalMessage()`, para respostas longas não derrubarem a conexão
 - **Retry (AGENTS.md, seção 7):** até 3 tentativas, espera 1 s e 2 s (exponencial); repete só 429, 5xx/529 e falha de conexão/timeout por tentativa; nunca outros 4xx. 429 respeita `Retry-After`; se a espera não couber no tempo restante, desiste. O retry automático do SDK fica desligado (`maxRetries: 0`)
 - **Timeout:** exceção para IA — **120 s no total** (`AI_TOTAL_TIMEOUT_MS`), cada tentativa usa só o tempo que sobra; demais chamadas externas seguem 15 s
@@ -148,5 +148,11 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 - [x] Tela: confirmação de substituição, carregamento longo, erro e sucesso
 - [x] Migration aplicada no Supabase (2026-11-24)
 - [ ] Uma chamada real medida (PLN-001)
+
+### 2026-11-24 — Troca para Claude Haiku 5.5
+
+- **Pedido:** o Opus é caro; usar um modelo barato (escolha do usuário: Haiku 5.5).
+- **Mudança:** `CLAUDE_MODEL = "claude-haiku-5-5"` (US$ 0,10 / 0,50 por milhão de tokens até 100 mil tokens de prompt, contra US$ 4 / 20 do Opus 5.5); removido o fallback de recusa no servidor (não existe no Haiku). Script `scripts/measure-plan-generation.ts` para a chamada real (PLN-001), com preços do Haiku.
+- **Pendências:** PLN-001 segue aberta (medir a qualidade do plano no Haiku e o tempo).
 
 ## Fim da spec

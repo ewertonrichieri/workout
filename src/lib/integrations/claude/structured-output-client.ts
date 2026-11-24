@@ -4,8 +4,6 @@ import type { BetaContentBlock, BetaJSONOutputFormat, BetaMessage, BetaMessageSt
 import type { z } from "zod";
 import {
   AI_RETRY_POLICY,
-  CLAUDE_FALLBACK_BETA,
-  CLAUDE_FALLBACK_MODE,
   CLAUDE_MODEL,
   DEFAULT_CLAUDE_EFFORT,
   DEFAULT_CLAUDE_MAX_TOKENS,
@@ -55,19 +53,14 @@ function buildRequestBody<T>(request: StructuredOutputRequest<T>): BetaMessageSt
   return {
     model: CLAUDE_MODEL,
     max_tokens: request.maxTokens ?? DEFAULT_CLAUDE_MAX_TOKENS,
-    betas: [CLAUDE_FALLBACK_BETA],
-    fallbacks: CLAUDE_FALLBACK_MODE,
     system: buildSystem(request),
     messages: [{ role: "user", content: request.prompt }],
     output_config: { effort: request.effort ?? DEFAULT_CLAUDE_EFFORT, format: toOutputFormat(request.schema) },
   };
 }
 
-/** Text written after the last fallback switch: earlier text belongs to a model that declined. */
 function readFinalText(content: readonly BetaContentBlock[]): string {
-  const lastFallback = content.findLastIndex((block) => block.type === "fallback");
   return content
-    .slice(lastFallback + 1)
     .flatMap((block) => (block.type === "text" ? [block.text] : []))
     .join("");
 }

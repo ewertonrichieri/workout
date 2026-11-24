@@ -18,8 +18,8 @@ import type { PlanCandidate } from "../src/lib/plan-generation/plan-candidate";
 import { buildPlanRequestPrompt, buildPlanSystemPrompt } from "../src/lib/plan-generation/plan-prompt";
 import { resolveWorkoutCountRange } from "../src/lib/plan-generation/split-rule";
 
-/** USD per million tokens for claude-opus-5-5 (Anthropic price list, 2026-11); cache write = 5-minute TTL. */
-const PRICE_PER_MILLION_TOKENS = { input: 4, output: 20, cacheWrite: 5, cacheRead: 0.2 } as const;
+/** USD per million tokens for claude-haiku-5-5 up to 100K-token prompts (Anthropic price list, 2026-11); cache write = 5-minute TTL (1.25x), cache read = 0.1x. */
+const PRICE_PER_MILLION_TOKENS = { input: 0.1, output: 0.5, cacheWrite: 0.125, cacheRead: 0.01 } as const;
 const TOKENS_PER_MILLION = 1_000_000;
 const DEFAULT_RUNS = 2;
 const SUCCESS_LOG_MESSAGE = "claude request succeeded";

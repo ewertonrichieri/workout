@@ -51,19 +51,19 @@ beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
 describe("structured output client", () => {
-  it("sends a streamed request with schema, fallback and effort, and returns the validated output", async () => {
+  it("sends a streamed request on Haiku with schema and effort, and returns the validated output", async () => {
     const { service, stream } = setup([textMessage('{"title":"Plano A","days":3}')]);
     await expect(service.generate({ ...REQUEST, effort: "xhigh" })).resolves.toEqual({ title: "Plano A", days: 3 });
     const [body, options] = stream.mock.calls[0];
     expect(body).toMatchObject({
-      model: "claude-opus-5-5",
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
+      model: "claude-haiku-5-5",
       system: REQUEST.system,
       messages: [{ role: "user", content: REQUEST.prompt }],
       output_config: { effort: "xhigh", format: { type: "json_schema" } },
     });
     expect(body).not.toHaveProperty("thinking");
+    expect(body).not.toHaveProperty("fallbacks");
+    expect(body).not.toHaveProperty("betas");
     expect(options.timeout).toBe(120_000);
     expect(options.signal).toBeInstanceOf(AbortSignal);
   });
@@ -72,19 +72,6 @@ describe("structured output client", () => {
     const { service, stream } = setup([textMessage('{"title":"Plano","days":3}')]);
     await service.generate({ ...REQUEST, cacheSystem: true });
     expect(stream.mock.calls[0][0].system).toEqual([{ type: "text", text: REQUEST.system, cache_control: { type: "ephemeral" } }]);
-  });
-
-  it("uses the text after the last fallback switch", async () => {
-    const message: FakeMessage = {
-      stop_reason: "end_turn",
-      usage: {},
-      content: [
-        { type: "text", text: '{"tit' },
-        { type: "fallback", from: { model: "claude-opus-5-5" }, to: { model: "claude-opus-5" } },
-        { type: "text", text: '{"title":"Plano B","days":2}' },
-      ],
-    };
-    await expect(setup([message]).service.generate(REQUEST)).resolves.toEqual({ title: "Plano B", days: 2 });
   });
 
   it.each([
