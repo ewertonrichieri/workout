@@ -6,6 +6,7 @@ import { CATALOG_SOURCE_VALUES } from "@/lib/catalog/catalog-sources";
 import { buildCatalog } from "@/lib/catalog/normalization/build-catalog";
 import { mediaHostingSchema } from "@/lib/catalog/media/media-hosting";
 import { resolveExerciseMedia } from "@/lib/catalog/media/resolve-exercise-media";
+import { buildCatalogSeedSql } from "@/lib/catalog/seed/build-catalog-seed-sql";
 import { duplicateDecisionsSchema } from "@/lib/catalog/normalization/deduplicate-exercises";
 import { vocabularySchema } from "@/lib/catalog/normalization/vocabulary";
 import { sourceExerciseSchema } from "@/lib/catalog/source-exercise";
@@ -55,5 +56,15 @@ describe("versioned catalog seed data", () => {
       return media.length === 0 || media.some((item) => !item.url.startsWith("https://"));
     });
     expect(withoutMedia.map((exercise) => exercise.slug)).toEqual([]);
+  });
+
+  it("matches the committed supabase/seed.sql", () => {
+    const sql = buildCatalogSeedSql({
+      exercises: result.exercises,
+      muscles: readJson("vocabulary/muscles.json", vocabularySchema).entries,
+      equipment: readJson("vocabulary/equipment.json", vocabularySchema).entries,
+      mediaHosting: readJson("media-hosting.json", mediaHostingSchema),
+    });
+    expect(sql).toBe(readFileSync(join(process.cwd(), "supabase", "seed.sql"), "utf8"));
   });
 });
