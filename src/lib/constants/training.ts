@@ -8,3 +8,6 @@ export const DEFAULT_PLAN_VALIDITY_WEEKS = 6;
 
 /** Calendar used for "today" (validity, sessions). Single-user MVP in Brazil. */
 export const APP_TIME_ZONE = "America/Sao_Paulo";
+
+/** URL search param that selects the workout tab by label (e.g. /workout?workout=B). */
+export const WORKOUT_QUERY_PARAM = "workout";
