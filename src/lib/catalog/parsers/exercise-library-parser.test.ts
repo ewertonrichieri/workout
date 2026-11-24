@@ -36,6 +36,11 @@ describe("parseExerciseLibrary", () => {
     expect(exercise.instructionSteps).toEqual(["Just do it."]);
   });
 
+  it("repairs broken degree signs in names", () => {
+    const [exercise] = parseExerciseLibrary([buildRawExercise({ name: "sled 45Ð²Â° leg press" })]).exercises;
+    expect(exercise.nameEn).toBe("sled 45° leg press");
+  });
+
   it("rejects gif names that try to leave the gifs folder", () => {
     expect(parseExerciseLibrary([buildRawExercise({ gif: "../secret.gif" })]).rejected).toHaveLength(1);
   });

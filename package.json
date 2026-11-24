@@ -9,7 +9,8 @@
         "lint": "eslint",
         "test": "vitest run",
         "test:watch": "vitest",
-        "catalog:parse": "tsx scripts/parse-catalog-sources.ts"
+        "catalog:parse": "tsx scripts/parse-catalog-sources.ts",
+        "catalog:build": "tsx scripts/build-catalog.ts"
     },
     "dependencies": {
         "@supabase/ssr": "^0.12.7",

@@ -1,0 +1,1539 @@
+[
+  {
+    "kind": "same_name_different_equipment",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1274"
+      ],
+      [
+        "exercise-library:vptOQ4N"
+      ]
+    ],
+    "names": [
+      "Deep Push-Up",
+      "deep push up"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "same_name_different_equipment",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1388"
+      ],
+      [
+        "exercise-library:XhfS1DZ"
+      ]
+    ],
+    "names": [
+      "Peroneals Stretch",
+      "peroneals stretch"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "rope"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "workout-free-videos:a02",
+        "free-exercise-db-with-videos:0865"
+      ],
+      [
+        "free-exercise-db-with-videos:1002"
+      ]
+    ],
+    "names": [
+      "Lying Leg Raise",
+      "Lying Straight Leg Raise"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "workout-free-videos:a02",
+        "free-exercise-db-with-videos:0865"
+      ],
+      [
+        "exercise-library:9IxJdtC"
+      ]
+    ],
+    "names": [
+      "Lying Leg Raise",
+      "lying leg-hip raise"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "workout-free-videos:b02",
+        "free-exercise-db-with-videos:0318",
+        "free-exercise-db-with-videos:0322",
+        "exercise-library:ae9UoXQ",
+        "exercise-library:F3xgbjF"
+      ],
+      [
+        "exercise-library:LCtQPn8"
+      ]
+    ],
+    "names": [
+      "Incline Dumbbell Curl",
+      "dumbbell incline inner biceps curl"
+    ],
+    "equipment": [
+      [
+        "dumbbell",
+        "bench"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "workout-free-videos:q01",
+        "free-exercise-db-with-videos:1435"
+      ],
+      [
+        "exercise-library:bTpEUcm"
+      ]
+    ],
+    "names": [
+      "Barbell Back Squat",
+      "barbell low bar squat"
+    ],
+    "equipment": [
+      [
+        "barbell"
+      ],
+      [
+        "barbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "workout-free-videos:u03",
+        "exercise-library:eZyBC3j"
+      ],
+      [
+        "free-exercise-db-with-videos:0027"
+      ]
+    ],
+    "names": [
+      "Barbell Bent-Over Row",
+      "Barbell Underhand Bent-Over Row"
+    ],
+    "equipment": [
+      [
+        "barbell"
+      ],
+      [
+        "barbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0042",
+        "exercise-library:zG0zs85"
+      ],
+      [
+        "exercise-library:IeTIEqg"
+      ]
+    ],
+    "names": [
+      "Barbell Front Squat",
+      "barbell front chest squat"
+    ],
+    "equipment": [
+      [
+        "barbell"
+      ],
+      [
+        "barbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0162"
+      ],
+      [
+        "exercise-library:u2X71Np"
+      ]
+    ],
+    "names": [
+      "Cable One Arm Front Raise",
+      "cable front raise"
+    ],
+    "equipment": [
+      [
+        "cable"
+      ],
+      [
+        "cable"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0194",
+        "exercise-library:2IxROQ1"
+      ],
+      [
+        "exercise-library:NN8nSNT"
+      ]
+    ],
+    "names": [
+      "Cable Rope Overhead Triceps Extension",
+      "cable rope high pulley overhead tricep extension"
+    ],
+    "equipment": [
+      [
+        "cable"
+      ],
+      [
+        "cable"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0207"
+      ],
+      [
+        "exercise-library:VjYliFZ"
+      ]
+    ],
+    "names": [
+      "Reverse-Grip Cable Lat Pulldown",
+      "cable reverse-grip pushdown"
+    ],
+    "equipment": [
+      [
+        "cable"
+      ],
+      [
+        "cable"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0208"
+      ],
+      [
+        "exercise-library:PNtsX17"
+      ]
+    ],
+    "names": [
+      "Seated Cable Row (V-Grip)",
+      "cable reverse-grip straight back seated high row"
+    ],
+    "equipment": [
+      [
+        "cable"
+      ],
+      [
+        "cable"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0253",
+        "exercise-library:G70mEAJ"
+      ],
+      [
+        "free-exercise-db-with-videos:2987",
+        "exercise-library:VnfUNW7"
+      ]
+    ],
+    "names": [
+      "Chin-ups (narrow parallel grip)",
+      "Close Grip Chin-Up"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0257"
+      ],
+      [
+        "exercise-library:X7jbxra"
+      ]
+    ],
+    "names": [
+      "Hip Circles Stretch",
+      "circles knee stretch"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0271"
+      ],
+      [
+        "exercise-library:MCUhf1F"
+      ]
+    ],
+    "names": [
+      "Stability Ball Leg Elevated Crunch",
+      "crunch (on stability ball)"
+    ],
+    "equipment": [
+      [
+        "stability-ball"
+      ],
+      [
+        "stability-ball"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0285"
+      ],
+      [
+        "exercise-library:BU15nH4"
+      ]
+    ],
+    "names": [
+      "Seated Alternating Dumbbell Curl",
+      "dumbbell alternate biceps curl"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "workout-free-videos:c01",
+        "exercise-library:SpYC0Kp"
+      ],
+      [
+        "free-exercise-db-with-videos:0289",
+        "exercise-library:3d7wHyd"
+      ]
+    ],
+    "names": [
+      "Dumbbell Bench Press",
+      "Seated Dumbbell Shoulder Press"
+    ],
+    "equipment": [
+      [
+        "dumbbell",
+        "bench"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0300",
+        "exercise-library:nUwVh7b"
+      ],
+      [
+        "exercise-library:rR0LJzx"
+      ]
+    ],
+    "names": [
+      "Dumbbell Deadlift",
+      "dumbbell romanian deadlift"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0306"
+      ],
+      [
+        "exercise-library:OTgkHwR"
+      ]
+    ],
+    "names": [
+      "Dumbbell One-Arm Triceps Extension",
+      "dumbbell decline triceps extension"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "workout-free-videos:s02",
+        "free-exercise-db-with-videos:0334",
+        "exercise-library:DsgkuIt"
+      ],
+      [
+        "free-exercise-db-with-videos:0332",
+        "exercise-library:cALkHHX"
+      ]
+    ],
+    "names": [
+      "Dumbbell Lateral Raise",
+      "Dumbbell Iron Cross"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0343",
+        "exercise-library:FkBIE6a"
+      ],
+      [
+        "exercise-library:zGSIWQi"
+      ]
+    ],
+    "names": [
+      "Dumbbell Lying Leg Curl",
+      "dumbbell lying one arm press"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0361"
+      ],
+      [
+        "exercise-library:84RyJf8"
+      ]
+    ],
+    "names": [
+      "Dumbbell Alternating Shoulder Press",
+      "dumbbell one arm shoulder press"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0364"
+      ],
+      [
+        "exercise-library:q8aHNoF"
+      ]
+    ],
+    "names": [
+      "Dumbbell Behind-the-Back Wrist Curl",
+      "dumbbell one arm wrist curl"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0333",
+        "exercise-library:W6PxUkg"
+      ],
+      [
+        "free-exercise-db-with-videos:0394",
+        "exercise-library:en550rk"
+      ]
+    ],
+    "names": [
+      "Dumbbell Kickback",
+      "Dumbbell Seated Kickback"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "workout-free-videos:s02",
+        "free-exercise-db-with-videos:0334",
+        "exercise-library:DsgkuIt"
+      ],
+      [
+        "free-exercise-db-with-videos:0396",
+        "exercise-library:hxyTtWj"
+      ]
+    ],
+    "names": [
+      "Dumbbell Lateral Raise",
+      "Dumbbell Seated Lateral Raise"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0600"
+      ],
+      [
+        "free-exercise-db-with-videos:0872",
+        "exercise-library:nCU1Ekp"
+      ]
+    ],
+    "names": [
+      "Leg Raise Crunch",
+      "Reverse Crunch"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0651"
+      ],
+      [
+        "exercise-library:0V2YQjW"
+      ]
+    ],
+    "names": [
+      "Shoulder-Width Pull-Up",
+      "pull up (neutral grip)"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0668",
+        "exercise-library:UpAlold"
+      ],
+      [
+        "free-exercise-db-with-videos:drv-hip-raise-bridge"
+      ]
+    ],
+    "names": [
+      "Rear Decline Bridge",
+      "Glute Bridge"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0672"
+      ],
+      [
+        "exercise-library:NZ5Qqkz"
+      ]
+    ],
+    "names": [
+      "Reverse Dip Stretch",
+      "reverse dip"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0748",
+        "exercise-library:7zdxRTl"
+      ],
+      [
+        "exercise-library:trqKQv2"
+      ]
+    ],
+    "names": [
+      "Smith Machine Leg Press",
+      "smith bench press"
+    ],
+    "equipment": [
+      [
+        "smith-machine"
+      ],
+      [
+        "smith-machine"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0750",
+        "exercise-library:Gu2rNJd"
+      ],
+      [
+        "exercise-library:jFtipLl"
+      ]
+    ],
+    "names": [
+      "Smith Chair Squat",
+      "smith squat"
+    ],
+    "equipment": [
+      [
+        "smith-machine"
+      ],
+      [
+        "smith-machine"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0832"
+      ],
+      [
+        "exercise-library:s8nrDXF"
+      ]
+    ],
+    "names": [
+      "Weighted Leg Extension Crunch",
+      "weighted crunch"
+    ],
+    "equipment": [
+      [
+        "extra-weight"
+      ],
+      [
+        "extra-weight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0846"
+      ],
+      [
+        "exercise-library:fZFZ704"
+      ]
+    ],
+    "names": [
+      "Weighted Lying Twist",
+      "weighted russian twist"
+    ],
+    "equipment": [
+      [
+        "extra-weight"
+      ],
+      [
+        "extra-weight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0861"
+      ],
+      [
+        "exercise-library:fUBheHs"
+      ]
+    ],
+    "names": [
+      "Cable One-Arm Twisting Seated Row",
+      "cable seated row"
+    ],
+    "equipment": [
+      [
+        "cable"
+      ],
+      [
+        "cable"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0976"
+      ],
+      [
+        "exercise-library:kmVVAfu"
+      ]
+    ],
+    "names": [
+      "Band Prone Leg Curl",
+      "band concentration curl"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0980"
+      ],
+      [
+        "exercise-library:Y1MsI1l"
+      ]
+    ],
+    "names": [
+      "Band Seated Leg Extension",
+      "resistance band leg extension"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0980"
+      ],
+      [
+        "exercise-library:wSScovH"
+      ]
+    ],
+    "names": [
+      "Band Seated Leg Extension",
+      "band bent-over hip extension"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0981"
+      ],
+      [
+        "free-exercise-db-with-videos:drv-v-up"
+      ]
+    ],
+    "names": [
+      "Jackknife Floor",
+      "V-Up"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0985"
+      ],
+      [
+        "exercise-library:rbu5UUb"
+      ]
+    ],
+    "names": [
+      "Twisting Crunch",
+      "cross body crunch"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0988"
+      ],
+      [
+        "exercise-library:km0sQC0"
+      ]
+    ],
+    "names": [
+      "Band Standing Leg Curl",
+      "band one arm standing low row"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0990"
+      ],
+      [
+        "exercise-library:DKBwJrL"
+      ]
+    ],
+    "names": [
+      "Band Seated Row",
+      "band one arm twisting seated row"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0999"
+      ],
+      [
+        "exercise-library:9JprnPh"
+      ]
+    ],
+    "names": [
+      "Band Standing Calf Raise",
+      "band single leg calf raise"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1017"
+      ],
+      [
+        "exercise-library:aHDy5O5"
+      ]
+    ],
+    "names": [
+      "Band One Arm Front Raise",
+      "band y-raise"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1269",
+        "exercise-library:Pr9Rhf4"
+      ],
+      [
+        "exercise-library:UKWTJWR"
+      ]
+    ],
+    "names": [
+      "Cable Standing Fly",
+      "cable standing up straight crossovers"
+    ],
+    "equipment": [
+      [
+        "cable"
+      ],
+      [
+        "cable"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0377"
+      ],
+      [
+        "free-exercise-db-with-videos:1328",
+        "exercise-library:XUUD0Fs"
+      ]
+    ],
+    "names": [
+      "Dumbbell Rear Delt Row",
+      "Dumbbell Lying Rear Delt Row"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1330"
+      ],
+      [
+        "exercise-library:ZIViNh1"
+      ]
+    ],
+    "names": [
+      "Dumbbell Hammer Grip Incline Bench Row",
+      "dumbbell reverse grip incline bench one arm row"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1338"
+      ],
+      [
+        "exercise-library:d7z1Y7V"
+      ]
+    ],
+    "names": [
+      "Exercise Ball Sit-Up",
+      "exercise ball hug"
+    ],
+    "equipment": [
+      [
+        "stability-ball"
+      ],
+      [
+        "stability-ball"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1339"
+      ],
+      [
+        "exercise-library:sM84pE4"
+      ]
+    ],
+    "names": [
+      "Exercise Ball Spinal Stretch",
+      "exercise ball lat stretch"
+    ],
+    "equipment": [
+      [
+        "stability-ball"
+      ],
+      [
+        "stability-ball"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1393"
+      ],
+      [
+        "exercise-library:9GXrTE6"
+      ]
+    ],
+    "names": [
+      "Smith Machine Calf Raise",
+      "smith one leg floor calf raise"
+    ],
+    "equipment": [
+      [
+        "smith-machine"
+      ],
+      [
+        "smith-machine"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1405"
+      ],
+      [
+        "exercise-library:chfnQnM"
+      ]
+    ],
+    "names": [
+      "Middle Back Stretch",
+      "back pec stretch"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1408"
+      ],
+      [
+        "exercise-library:E4R8Hz1"
+      ]
+    ],
+    "names": [
+      "Band Standing Lift",
+      "band hip lift"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1564"
+      ],
+      [
+        "free-exercise-db-with-videos:1585",
+        "exercise-library:0mB6wHO"
+      ]
+    ],
+    "names": [
+      "Hip Flexor and Quadriceps Stretch",
+      "Runner's Stretch"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1723",
+        "exercise-library:3ZflifB"
+      ],
+      [
+        "exercise-library:qRZ5S1N"
+      ]
+    ],
+    "names": [
+      "Cable Triceps Pushdown",
+      "cable one arm tricep pushdown"
+    ],
+    "equipment": [
+      [
+        "cable"
+      ],
+      [
+        "cable"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1757"
+      ],
+      [
+        "exercise-library:gKozT8X"
+      ]
+    ],
+    "names": [
+      "Single Dumbbell Stiff-Leg Deadlift",
+      "dumbbell single leg deadlift"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0413",
+        "exercise-library:HsvHqgf"
+      ],
+      [
+        "free-exercise-db-with-videos:1760",
+        "exercise-library:yn8yg1r"
+      ]
+    ],
+    "names": [
+      "Dumbbell Squat",
+      "Dumbbell Goblet Squat"
+    ],
+    "equipment": [
+      [
+        "dumbbell"
+      ],
+      [
+        "dumbbell"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1771"
+      ],
+      [
+        "exercise-library:Z5YStHW"
+      ]
+    ],
+    "names": [
+      "Kneeling Triceps Stretch",
+      "overhead triceps stretch"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:1771"
+      ],
+      [
+        "exercise-library:s0HKO2I"
+      ]
+    ],
+    "names": [
+      "Kneeling Triceps Stretch",
+      "bodyweight kneeling triceps extension"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:3006"
+      ],
+      [
+        "exercise-library:0xDpB4L"
+      ]
+    ],
+    "names": [
+      "Band Hip Abduction",
+      "resistance band seated hip abduction"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:0990"
+      ],
+      [
+        "free-exercise-db-with-videos:3144",
+        "exercise-library:Nu7jqFE"
+      ]
+    ],
+    "names": [
+      "Band Seated Row",
+      "Band Straight-Back Seated Row"
+    ],
+    "equipment": [
+      [
+        "band"
+      ],
+      [
+        "band"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:drv-bench-dips"
+      ],
+      [
+        "free-exercise-db-with-videos:drv-triceps-dips",
+        "exercise-library:X6C6i5Y"
+      ]
+    ],
+    "names": [
+      "Bench Dips",
+      "Triceps Dips"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "workout-free-videos:l01",
+        "free-exercise-db-with-videos:0198",
+        "exercise-library:RVwzP10"
+      ],
+      [
+        "free-exercise-db-with-videos:drv-cable-bar-lateral-pulldown-wide-shoulder-grip"
+      ]
+    ],
+    "names": [
+      "Lat Pulldown",
+      "Wide Grip Cable Lat Pulldown"
+    ],
+    "equipment": [
+      [
+        "cable"
+      ],
+      [
+        "cable"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:drv-chin-ups-pull-ups"
+      ],
+      [
+        "exercise-library:lBDjFxJ"
+      ]
+    ],
+    "names": [
+      "Pull-Up / Chin-Up",
+      "pull-up"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:2327",
+        "exercise-library:T2mxWqc",
+        "exercise-library:YAk5dIw"
+      ],
+      [
+        "free-exercise-db-with-videos:drv-chin-ups-pull-ups"
+      ]
+    ],
+    "names": [
+      "Reverse Grip Pull-Up",
+      "Pull-Up / Chin-Up"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:drv-jackknife-pilates"
+      ],
+      [
+        "free-exercise-db-with-videos:drv-v-up"
+      ]
+    ],
+    "names": [
+      "Jackknife",
+      "V-Up"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  },
+  {
+    "kind": "alias_match",
+    "refKeys": [
+      [
+        "free-exercise-db-with-videos:new-low-impact-jumping-jack"
+      ],
+      [
+        "exercise-library:HtfCpfi"
+      ]
+    ],
+    "names": [
+      "Jumping Jack",
+      "star jump"
+    ],
+    "equipment": [
+      [
+        "bodyweight"
+      ],
+      [
+        "bodyweight"
+      ]
+    ]
+  }
+]
