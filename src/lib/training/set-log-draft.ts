@@ -2,6 +2,7 @@ import { z } from "zod";
 import { LOAD_DECIMAL_PLACES, MAX_LOAD_KG, MAX_REPS_DONE } from "@/lib/constants/training";
 import type { Workout } from "./plan-types";
 import type { FinishedSet, FinishWorkoutInput } from "./session-schema";
+import type { SuggestedLoads } from "./suggested-loads";
 
 /** One set as typed by the user (raw text keeps partial input like "12,"). */
 export const setEntrySchema = z.object({ repsDone: z.string(), load: z.string(), isDone: z.boolean() });
@@ -48,13 +49,30 @@ export function canCompleteSet(entry: SetEntry): boolean {
   return reps.isValid && reps.value !== null && parseLoadKg(entry.load).isValid;
 }
 
-function emptySets(count: number): SetEntry[] {
-  return Array.from({ length: count }, () => ({ ...EMPTY_SET }));
+const DECIMAL_POINT = ".";
+const DECIMAL_COMMA = ",";
+
+function emptySets(count: number, suggestedLoads: readonly number[] = []): SetEntry[] {
+  return Array.from({ length: count }, (_, index) => {
+    const suggested = suggestedLoads[index];
+    return { ...EMPTY_SET, load: suggested === undefined ? "" : formatLoadInput(suggested) };
+  });
 }
 
-export function createEmptyDraft(workout: Workout, date: string): WorkoutDraft {
-  const entries = Object.fromEntries(workout.exercises.map((exercise) => [exercise.id, emptySets(exercise.sets)]));
+/** Load as typed in pt-BR ("22,5"). */
+export function formatLoadInput(loadKg: number): string {
+  return String(loadKg).replace(DECIMAL_POINT, DECIMAL_COMMA);
+}
+
+/** New draft; tracked exercises get the suggested load of the latest session (step 2.7). */
+export function createEmptyDraft(workout: Workout, date: string, suggestedLoads: SuggestedLoads = {}): WorkoutDraft {
+  const entries = Object.fromEntries(workout.exercises.map((exercise) => [exercise.id, emptySets(exercise.sets, suggestedLoads[exercise.id])]));
   return { workoutId: workout.id, date, startedAt: null, entries };
+}
+
+/** New suggestions replace a draft only while the user has not edited it. */
+export function refreshUntouchedDraft(draft: WorkoutDraft, workout: Workout, suggestedLoads: SuggestedLoads): WorkoutDraft {
+  return draft.startedAt === null ? createEmptyDraft(workout, draft.date, suggestedLoads) : draft;
 }
 
 /** Records the session start on the first edit; later edits keep it. */

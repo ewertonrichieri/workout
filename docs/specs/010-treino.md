@@ -98,6 +98,14 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - **Depois:** sucesso → rascunho apagado do aparelho e "Treino finalizado e salvo."; falha → mensagem em pt-BR, rascunho mantido
 - **Arquivos:** migrations `20261125000000_table_privileges.sql` (grants, ver bug na spec 006) e `20261125000100_finish_workout_session.sql`, aplicadas no Supabase em 2026-11-25 (testadas antes com rollback); `src/lib/training/session-schema.ts`, `session-repository.ts`, `session-service.ts`, `server-session-service.ts`; `src/app/api/workout-sessions/route.ts`; `src/components/workout/finish-workout-button.tsx`
 
+## Salvar carga para progredir (2.7)
+
+- **Interruptor por exercício** no card ("Salvar carga para progredir", `role="switch"`): `PATCH /api/workout-exercises/:id` com `{ trackProgression }`; o servidor confere que o exercício é do plano ativo do usuário (senão 404) e grava só `track_progression` (único privilégio de update). Falha → volta ao estado anterior com mensagem em pt-BR
+- **Carga sugerida:** para exercícios com o interruptor ligado, a carga de cada série vem da **última sessão finalizada** com carga daquele exercício (mesmo `set_number`; série sem registro → carga da última série registrada naquela sessão). Função `public.latest_set_loads(p_exercise_ids uuid[])` (`security invoker`)
+- **Preenchimento:** a sugestão preenche o campo de carga de um rascunho **ainda não editado** (vale também quando a sugestão muda, ex.: depois de finalizar ou ligar o interruptor); o rascunho já editado nunca é sobrescrito. O campo continua editável; aviso "Carga sugerida da última sessão" no card
+- **Sem histórico:** nada é preenchido (nunca inventar carga)
+- **Arquivos:** migration `20261125010000_latest_set_loads.sql` (aplicada no Supabase em 2026-11-25, testada antes com rollback, incluindo isolamento entre usuários); `src/lib/http/send-json-request.ts` (chamadas do cliente à API); `src/lib/training/progression-repository.ts`, `suggested-loads.ts`, `workout-exercise-repository.ts`, `workout-exercise-service.ts`; `src/app/api/workout-exercises/[id]/route.ts`; `src/components/workout/track-progression-switch.tsx`
+
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
@@ -113,7 +121,7 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - [x] 2.3 — Player com fallback, com testes
 - [x] 2.4 — Registro de séries, com testes (rascunho no aparelho; gravação no banco na 2.6)
 - [x] 2.6 — Finalizar treino, com testes (função validada no Supabase com rollback)
-- [ ] 2.7 — Salvar carga para progredir
+- [x] 2.7 — Salvar carga para progredir, com testes
 - [ ] 2.8 — Histórico e gráfico
 
 ## Fim da spec

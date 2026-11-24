@@ -164,6 +164,12 @@
       "cancelButton": "Continuar treinando",
       "success": "Treino finalizado e salvo.",
       "failed": "Não foi possível salvar o treino. Seus registros continuam neste aparelho; tente de novo."
+    },
+    "progression": {
+      "switchText": "Salvar carga para progredir",
+      "switchLabel": "Salvar carga para progredir em {name}",
+      "suggestedNotice": "Carga sugerida da última sessão",
+      "failed": "Não foi possível salvar a preferência. Tente de novo."
     }
   }
 }

@@ -94,3 +94,12 @@ describe("table privileges", () => {
     expect(sql).not.toMatch(/grant [^;]* to anon/);
   });
 });
+
+describe("latest_set_loads", () => {
+  it("is a security invoker function executable only by authenticated users", () => {
+    const sql = readAllMigrations();
+    expect(sql.slice(sql.indexOf("create or replace function public.latest_set_loads"))).toContain("security invoker");
+    expect(sql).toContain("revoke all on function public.latest_set_loads(uuid[]) from public, anon");
+    expect(sql).toContain("grant execute on function public.latest_set_loads(uuid[]) to authenticated");
+  });
+});

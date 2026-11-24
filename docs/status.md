@@ -11,12 +11,13 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **TRN-001** — séries, repetições e descanso do plano atual (usuário) → `specs/010-treino.md`
-4. **2.7** — Salvar carga para progredir (esforço `medium`) → `specs/010-treino.md`
+4. **2.8** — Histórico e gráfico de progressão (esforço `medium`) → `specs/010-treino.md`
 
 ---
 
 ## Concluído recentemente
 
+- **2.7 Salvar carga para progredir** — interruptor por exercício (`PATCH /api/workout-exercises/:id`); carga da última sessão preenchida em rascunho ainda não editado (`latest_set_loads`, aplicada no Supabase) → `specs/010-treino.md`
 - **2.6 Finalizar treino** — `POST /api/workout-sessions` revalida no servidor e grava sessão + séries com check numa transação (`finish_workout_session`); confirmação com séries sem check; rascunho apagado ao salvar. Corrigido bug de permissões das tabelas (spec 006). Migrations aplicadas no Supabase → `specs/010-treino.md`
 - **2.4 Registro de séries** — linha por série (repetições, carga em kg com vírgula, check), validação com erro por campo, "Concluído" por exercício e resumo no topo; rascunho no aparelho por treino e dia até finalizar (2.6) → `specs/010-treino.md`
 - **2.3 Player com fallback** — mídias por prioridade (vídeo → GIF → YouTube via embed `youtube-nocookie`), troca automática quando uma falha, crédito da mídia exibida; no detalhe do exercício e em "Ver demonstração" no card do treino → `specs/010-treino.md`

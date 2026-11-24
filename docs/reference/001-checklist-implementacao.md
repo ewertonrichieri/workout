@@ -55,7 +55,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 2.4 | Registro de séries, repetições e carga + check de concluído (rascunho no aparelho; gravação na 2.6) | `high` | [x] |
 | 2.5 | ~~Timer de descanso~~ — removida a pedido do usuário (PRD, 2026-11-24) | — | — |
 | 2.6 | "Finalizar treino": salvar sessão e cargas em transação | `medium` | [x] |
-| 2.7 | "Salvar carga para progredir" (carga sugerida na próxima sessão) | `medium` | [ ] |
+| 2.7 | "Salvar carga para progredir" (carga sugerida na próxima sessão) | `medium` | [x] |
 | 2.8 | Histórico e gráfico de progressão por exercício | `medium` | [ ] |
 
 ### Fase 3 — Geração de treino por IA
