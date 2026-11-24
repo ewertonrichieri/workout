@@ -21,7 +21,15 @@ describe("session repository", () => {
       p_workout_id: INPUT.workoutId,
       p_started_at: INPUT.startedAt,
       p_sets: [{ workout_exercise_id: "22222222-2222-4222-8222-222222222222", set_number: 1, reps_done: 10, load_kg: 12.5 }],
+      p_readiness_checkin_id: null,
     });
+  });
+
+  it("links the check-in of the day (step 3B.1)", async () => {
+    const client = createClient({ data: "33333333-3333-4333-8333-333333333333", error: null });
+    const checkinId = "44444444-4444-4444-8444-444444444444";
+    await createSupabaseSessionRepository(client).finishSession({ ...INPUT, readinessCheckinId: checkinId });
+    expect(client.rpc).toHaveBeenCalledWith("finish_workout_session", expect.objectContaining({ p_readiness_checkin_id: checkinId }));
   });
 
   it("fails on database errors or an unexpected result", async () => {

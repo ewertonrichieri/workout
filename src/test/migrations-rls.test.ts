@@ -23,6 +23,8 @@ const USER_TABLES = [
   "workout_exercises",
   "workout_sessions",
   "set_logs",
+  "readiness_checkins",
+  "readiness_checkin_pains",
 ];
 
 function readAllMigrations(): string {
@@ -80,6 +82,25 @@ describe("finish_workout_session", () => {
     expect(definition).toContain("security invoker");
     expect(sql).toContain("revoke all on function public.finish_workout_session(uuid, timestamptz, jsonb) from public, anon");
     expect(sql).toContain("grant execute on function public.finish_workout_session(uuid, timestamptz, jsonb) to authenticated");
+  });
+});
+
+describe("readiness check-in (step 3B.1)", () => {
+  const sql = readAllMigrations();
+
+  it("saves check-ins through a security invoker function executable only by authenticated users", () => {
+    const definition = sql.slice(sql.indexOf("create or replace function public.save_readiness_checkin"));
+    expect(definition).toContain("security invoker");
+    expect(sql).toContain("revoke all on function public.save_readiness_checkin(uuid, text, text, integer, jsonb) from public, anon");
+    expect(sql).toContain("grant execute on function public.save_readiness_checkin(uuid, text, text, integer, jsonb) to authenticated");
+    expect(sql).toContain("grant select, insert on public.readiness_checkins, public.readiness_checkin_pains to authenticated");
+  });
+
+  it("links the finished session to the check-in", () => {
+    const definition = sql.slice(sql.lastIndexOf("create function public.finish_workout_session"));
+    expect(definition).toContain("p_readiness_checkin_id uuid default null");
+    expect(definition).toContain("security invoker");
+    expect(sql).toContain("grant execute on function public.finish_workout_session(uuid, timestamptz, jsonb, uuid) to authenticated");
   });
 });
 

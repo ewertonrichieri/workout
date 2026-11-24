@@ -113,6 +113,7 @@ describe("finish payload", () => {
       workoutId: "workout-A",
       startedAt: "2026-11-24T10:00:00.000Z",
       sets: [{ workoutExerciseId: FIRST, setNumber: 2, repsDone: 10, loadKg: 12.5 }],
+      readinessCheckinId: null,
     });
   });
 
@@ -137,5 +138,37 @@ describe("suggested loads in the draft", () => {
     expect(refreshUntouchedDraft(untouched, WORKOUT, { [SECOND]: [30] }).entries[SECOND][0].load).toBe("30");
     const edited = markStarted(untouched, "2026-11-24T10:00:00.000Z");
     expect(refreshUntouchedDraft(edited, WORKOUT, { [SECOND]: [30] })).toBe(edited);
+  });
+});
+
+describe("check-in of the day in the draft (step 3B.1)", () => {
+  const CHECKIN = { status: "done" as const, checkinId: "44444444-4444-4444-8444-444444444444", needsAdjustment: true, hasSeverePain: false };
+
+  it("starts without a check-in and records a done or skipped one", async () => {
+    const { setReadiness } = await import("./set-log-draft");
+    const empty = createEmptyDraft(WORKOUT, TODAY);
+    expect(empty.readiness).toBeNull();
+    expect(setReadiness(empty, CHECKIN).readiness).toEqual(CHECKIN);
+    expect(setReadiness(empty, { status: "skipped" }).readiness).toEqual({ status: "skipped" });
+  });
+
+  it("survives restoring and new suggested loads", async () => {
+    const { refreshUntouchedDraft, setReadiness } = await import("./set-log-draft");
+    const withCheckin = setReadiness(createEmptyDraft(WORKOUT, TODAY), CHECKIN);
+    expect(restoreDraft(JSON.parse(JSON.stringify(withCheckin)), WORKOUT, TODAY).readiness).toEqual(CHECKIN);
+    expect(refreshUntouchedDraft(withCheckin, WORKOUT, { [FIRST]: [20] }).readiness).toEqual(CHECKIN);
+  });
+
+  it("restores older drafts without a check-in", () => {
+    const older: Record<string, unknown> = { ...createEmptyDraft(WORKOUT, TODAY) };
+    delete older.readiness;
+    expect(restoreDraft(older, WORKOUT, TODAY).readiness).toBeNull();
+  });
+
+  it("sends the check-in id when finishing, never a skipped one", async () => {
+    const { buildFinishPayload, setReadiness } = await import("./set-log-draft");
+    const draft = updateSetEntry(updateSetEntry(createEmptyDraft(WORKOUT, TODAY), SECOND, 0, { repsDone: "8" }), SECOND, 0, { isDone: true });
+    expect(buildFinishPayload(setReadiness(draft, CHECKIN), "2026-11-24T12:00:00.000Z").readinessCheckinId).toBe(CHECKIN.checkinId);
+    expect(buildFinishPayload(setReadiness(draft, { status: "skipped" }), "2026-11-24T12:00:00.000Z").readinessCheckinId).toBeNull();
   });
 });

@@ -33,7 +33,16 @@ describe("session service: finishWorkout", () => {
       workoutId: WORKOUT_ID,
       startedAt: STARTED_AT,
       sets: [VALID_SET, { ...VALID_SET, setNumber: 2, loadKg: null }],
+      readinessCheckinId: null,
     });
+  });
+
+  it("passes the check-in of the day and rejects an invalid id", async () => {
+    const { service, sessionRepository } = setup();
+    const checkinId = "44444444-4444-4444-8444-444444444444";
+    await service.finishWorkout("user-1", { ...buildInput([VALID_SET]), readinessCheckinId: checkinId });
+    expect(sessionRepository.finishSession).toHaveBeenCalledWith(expect.objectContaining({ readinessCheckinId: checkinId }));
+    await expect(service.finishWorkout("user-1", { ...buildInput([VALID_SET]), readinessCheckinId: "abc" })).rejects.toBeInstanceOf(InvalidInputError);
   });
 
   it("rejects input outside the schema", async () => {

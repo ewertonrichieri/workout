@@ -43,6 +43,8 @@ export interface GenerationStatus {
   hasActivePlan: boolean;
   /** The latest assessment reports injuries or limitations (health notice, step 3.7). */
   hasLimitations: boolean;
+  /** Time per workout of the latest assessment (check-in default, step 3B.1); null without one. */
+  sessionMinutes: number | null;
   /** Set when the active plan is in its last days or expired (step 3.6). */
   renewal: RenewalInfo | null;
 }
@@ -125,6 +127,7 @@ export function createPlanGenerationService(dependencies: PlanGenerationDependen
         hasAssessment: assessment !== null,
         hasActivePlan: activePlan !== null,
         hasLimitations: Boolean(assessment?.limitations),
+        sessionMinutes: assessment?.sessionMinutes ?? null,
         renewal: describeRenewal(activePlan, dependencies.now()),
       };
     },

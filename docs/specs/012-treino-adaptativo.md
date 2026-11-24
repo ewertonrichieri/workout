@@ -4,7 +4,7 @@
 
 **Status:** aprovada. Decisões D1 a D7 confirmadas pelo usuário em 2026-11-24.
 
-**Pré-requisito:** V1 concluída. Falta fechar a AUTH-002 (spec 007) antes de começar a 3B.1 (`AGENTS.md`, seção 12).
+**Pré-requisito:** V1 concluída. A AUTH-002 (spec 007, teste manual do cadastro por e-mail) seguia aberta; o usuário pediu para iniciar a 3B.1 mesmo assim (2026-11-24).
 
 ## Objetivo
 
@@ -78,6 +78,19 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 - **Rascunho:** o check-in fica ligado ao rascunho do dia (spec 010, 2.4); ao finalizar, a sessão grava o `readiness_checkin_id`
 - **Falha ao salvar:** mensagem em pt-BR, os campos continuam preenchidos e o botão "Treinar sem check-in" continua disponível
 
+### Implementação (3B.1)
+
+- Migration `supabase/migrations/20261127000000_readiness_checkins.sql`: tabelas `readiness_checkins` e `readiness_checkin_pains` (RLS por dono, `select, insert`), `workout_sessions.readiness_checkin_id` (único quando preenchido: um check-in vale para uma sessão), função `save_readiness_checkin` (`security invoker`; treino precisa ser visível pela RLS) e `finish_workout_session` com o 4º parâmetro opcional `p_readiness_checkin_id` (o check-in precisa ser do mesmo treino)
+- `src/lib/constants/readiness.ts` — valores de domínio, respostas padrão (sono "ok", energia "normal", sem dor), opções de tempo
+- `src/lib/readiness/` — `readiness-schema.ts` (zod, tempo com os mesmos limites da anamnese: 10–240 min), `readiness-rules.ts` (`needsAdjustment`, `hasSeverePain`, opções de tempo), `readiness-repository.ts`, `readiness-service.ts` (treino do plano ativo, tempo da anamnese mais recente), `server-readiness-service.ts`
+- `src/app/api/readiness-checkins/route.ts` — `POST` (201, 400, 401, 404)
+- `src/components/readiness/` — `ReadinessCheckinPanel` (convite, formulário, resumo), `ReadinessCheckinForm`, `PainRegionFields`, `ReadinessOptionGroup` (grupo de opções controlado), `useReadinessForm`
+- Rascunho do dia (`set-log-draft.ts`): campo `readiness` (feito ou pulado), mantido ao restaurar e quando a carga sugerida muda; "Finalizar treino" envia o `readinessCheckinId`
+- `sendJsonRequestForData` (`src/lib/http/send-json-request.ts`): chamada do cliente que também valida o `data` da resposta
+- `GenerationStatus.sessionMinutes`: tempo da anamnese, usado como resposta padrão do tempo disponível
+- **Comportamento na 3B.1:** com `needsAdjustment`, o resumo diz "Seu check-in indica um dia mais leve. Ajuste séries e cargas como achar melhor…" (sem IA). A 3B.2 troca isso pela proposta de ajuste da IA
+- Validação: Postgres 16 local (gravação, ligação com a sessão, chamada antiga com 3 parâmetros, reuso do check-in, região inválida, treino de outro usuário, RLS) e o mesmo roteiro no Supabase real num bloco desfeito no fim (2026-11-24)
+
 ## 3B.2 — Ajuste do treino de hoje pela IA
 
 - **Quando:** só quando `needsAdjustment` é verdadeiro. Tela "Ajustando seu treino…" com carregamento longo (mesmo padrão da geração na 3.3)
@@ -150,7 +163,7 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 
 ## Checklist de aceite
 
-- [ ] 3B.1: migration (`readiness_checkins`, `readiness_checkin_pains`, `workout_sessions.readiness_checkin_id`) aplicada; schema, regra `needsAdjustment`, serviço e API com testes; tela com pular, erro e carregamento
+- [x] 3B.1: migration (`readiness_checkins`, `readiness_checkin_pains`, `workout_sessions.readiness_checkin_id`) aplicada no Supabase (2026-11-24); schema, regra `needsAdjustment`, serviço, repositório e API com testes; tela com pular, erro e carregamento, com testes (a conferência visual no navegador fica para o teste de ponta a ponta, 3B.5)
 - [ ] 3B.2: validação do ajuste (nunca aumenta, candidatos só da lista, sobra ≥ 1 exercício) com testes; revisão antes/depois com aceitar, manter e desfazer; fallback da IA; chamada real medida
 - [ ] 3B.3: `set_logs.effort` e `finish_workout_session` atualizada; regra de autorregulação com testes (sobe, desce, mantém, sem esforço); motivo no card
 - [ ] 3B.4: pré-filtro e fallback com testes; troca e desfazer na tela; gravação da troca com histórico coerente
