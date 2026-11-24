@@ -77,7 +77,6 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
 | PLN-001 | Fazer uma chamada real à Claude API (tempo, tokens, custo; ajustar esforço). Migration já aplicada no Supabase em 2026-11-24 (1.079 candidatos para uma academia comum) | `supabase/migrations/`, `src/lib/constants/plan-generation.ts` | Alta |
-| WED-001 | Aplicar a migration `20261126020000_edit_workout_exercises.sql` no Supabase | `supabase/migrations/` | Alta |
 | ASM-001 | Testar o envio da anamnese no navegador (migration já aplicada; o Supabase está sem contas de usuário no momento) | `/assessment` | Alta (antes da 3.3) |
 
 ## Atualizações
@@ -160,7 +159,7 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 
 - **Pedido:** etapa 3.4 — revisar o plano gerado e editar os exercícios de cada treino (escopo confirmado pelo usuário).
 - **Mudança:** tela `/workout/edit?workout=<rótulo>`, `PUT /api/workouts/:id/exercises`, função `save_workout_exercises` (migration `20261126020000_edit_workout_exercises.sql`), aviso de revisão depois da geração.
-- **Pendências:** WED-001 (aplicar a migration no Supabase)
+- **Pendências:** nenhuma (WED-001 fechada: migration aplicada em 2026-11-24)
 
 #### Regras da 3.4
 
@@ -186,6 +185,6 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 - [x] Função SQL validada em Postgres local (edição, ordem, remoção com histórico preservado, rollback, outro usuário)
 - [x] Editor com testes: editar, reordenar, remover e descartar, adicionar e trocar pelo catálogo, erros por campo, falha ao salvar sem perder alterações
 - [x] Aviso de revisão depois da geração e link de edição na tela de treino
-- [ ] Migration aplicada no Supabase (WED-001)
+- [x] Migration aplicada no Supabase (2026-11-24)
 
 ## Fim da spec
