@@ -43,14 +43,13 @@ Permitir entrar no app com o botão do Google ou com e-mail e senha, usando o Su
 - [x] Validação de e-mail/senha e sanitização do `next` testadas
 - [x] Serviço de autenticação com mensagens de erro em pt-BR testado com cliente falso
 - [x] `/` sem sessão redireciona para `/login`; `/api/*` sem sessão retorna 401
-- [ ] Login com Google funcionando de ponta a ponta — depende da configuração manual (AUTH-001)
+- [x] Login com Google configurado (AUTH-001, fechada em 2026-11-24): provedor ativo no Supabase e redirecionamento para o Google conferido
 - [ ] Cadastro/login com e-mail testado de ponta a ponta pelo usuário (AUTH-002) — **login** com e-mail/senha já testado de ponta a ponta em 2026-11-25 (usuário temporário confirmado pela API, apagado depois); falta só o **cadastro** com recebimento do e-mail de confirmação
 
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| AUTH-001 | Configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento | Painéis Google Cloud / Supabase | Alta |
 | AUTH-002 | Teste manual de **cadastro** por e-mail com recebimento do e-mail de confirmação (o login já foi testado de ponta a ponta em 2026-11-25). O SMTP padrão do Supabase só entrega para e-mails da equipe do projeto, por isso o teste é com o e-mail do usuário | `/login` | Alta |
 
 ## Atualizações
@@ -60,5 +59,11 @@ Permitir entrar no app com o botão do Google ou com e-mail e senha, usando o Su
 - **Pedido:** testar AUTH-001/002 no navegador.
 - **Mudança:** login por e-mail/senha, senha errada (mensagem em pt-BR), redirecionamento de página protegida e API sem sessão (401) testados no navegador contra o Supabase real; host do projeto liberado na rede do ambiente de nuvem. Google (AUTH-001) depende da configuração no Google Cloud pelo usuário.
 - **Pendências:** AUTH-001, AUTH-002 (só o cadastro)
+
+### 2026-11-24 — AUTH-001 Google configurado
+
+- **Pedido:** o usuário configurou o Google OAuth (Google Cloud + Supabase).
+- **Mudança:** conferido pela API do Supabase: `external_google_enabled = true`, `uri_allow_list` com `http://localhost:3000/auth/callback`; `/auth/v1/authorize?provider=google` responde 302 para `accounts.google.com` com o client id configurado. O clique final com a conta Google é feito pelo usuário no navegador. Quando houver deploy, incluir a URL de produção em `site_url` e na lista de redirecionamento.
+- **Pendências:** AUTH-002
 
 ## Fim da spec
