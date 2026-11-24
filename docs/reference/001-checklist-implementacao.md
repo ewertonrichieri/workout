@@ -62,9 +62,9 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 
 | # | Etapa | Esforço | Status |
 |---|---|---|---|
-| 3.1 | Anamnese: formulário + schema + gravação | `medium` | [ ] |
+| 3.1 | Anamnese: formulário + schema + gravação (inclui preferência de divisão: IA decide / full body / dividido) | `medium` | [ ] |
 | 3.2 | Wrapper da Claude API (servidor, retry, timeout, validação da saída) | `high` | [ ] |
-| 3.3 | Geração do plano: prompt + catálogo filtrado + só exercícios com mídia | `xhigh` | [ ] |
+| 3.3 | Geração do plano: prompt + catálogo filtrado + só exercícios com mídia + divisão full body ou A/B/C conforme dias/semana e preferência | `xhigh` | [ ] |
 | 3.4 | Revisão e edição manual do plano | `high` | [ ] |
 | 3.5 | Sugestão de progressão de carga pelo histórico | `medium` | [ ] |
 | 3.6 | Sugestão de renovação ao fim da validade (6 semanas) | `medium` | [ ] |
