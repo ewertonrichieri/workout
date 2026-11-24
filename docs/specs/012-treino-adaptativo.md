@@ -247,6 +247,24 @@ Remada sentada na máquina (`lever-seated-row`) com o aparelho ocupado; equipame
 | D6 | Troca na hora | Pré-filtro no servidor + IA escolhe 3, com fallback sem IA |
 | D7 | Ordem das etapas | 3B.1 → 3B.2 → 3B.3 → 3B.4 (a 3B.3 e a 3B.4 não dependem do check-in e podem vir antes, se preferir) |
 
+## Teste de ponta a ponta (3B.5, 2026-11-24)
+
+Usuário temporário criado já confirmado pela API de gestão do Supabase (SQL em `auth.users`/`auth.identities`, sem enviar e-mail) no Supabase real; app em modo produção nesta nuvem (`NODE_USE_ENV_PROXY=1`); navegador sem tela em 375px; IA real (Claude Haiku 5.5). Anamnese (hipertrofia, iniciante, 3 dias, 60 min, full body, halteres + banco + máquina + polia + peso corporal + corda) e plano gerado pela IA (9 exercícios). Passaram:
+
+- **Check-in:** sono ruim, energia baixa, 30 min, dor moderada nos joelhos → "Ajustando seu treino..." e proposta em 11–13 s (IA 7,5–9 s; 2ª chamada em diante com cache de 16 mil tokens). Proposta coerente: polichinelo (impacto) e rosca removidos, 4 exercícios com 2 séries, ~28 min
+- **Aceitar:** `session_adjustments` gravado; removidos somem, reduzidos mostram "Ajustado hoje: {motivo}"; continua ajustado depois de recarregar
+- **Desfazer:** "Voltar ao treino original" apaga os ajustes no banco e volta ao plano ("Você manteve o treino original."), ~2,8 s
+- **Manter treino original:** nada gravado, treino do plano
+- **Falha da IA:** numa chamada a IA propôs mais que o plano; o servidor recusou (`above_plan`, só no log), a tela mostrou o fallback com "Tentar de novo" e o check-in continuou gravado
+- **Troca na hora:** "Trocar exercício" na puxada frontal (polia) com "Aparelho ocupado" → 3 sugestões da IA em 3,9 s, nenhuma de polia; "No lugar de Puxada frontal hoje", sem o interruptor de carga; "Desfazer troca" volta ao original; trocar de novo funciona
+- **Esforço por série:** botões aparecem depois do check e somem ao desmarcar; "Desfazer troca" e "Voltar ao treino original" somem depois da primeira série com check
+- **Finalizar:** sessão com o check-in, ajustes ligados, `set_logs.effort` gravado, `exercise_substitutions` com motivo e séries do substituto com o `exercise_id` dele; Agenda mostra o treino
+- **Autorregulação:** supino com 2 séries "no limite" de 6 repetições (mín. 8) a 30 kg → "Sugestão: 28,5 kg" e campos preenchidos; leg press com 3×12 a 80 kg e uma série "no limite" (2ª sessão, check-in pulado) → "a carga fica em 80 kg"; no dia ajustado (2 de 3 séries) a carga só se repetiu, como manda a regra da 3.5; o exercício original da troca ficou sem carga sugerida (histórico separado)
+- **Pular check-in:** some o convite e o treino segue com o plano
+- **Sem sessão:** `POST /api/readiness-checkins`, `.../adjustment` e `.../substitutions` → 401
+
+Observações (não são defeitos): para a puxada frontal a IA pôs remadas antes da barra fixa (o padrão vertical veio em 3º); as mídias não carregam nesta nuvem (hosts não liberados). Não testados aqui (cobertos por testes automatizados): reforço de dor forte e interruptor desligado travando a carga. Usuário e todos os dados dele apagados ao final (contagens zeradas).
+
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
@@ -258,6 +276,6 @@ Remada sentada na máquina (`lever-seated-row`) com o aparelho ocupado; equipame
 - [x] 3B.2: validação do ajuste (nunca aumenta, candidatos só da lista, sobra ≥ 1 exercício) com testes; revisão antes/depois com aceitar, manter e desfazer; fallback da IA; chamada real medida (2026-11-24); migration aplicada e testada no Supabase (a conferência visual no navegador fica para a 3B.5)
 - [x] 3B.3: `set_logs.effort` e `finish_workout_session` atualizada (migration aplicada no Supabase em 2026-11-24); regra de autorregulação com testes (sobe, desce, mantém, sem esforço, interruptor desligado); motivo no card
 - [x] 3B.4: pré-filtro e fallback com testes; troca e desfazer na tela; gravação da troca com histórico coerente (migration aplicada e testada no Supabase; chamada real medida em 2026-11-24)
-- [ ] Teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
+- [x] Teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim) — 3B.5, 2026-11-24
 
 ## Fim da spec
