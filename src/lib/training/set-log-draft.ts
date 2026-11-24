@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { LOAD_DECIMAL_PLACES, MAX_LOAD_KG, MAX_REPS_DONE } from "@/lib/constants/training";
 import type { Workout } from "./plan-types";
+import type { FinishedSet, FinishWorkoutInput } from "./session-schema";
 
 /** One set as typed by the user (raw text keeps partial input like "12,"). */
 export const setEntrySchema = z.object({ repsDone: z.string(), load: z.string(), isDone: z.boolean() });
@@ -9,6 +10,8 @@ export type SetEntry = z.infer<typeof setEntrySchema>;
 export const workoutDraftSchema = z.object({
   workoutId: z.string(),
   date: z.string(),
+  /** ISO instant of the first edit (session start); `null` until the user types something. */
+  startedAt: z.string().nullable().default(null),
   /** Keyed by workout exercise id; one entry per prescribed set, in order. */
   entries: z.record(z.string(), z.array(setEntrySchema)),
 });
@@ -51,7 +54,32 @@ function emptySets(count: number): SetEntry[] {
 
 export function createEmptyDraft(workout: Workout, date: string): WorkoutDraft {
   const entries = Object.fromEntries(workout.exercises.map((exercise) => [exercise.id, emptySets(exercise.sets)]));
-  return { workoutId: workout.id, date, entries };
+  return { workoutId: workout.id, date, startedAt: null, entries };
+}
+
+/** Records the session start on the first edit; later edits keep it. */
+export function markStarted(draft: WorkoutDraft, nowIso: string): WorkoutDraft {
+  return draft.startedAt === null ? { ...draft, startedAt: nowIso } : draft;
+}
+
+/** Parsed numbers of a checked set (a checked set is always valid, see `updateSetEntry`). */
+function toFinishedSet(workoutExerciseId: string, entry: SetEntry, index: number): FinishedSet | null {
+  const reps = parseRepsDone(entry.repsDone);
+  const load = parseLoadKg(entry.load);
+  if (!entry.isDone || !reps.isValid || reps.value === null || !load.isValid) return null;
+  return { workoutExerciseId, setNumber: index + 1, repsDone: reps.value, loadKg: load.value };
+}
+
+/** Body of "Finalizar treino": only checked sets; the server validates it again. */
+export function buildFinishPayload(draft: WorkoutDraft, nowIso: string): FinishWorkoutInput {
+  const sets = Object.entries(draft.entries).flatMap(([workoutExerciseId, entries]) =>
+    entries.map((entry, index) => toFinishedSet(workoutExerciseId, entry, index)).filter((set) => set !== null),
+  );
+  return { workoutId: draft.workoutId, startedAt: draft.startedAt ?? nowIso, sets };
+}
+
+export function hasUncheckedSets(draft: WorkoutDraft): boolean {
+  return Object.values(draft.entries).some((entries) => entries.some((entry) => !entry.isDone));
 }
 
 /** Immutable update of one set; a set that can no longer be completed is unchecked. */
@@ -85,5 +113,5 @@ export function restoreDraft(stored: unknown, workout: Workout, date: string): W
   const parsed = workoutDraftSchema.safeParse(stored);
   if (!parsed.success || parsed.data.workoutId !== workout.id || parsed.data.date !== date) return createEmptyDraft(workout, date);
   const entries = Object.fromEntries(workout.exercises.map((exercise) => [exercise.id, alignSets(parsed.data.entries[exercise.id], exercise.sets)]));
-  return { workoutId: workout.id, date, entries };
+  return { workoutId: workout.id, date, startedAt: parsed.data.startedAt, entries };
 }

@@ -152,6 +152,18 @@
     "invalidLoad": "Use um número de 0 a 9999,99 kg, com até 2 casas decimais.",
     "exerciseCompleted": "Concluído",
     "completedSummary": "{done} de {total} exercícios concluídos",
-    "draftNotice": "Os registros ficam salvos neste aparelho até você finalizar o treino."
+    "draftNotice": "Os registros ficam salvos neste aparelho até você finalizar o treino.",
+    "workoutResource": "Treino",
+    "finish": {
+      "button": "Finalizar treino",
+      "pending": "Salvando...",
+      "noSets": "Marque pelo menos uma série antes de finalizar o treino.",
+      "setsMismatch": "Algumas séries não correspondem ao treino atual. Recarregue a página e tente de novo.",
+      "confirmIncomplete": "Ainda há séries sem check. Elas não serão salvas.",
+      "confirmButton": "Finalizar mesmo assim",
+      "cancelButton": "Continuar treinando",
+      "success": "Treino finalizado e salvo.",
+      "failed": "Não foi possível salvar o treino. Seus registros continuam neste aparelho; tente de novo."
+    }
   }
 }

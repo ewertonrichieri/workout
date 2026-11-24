@@ -30,3 +30,11 @@ export function writeStoredDraft(key: string, value: unknown): void {
     if (!isRecoverableStorageError(error)) throw error;
   }
 }
+
+export function removeStoredDraft(key: string): void {
+  try {
+    window.localStorage.removeItem(key);
+  } catch (error) {
+    if (!isRecoverableStorageError(error)) throw error;
+  }
+}
