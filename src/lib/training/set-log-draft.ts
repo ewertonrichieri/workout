@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { LOAD_DECIMAL_PLACES, MAX_LOAD_KG, MAX_REPS_DONE } from "@/lib/constants/training";
+import { checkinResultSchema } from "@/lib/readiness/readiness-schema";
 import type { Workout } from "./plan-types";
 import type { FinishedSet, FinishWorkoutInput } from "./session-schema";
 import type { SuggestedLoads } from "./suggested-loads";
@@ -8,6 +9,13 @@ import type { SuggestedLoads } from "./suggested-loads";
 export const setEntrySchema = z.object({ repsDone: z.string(), load: z.string(), isDone: z.boolean() });
 export type SetEntry = z.infer<typeof setEntrySchema>;
 
+/** Check-in of the day (step 3B.1): done (saved on the server) or skipped by the user. */
+export const draftReadinessSchema = z.discriminatedUnion("status", [
+  checkinResultSchema.extend({ status: z.literal("done") }),
+  z.object({ status: z.literal("skipped") }),
+]);
+export type DraftReadiness = z.infer<typeof draftReadinessSchema>;
+
 export const workoutDraftSchema = z.object({
   workoutId: z.string(),
   date: z.string(),
@@ -15,6 +23,8 @@ export const workoutDraftSchema = z.object({
   startedAt: z.string().nullable().default(null),
   /** Keyed by workout exercise id; one entry per prescribed set, in order. */
   entries: z.record(z.string(), z.array(setEntrySchema)),
+  /** `null` until the user answers or skips the check-in; older drafts have none. */
+  readiness: draftReadinessSchema.nullable().default(null),
 });
 export type WorkoutDraft = z.infer<typeof workoutDraftSchema>;
 
@@ -67,12 +77,17 @@ export function formatLoadInput(loadKg: number): string {
 /** New draft; tracked exercises get the suggested load of the latest session (step 2.7). */
 export function createEmptyDraft(workout: Workout, date: string, suggestedLoads: SuggestedLoads = {}): WorkoutDraft {
   const entries = Object.fromEntries(workout.exercises.map((exercise) => [exercise.id, emptySets(exercise.sets, suggestedLoads[exercise.id])]));
-  return { workoutId: workout.id, date, startedAt: null, entries };
+  return { workoutId: workout.id, date, startedAt: null, entries, readiness: null };
+}
+
+export function setReadiness(draft: WorkoutDraft, readiness: DraftReadiness): WorkoutDraft {
+  return { ...draft, readiness };
 }
 
 /** New suggestions replace a draft only while the user has not edited it. */
 export function refreshUntouchedDraft(draft: WorkoutDraft, workout: Workout, suggestedLoads: SuggestedLoads): WorkoutDraft {
-  return draft.startedAt === null ? createEmptyDraft(workout, draft.date, suggestedLoads) : draft;
+  if (draft.startedAt !== null) return draft;
+  return { ...createEmptyDraft(workout, draft.date, suggestedLoads), readiness: draft.readiness };
 }
 
 /** Records the session start on the first edit; later edits keep it. */
@@ -93,7 +108,8 @@ export function buildFinishPayload(draft: WorkoutDraft, nowIso: string): FinishW
   const sets = Object.entries(draft.entries).flatMap(([workoutExerciseId, entries]) =>
     entries.map((entry, index) => toFinishedSet(workoutExerciseId, entry, index)).filter((set) => set !== null),
   );
-  return { workoutId: draft.workoutId, startedAt: draft.startedAt ?? nowIso, sets };
+  const readinessCheckinId = draft.readiness?.status === "done" ? draft.readiness.checkinId : null;
+  return { workoutId: draft.workoutId, startedAt: draft.startedAt ?? nowIso, sets, readinessCheckinId };
 }
 
 export function hasUncheckedSets(draft: WorkoutDraft): boolean {
@@ -131,5 +147,5 @@ export function restoreDraft(stored: unknown, workout: Workout, date: string): W
   const parsed = workoutDraftSchema.safeParse(stored);
   if (!parsed.success || parsed.data.workoutId !== workout.id || parsed.data.date !== date) return createEmptyDraft(workout, date);
   const entries = Object.fromEntries(workout.exercises.map((exercise) => [exercise.id, alignSets(parsed.data.entries[exercise.id], exercise.sets)]));
-  return { workoutId: workout.id, date, startedAt: parsed.data.startedAt, entries };
+  return { workoutId: workout.id, date, startedAt: parsed.data.startedAt, entries, readiness: parsed.data.readiness };
 }

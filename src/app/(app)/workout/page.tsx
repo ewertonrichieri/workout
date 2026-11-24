@@ -28,6 +28,7 @@ async function WorkoutContent({ searchParams }: { searchParams: WorkoutSearchPar
       requestedLabel={typeof requested === "string" ? requested : undefined}
       showReviewNotice={params[REVIEW_QUERY_PARAM] === REVIEW_QUERY_VALUE}
       hasLimitations={status.hasLimitations}
+      sessionMinutes={status.sessionMinutes}
     />
   );
 }

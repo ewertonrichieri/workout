@@ -79,6 +79,8 @@ No MVP, as mídias são servidas por fork + jsDelivr ou pela origem (decisão em
 - Aviso de saúde (não substitui profissional)
 
 ### Fase 3B — Treino adaptativo do dia + substituição na hora (V2)
+> Promovida para `docs/specs/012-treino-adaptativo.md` (2026-11-24). O texto abaixo é o registro original da ideia.
+
 **Treino adaptativo (principal diferencial):**
 - Check-in pré-treino (~10s): sono, dor/cansaço por região, tempo disponível, energia
 - IA ajusta o treino do dia: reduz volume, troca exercícios que afetam a área dolorida, condensa para o tempo disponível

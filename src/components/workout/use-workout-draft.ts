@@ -5,7 +5,17 @@ import { APP_TIME_ZONE } from "@/lib/constants/training";
 import { buildDraftStorageKey, readStoredDraft, removeStoredDraft, writeStoredDraft } from "@/lib/training/draft-storage";
 import type { Workout } from "@/lib/training/plan-types";
 import { toDateInTimeZone } from "@/lib/training/plan-validity";
-import { createEmptyDraft, markStarted, refreshUntouchedDraft, restoreDraft, updateSetEntry, type SetEntry, type WorkoutDraft } from "@/lib/training/set-log-draft";
+import {
+  createEmptyDraft,
+  markStarted,
+  refreshUntouchedDraft,
+  restoreDraft,
+  setReadiness,
+  updateSetEntry,
+  type DraftReadiness,
+  type SetEntry,
+  type WorkoutDraft,
+} from "@/lib/training/set-log-draft";
 import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 
 export type SetChangeHandler = (workoutExerciseId: string, setIndex: number, patch: Partial<SetEntry>) => void;
@@ -16,6 +26,8 @@ const DATE_PENDING = "";
 interface WorkoutDraftState {
   draft: WorkoutDraft;
   changeSet: SetChangeHandler;
+  /** Check-in of the day (step 3B.1); does not count as the session start. */
+  changeReadiness: (readiness: DraftReadiness) => void;
   /** After "Finalizar treino": removes the stored draft and starts a new empty one. */
   clearDraft: () => void;
 }
@@ -46,10 +58,14 @@ export function useWorkoutDraft(workout: Workout, suggestedLoads: SuggestedLoads
     setDraft((current) => markStarted(updateSetEntry(current, workoutExerciseId, setIndex, patch), new Date().toISOString()));
   }, []);
 
+  const changeReadiness = useCallback((readiness: DraftReadiness) => {
+    setDraft((current) => setReadiness(current, readiness));
+  }, []);
+
   const clearDraft = useCallback(() => {
     if (storageKey) removeStoredDraft(storageKey);
     setDraft(createEmptyDraft(workout, today(), suggestedLoads));
   }, [storageKey, workout, suggestedLoads]);
 
-  return { draft, changeSet, clearDraft };
+  return { draft, changeSet, changeReadiness, clearDraft };
 }

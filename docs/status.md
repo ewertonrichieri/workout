@@ -8,14 +8,18 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar o cadastro por e-mail (o login por e-mail já foi testado de ponta a ponta) (usuário) → `specs/007-autenticacao.md`
-2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-3. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
+1. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
+2. **3B.2 Ajuste do treino do dia pela IA** (esforço `xhigh`) → `specs/012-treino-adaptativo.md`
+3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
+4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 
 ---
 
 ## Concluído recentemente
 
+- **3B.1 Check-in antes do treino** — opcional, antes da primeira série: sono, energia, tempo (padrão da anamnese) e dor por região com intensidade; `POST /api/readiness-checkins`; tabelas `readiness_checkins` e `readiness_checkin_pains`; a sessão finalizada guarda o check-in do dia; migration aplicada e testada no Supabase (bloco desfeito) → `specs/012-treino-adaptativo.md`
+- **Spec da Fase 3B (V2)** — `specs/012-treino-adaptativo.md` aprovada (D1–D7 confirmadas): check-in, ajuste do dia pela IA, esforço por série com autorregulação e troca na hora → `specs/012-treino-adaptativo.md`
+- **AUTH-001 Login com Google** — configurado pelo usuário; Google ativo no Supabase e `/auth/v1/authorize?provider=google` redireciona para o Google com o client id certo (conferido em 2026-11-24) → `specs/007-autenticacao.md`
 - **Teste de ponta a ponta (Fase 3)** — anamnese, geração real com IA, revisão, edição, progressão de carga, renovação com histórico, aviso de saúde, PWA e API sem sessão testados no navegador contra o Supabase real; ASM-001 fechada; dados temporários apagados → `specs/011-geracao-treino-ia.md`
 - **3.8 PWA instalável** — recurso nativo do Next.js: `manifest.ts`, ícones gerados (`icon.tsx` 192/512/mascarável, `apple-icon.tsx`), `themeColor`; manifest e ícones públicos no proxy; conferido com o app rodando (sem login) → `specs/011-geracao-treino-ia.md`
 - **3.7 Aviso de saúde** — na anamnese e na tela de treino, com reforço quando há limitação informada → `specs/011-geracao-treino-ia.md`
@@ -54,7 +58,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
-- **0.7 Autenticação** — código na `main`; etapa pendente até AUTH-001/AUTH-002 (configuração do Google e teste manual) → `specs/007-autenticacao.md`
+- **0.7 Autenticação** — código na `main`; Google configurado (AUTH-001 fechada); falta só a AUTH-002 (teste do cadastro por e-mail) → `specs/007-autenticacao.md`
 
 ---
 
@@ -63,7 +67,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
-- **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`
 - **CAT-003** — licença dos GIFs da Exercise Library a confirmar → `specs/009-catalogo-exercicios.md`
@@ -84,7 +87,7 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 
 ### Planning
 
-- Detalhes de V2/V3 → `planning/001-planejamento-inicial.md`
+- Fase 3B promovida para `specs/012-treino-adaptativo.md`; Fase 4 e V3 → `planning/001-planejamento-inicial.md`
 
 ### Improvements
 

@@ -352,5 +352,54 @@
     "title": "Aviso de saúde",
     "notice": "Este plano é gerado por IA e não substitui a orientação de um profissional de educação física ou de saúde. Se você tem lesões, dores ou alguma condição médica, consulte um profissional antes de começar. Pare o exercício se sentir dor.",
     "limitationsNotice": "Você informou uma lesão ou limitação: procure orientação profissional antes de seguir o plano."
+  },
+  "readiness": {
+    "promptTitle": "Como você está hoje?",
+    "promptDescription": "Um check-in rápido ajuda a adaptar o treino ao seu dia. É opcional.",
+    "startButton": "Fazer check-in",
+    "skipButton": "Pular check-in",
+    "formLabel": "Check-in antes do treino",
+    "sleepLegend": "Como você dormiu?",
+    "sleep": {
+      "poor": "Mal",
+      "ok": "Ok",
+      "good": "Bem"
+    },
+    "energyLegend": "Sua energia agora",
+    "energy": {
+      "low": "Baixa",
+      "normal": "Normal",
+      "high": "Alta"
+    },
+    "minutesLegend": "Tempo disponível hoje",
+    "minutesOption": "{minutes} min",
+    "painLegend": "Dor ou cansaço em alguma região?",
+    "painHint": "Marque só se sentir algo. Sem marcação = nenhuma dor.",
+    "regions": {
+      "neck": "Pescoço",
+      "shoulders": "Ombros",
+      "upper_back": "Costas (parte de cima)",
+      "lower_back": "Lombar",
+      "chest": "Peito",
+      "elbows": "Cotovelos",
+      "wrists": "Punhos",
+      "hips": "Quadril",
+      "knees": "Joelhos",
+      "ankles": "Tornozelos"
+    },
+    "intensityLegend": "Intensidade em {region}",
+    "intensity": {
+      "mild": "Leve",
+      "moderate": "Moderada",
+      "severe": "Forte"
+    },
+    "submitButton": "Salvar check-in",
+    "submitting": "Salvando...",
+    "failed": "Não foi possível salvar o check-in. Tente de novo ou treine sem check-in.",
+    "skipAfterFailure": "Treinar sem check-in",
+    "doneTitle": "Check-in feito",
+    "doneNormal": "Tudo certo para treinar como planejado. Bom treino!",
+    "doneLighter": "Seu check-in indica um dia mais leve. Ajuste séries e cargas como achar melhor e respeite seus limites.",
+    "severePainNotice": "Você marcou dor forte: evite exercícios que forcem essa região e, se a dor continuar, procure orientação profissional."
   }
 }

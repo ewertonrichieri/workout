@@ -20,6 +20,8 @@ interface WorkoutPlanViewProps {
   showReviewNotice?: boolean;
   /** Latest assessment reports injuries or limitations (step 3.7). */
   hasLimitations?: boolean;
+  /** Default answer of the pre-workout check-in (step 3B.1). */
+  sessionMinutes?: number | null;
 }
 
 const EDIT_LINK_CLASS =
@@ -38,9 +40,23 @@ function EmptyWorkout() {
   return <EmptyState title={translate("training.emptyWorkoutTitle")} description={translate("training.emptyWorkoutDescription")} />;
 }
 
-function SelectedWorkout({ workout, overview }: { workout: Workout; overview: ActivePlanOverview }) {
+interface SelectedWorkoutProps {
+  workout: Workout;
+  overview: ActivePlanOverview;
+  sessionMinutes: number | null;
+}
+
+function SelectedWorkout({ workout, overview, sessionMinutes }: SelectedWorkoutProps) {
   if (workout.exercises.length === 0) return <EmptyWorkout />;
-  return <WorkoutTracker key={workout.id} workout={workout} suggestedLoads={overview.suggestedLoads} loadIncreases={overview.loadIncreases} />;
+  return (
+    <WorkoutTracker
+      key={workout.id}
+      workout={workout}
+      suggestedLoads={overview.suggestedLoads}
+      loadIncreases={overview.loadIncreases}
+      sessionMinutes={sessionMinutes}
+    />
+  );
 }
 
 function WorkoutHeading({ workouts, selected }: { workouts: readonly Workout[]; selected: Workout }) {
@@ -49,7 +65,7 @@ function WorkoutHeading({ workouts, selected }: { workouts: readonly Workout[]; 
 }
 
 /** Daily workout screen: tabs (when split), plan validity and exercise cards by category. */
-export function WorkoutPlanView({ overview, requestedLabel, showReviewNotice = false, hasLimitations = false }: WorkoutPlanViewProps) {
+export function WorkoutPlanView({ overview, requestedLabel, showReviewNotice = false, hasLimitations = false, sessionMinutes = null }: WorkoutPlanViewProps) {
   const { plan, validity } = overview;
   const selected = selectWorkout(plan.workouts, requestedLabel);
   return (
@@ -62,7 +78,7 @@ export function WorkoutPlanView({ overview, requestedLabel, showReviewNotice = f
         <>
           <WorkoutHeading workouts={plan.workouts} selected={selected} />
           <EditWorkoutLink label={selected.label} />
-          <SelectedWorkout workout={selected} overview={overview} />
+          <SelectedWorkout workout={selected} overview={overview} sessionMinutes={sessionMinutes} />
         </>
       ) : (
         <EmptyWorkout />

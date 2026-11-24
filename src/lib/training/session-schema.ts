@@ -15,7 +15,9 @@ export const finishWorkoutInputSchema = z.object({
   workoutId: z.uuid(),
   startedAt: z.iso.datetime(),
   sets: z.array(finishedSetSchema).max(MAX_SETS_PER_SESSION),
+  /** Check-in of the day (step 3B.1); the database checks that it belongs to this workout. */
+  readinessCheckinId: z.uuid().nullable().default(null),
 });
 
 export type FinishedSet = z.infer<typeof finishedSetSchema>;
-export type FinishWorkoutInput = z.infer<typeof finishWorkoutInputSchema>;
+export type FinishWorkoutInput = z.input<typeof finishWorkoutInputSchema>;

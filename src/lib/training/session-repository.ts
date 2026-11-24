@@ -29,6 +29,7 @@ export function createSupabaseSessionRepository(client: SupabaseClient): Session
         p_workout_id: input.workoutId,
         p_started_at: input.startedAt,
         p_sets: toSetRows(input),
+        p_readiness_checkin_id: input.readinessCheckinId ?? null,
       });
       const sessionId = sessionIdSchema.safeParse(data);
       if (error || !sessionId.success) throw new RepositoryError(translate("errors.internal"), "sessions.finishSession");
