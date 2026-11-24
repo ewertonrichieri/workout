@@ -68,6 +68,12 @@ describe("structured output client", () => {
     expect(options.signal).toBeInstanceOf(AbortSignal);
   });
 
+  it("sends the model chosen by the caller", async () => {
+    const { service, stream } = setup([textMessage('{"title":"Plano","days":3}')]);
+    await service.generate({ ...REQUEST, model: "claude-haiku-5-5" });
+    expect(stream.mock.calls[0][0]).toMatchObject({ model: "claude-haiku-5-5" });
+  });
+
   it("caches the system prompt when asked", async () => {
     const { service, stream } = setup([textMessage('{"title":"Plano","days":3}')]);
     await service.generate({ ...REQUEST, cacheSystem: true });

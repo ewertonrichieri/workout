@@ -2,7 +2,8 @@ import type { ClaudeEffort } from "@/lib/constants/ai";
 
 /** Plan generation by AI (spec 011, step 3.3). */
 export const PLAN_GENERATION_OPERATION = "plan.generate";
-/** Fits the 120 s AI budget; revisit after measuring a real call (PLN-001). */
+/** Cheaper model chosen by the user after the real call (PLN-001, 2026-11-24): ~16 s, ~US$ 0.005 per plan. */
+export const PLAN_GENERATION_MODEL = "claude-haiku-5-5";
 export const PLAN_GENERATION_EFFORT: ClaudeEffort = "medium";
 
 /** Split rule (user decision 2026-11-24). */
