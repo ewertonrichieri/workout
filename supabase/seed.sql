@@ -527,7 +527,7 @@ insert into public.exercises (slug, name_pt, name_en, difficulty, instructions_p
   ('dumbbell-seated-one-arm-rotate', 'dumbbell seated one arm rotate', 'dumbbell seated one arm rotate', null, null),
   ('assisted-standing-triceps-extension-with-towel', 'assisted standing triceps extension (with towel)', 'assisted standing triceps extension (with towel)', null, null),
   ('dumbbell-clean', 'dumbbell clean', 'dumbbell clean', null, null),
-  ('lever-seated-row', 'lever seated row', 'lever seated row', null, null),
+  ('lever-seated-row', 'Remada sentada na máquina', 'lever seated row', null, null),
   ('dumbbell-standing-concentration-curl', 'dumbbell standing concentration curl', 'dumbbell standing concentration curl', null, null),
   ('barbell-rollerout', 'barbell rollerout', 'barbell rollerout', null, null),
   ('assisted-standing-chin-up', 'assisted standing chin-up', 'assisted standing chin-up', null, null),
