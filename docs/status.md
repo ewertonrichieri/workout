@@ -1,6 +1,6 @@
 # Status Geral — Workout (Personal Trainer com IA)
 
-**Data da última atualização:** 2026-11-25
+**Data da última atualização:** 2026-11-26
 
 ---
 
@@ -11,12 +11,14 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar o cadastro por e-mail (o login por e-mail já foi testado de ponta a ponta) (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
-4. **3.1** — Anamnese: formulário + schema + gravação (esforço `medium`) — criar spec da Fase 3
+4. **ASM-001** — aplicar a migration da anamnese no Supabase e testar o envio no navegador → `specs/011-geracao-treino-ia.md`
+5. **3.2** — Wrapper da Claude API (esforço `high`) → `specs/011-geracao-treino-ia.md`
 
 ---
 
 ## Concluído recentemente
 
+- **3.1 Anamnese** — `/assessment` (objetivo, nível, dias, tempo, divisão, equipamentos, limitações) com erros por campo e preenchida com a última anamnese; `POST /api/assessments` grava anamnese + equipamentos numa transação (`save_assessment`); link no Início e no Perfil. Migration validada em Postgres local; aplicar no Supabase: ASM-001 → `specs/011-geracao-treino-ia.md`
 - **Teste de ponta a ponta (Fases 0–2)** — login por e-mail, treino, finalizar, carga sugerida, Agenda e evolução testados no navegador contra o Supabase real; corrigidos `Date.now()` na pré-renderização e miniatura quebrada → `specs/010-treino.md`
 - **2.8 Histórico e gráfico** — Agenda com treinos finalizados (paginada); `/progress/[slug]` com gráfico da maior carga por sessão (tooltip por toque/mouse/setas) e tabela acessível; link "Ver evolução" no card e no detalhe do exercício → `specs/010-treino.md`
 - **2.7 Salvar carga para progredir** — interruptor por exercício (`PATCH /api/workout-exercises/:id`); carga da última sessão preenchida em rascunho ainda não editado (`latest_set_loads`, aplicada no Supabase) → `specs/010-treino.md`
@@ -54,6 +56,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
+- **ASM-001** — aplicar a migration da anamnese no Supabase e testar no navegador → `specs/011-geracao-treino-ia.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
