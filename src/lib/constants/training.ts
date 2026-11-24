@@ -11,3 +11,11 @@ export const APP_TIME_ZONE = "America/Sao_Paulo";
 
 /** URL search param that selects the workout tab by label (e.g. /workout?workout=B). */
 export const WORKOUT_QUERY_PARAM = "workout";
+
+/** Set logging limits (step 2.4); load mirrors `set_logs.load_kg numeric(6, 2)`. */
+export const MAX_REPS_DONE = 999;
+export const MAX_LOAD_KG = 9999.99;
+export const LOAD_DECIMAL_PLACES = 2;
+
+/** Device-only draft of the sets typed before "Finalizar treino" (step 2.6). */
+export const WORKOUT_DRAFT_STORAGE_PREFIX = "workout-draft";

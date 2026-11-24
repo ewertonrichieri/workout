@@ -60,3 +60,8 @@ export function describeValidityProgress(progress: number): { percent: number; t
 export function buildWorkoutHref(label: string): string {
   return `${APP_ROUTES.workout}?${new URLSearchParams({ [WORKOUT_QUERY_PARAM]: label })}`;
 }
+
+/** Target reps used as input hint: "10" or "8 a 12". */
+export function describeRepsTarget({ repsMin, repsMax }: Pick<WorkoutExercise, "repsMin" | "repsMax">): string {
+  return repsMin === repsMax ? translate("training.repsTargetOne", { count: repsMin }) : translate("training.repsTargetRange", { min: repsMin, max: repsMax });
+}
