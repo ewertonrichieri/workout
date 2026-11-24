@@ -128,6 +128,21 @@ Resultado sobre os dados reais (2026-11-23):
 - Validação manual (2026-11-24) em Postgres 16 local: migrations + seed aplicados duas vezes sem erro → 1.298 exercícios, 1.482 mídias, 3.787 músculos, 1.311 equipamentos, 1.486 referências de origem, 0 exercício sem mídia
 - **Aplicar no Supabase** (credencial administrativa, fora do app): `npx supabase db push --include-seed` (CAT-004)
 
+## Repositório e API (1.6)
+
+- Busca no banco: função `public.search_exercises(search_text, muscle_slug, equipment_slug, page_limit, page_offset)` (migration `20261124010000_search_exercises.sql`): sem diferenciar acento/maiúscula (`unaccent`), busca em `name_pt` e `name_en`, filtros por músculo e equipamento, **só exercícios com mídia ativa**, ordem por nome, total via `count(*) over ()`; `security invoker` (RLS vale) e execução só para `authenticated`; `%` e `_` digitados são tratados como texto
+- Código: `src/lib/catalog/exercises/` — `exercise-search-schema.ts` (entrada), `exercise-row-mapping.ts` (validação das linhas do banco), `exercise-repository.ts` (Supabase), `exercise-catalog-service.ts` (regras), `server-exercise-catalog.ts` (composition root); `src/lib/http/api-handler.ts` (envelope JSON padrão + log)
+- Limites em `src/lib/constants/catalog.ts`: página padrão 20, máximo 50, busca até 80 caracteres
+
+| Rota | Parâmetros | Resposta (`data`) |
+|---|---|---|
+| `GET /api/exercises` | `q`, `muscle` (slug), `equipment` (slug), `page`, `pageSize` | `{ items, page, pageSize, total, totalPages }` |
+| `GET /api/exercises/:slug` | — | exercício com músculos (primários/secundários), equipamentos e mídias ativas por prioridade |
+| `GET /api/exercise-filters` | — | `{ muscles, equipment }` com nomes pt-BR |
+
+- Erros: parâmetro inválido → 400; slug inexistente ou malformado → 404 ("Exercício não encontrado."); sem sessão → 401 (proxy central); falha do banco → 500 sem detalhes internos, com log de rota e operação
+- Validação manual (2026-11-24): função testada no Postgres local com o seed (`elevacao lateral` → 6; `supino` + peito + halteres → 7; `100%` → 0); `next build` ok; com `next start`, API sem sessão → 401 e página → redirect para login
+
 ## Checklist de aceite
 
 - [x] 1.1 — Fontes analisadas (formato, campos, mídia, licença) e decisões registradas nesta spec
@@ -135,7 +150,7 @@ Resultado sobre os dados reais (2026-11-23):
 - [x] 1.3 — Normalização, dedup e tradução (limitações: CAT-005, CAT-006, CAT-007)
 - [x] 1.4 — URLs das mídias com `source`/`license`/`priority` (depende de CAT-002 para as URLs do jsDelivr)
 - [x] 1.5 — Seed versionado gerado e validado (aplicar no Supabase: CAT-004)
-- [ ] 1.6 — Repositório + API
+- [x] 1.6 — Repositório + API (aplicar migration no Supabase: CAT-004)
 - [ ] 1.7 — Tela de busca/visualização
 
 ## Decisões
@@ -158,7 +173,7 @@ O banco guarda apenas a `url` em `exercise_media`; trocar a hospedagem depois é
 |---|---|---|---|
 | CAT-001 | Copiar vídeos do Free Exercise DB para um Cloudflare R2 próprio (hoje dependemos do R2 do autor) e reapontar as URLs — fase futura (etapa 6.5) | `exercise_media.url` | Média (antes da abertura) |
 | CAT-003 | Licença dos GIFs da Exercise Library: README diz MIT, mas não há LICENSE e a origem é o ExerciseDB (comercial). Confirmar ou desligar a fonte antes da abertura (6.1) | `exercise_media.license` | Alta (antes da abertura) |
-| CAT-004 | Aplicar a migration `20261124000000_exercise_source_refs.sql` e o seed no Supabase (sem credencial do banco nesta sessão): `npx supabase db push --include-seed` | `supabase/` | Alta (antes de usar a tela de exercícios) |
+| CAT-004 | Aplicar as migrations `20261124000000_exercise_source_refs.sql` e `20261124010000_search_exercises.sql` e o seed no Supabase (sem credencial do banco nesta sessão): `npx supabase db push --include-seed` | `supabase/` | Alta (antes de usar a tela de exercícios) |
 | CAT-005 | Traduzir os nomes dos 951 exercícios só com GIF (Exercise Library), listados em `seed-data/catalog/review/untranslated-names.json`; até lá a tela usa o nome em inglês | `seed-data/catalog/translations/exercise-names.pt-BR.json` | Média |
 | CAT-006 | Traduzir as instruções para pt-BR (`instructions_pt`); hoje só existem em inglês (`instructionStepsEn` no `catalog.json`) | `seed-data/catalog/` | Média (antes da tela de treino, Fase 2) |
 | CAT-007 | Revisar os 65 candidatos a duplicata em `seed-data/catalog/review/duplicate-candidates.json` (hoje mantidos separados) | `seed-data/catalog/curation/duplicate-decisions.json` | Baixa |

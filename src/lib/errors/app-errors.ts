@@ -52,3 +52,13 @@ export class ExternalServiceError extends AppError {
     super(message, HTTP_STATUS.BAD_GATEWAY);
   }
 }
+
+/** Database read/write failure; `operation` is for logs only, never shown to the user. */
+export class RepositoryError extends AppError {
+  constructor(
+    message: string,
+    readonly operation: string,
+  ) {
+    super(message, HTTP_STATUS.INTERNAL_SERVER_ERROR);
+  }
+}

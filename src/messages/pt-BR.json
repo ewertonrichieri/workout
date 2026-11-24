@@ -65,5 +65,8 @@
     "notFound": "{resource} não encontrado.",
     "rateLimited": "Muitas tentativas. Aguarde um pouco e tente de novo.",
     "externalService": "O serviço está indisponível no momento. Tente novamente em instantes."
+  },
+  "catalog": {
+    "exerciseResource": "Exercício"
   }
 }
