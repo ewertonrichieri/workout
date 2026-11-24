@@ -3,4 +3,5 @@ export const APP_ROUTES = {
   workout: "/workout",
   schedule: "/schedule",
   profile: "/profile",
+  exercises: "/exercises",
 } as const;

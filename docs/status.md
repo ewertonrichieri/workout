@@ -11,12 +11,13 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **CAT-004** — aplicar migrations (`exercise_source_refs`, `search_exercises`) e seed no Supabase (usuário: `npx supabase db push --include-seed`) → `specs/009-catalogo-exercicios.md`
-4. **1.7** — Tela de busca/visualização de exercícios (esforço `medium`) → `specs/009-catalogo-exercicios.md`
+4. **2.1** — Spec do treino + repositórios (esforço `medium`) → `reference/001-checklist-implementacao.md`
 
 ---
 
 ## Concluído recentemente
 
+- **1.7 Tela de exercícios** — `/exercises` (busca, filtros, paginação) e `/exercises/[slug]` (mídia, músculos, equipamentos, crédito), estados de carregamento/vazio/erro; link na tela de Treino → `specs/009-catalogo-exercicios.md`
 - **1.6 API de exercícios** — função `search_exercises` (sem acento, filtros, só com mídia), repositório, serviço e rotas `/api/exercises`, `/api/exercises/:slug`, `/api/exercise-filters` → `specs/009-catalogo-exercicios.md`
 - **1.5 Seed do catálogo** — `supabase/seed.sql` gerado (`npm run catalog:seed`), idempotente, validado em Postgres local (1.298 exercícios, 0 sem mídia); aplicar no Supabase: CAT-004 → `specs/009-catalogo-exercicios.md`
 - **1.4 URLs das mídias** — `media-hosting.json` (fork + commit fixo, licença e prioridade por fonte) e resolução das URLs; jsDelivr depende dos forks (CAT-002) → `specs/009-catalogo-exercicios.md`

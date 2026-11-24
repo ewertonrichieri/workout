@@ -4,7 +4,7 @@ import { render, screen } from "@testing-library/react";
 const usePathname = vi.fn(() => "/workout");
 vi.mock("next/navigation", () => ({ usePathname: () => usePathname() }));
 
-const { BottomNavigation } = await import("@/components/navigation/bottom-navigation");
+const { BottomNavigation, BottomNavigationBar } = await import("@/components/navigation/bottom-navigation");
 
 describe("BottomNavigation", () => {
   it("renders the four sections with their routes", () => {
@@ -33,5 +33,11 @@ describe("BottomNavigation", () => {
   it("has an accessible navigation landmark", () => {
     render(<BottomNavigation />);
     expect(screen.getByRole("navigation", { name: "Navegação principal" })).toBeInTheDocument();
+  });
+
+  it("renders usable links without an active item while the route is unknown", () => {
+    render(<BottomNavigationBar pathname={null} />);
+    expect(screen.getAllByRole("link")).toHaveLength(4);
+    screen.getAllByRole("link").forEach((link) => expect(link).not.toHaveAttribute("aria-current"));
   });
 });

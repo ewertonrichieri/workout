@@ -30,9 +30,8 @@ function isActiveRoute(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function BottomNavigation() {
-  const pathname = usePathname();
-
+/** Navigation bar; `pathname` is null while the current route is still unknown (no active item). */
+export function BottomNavigationBar({ pathname }: { pathname: string | null }) {
   return (
     <nav
       aria-label={translate("navigation.label")}
@@ -40,7 +39,7 @@ export function BottomNavigation() {
     >
       <ul className="mx-auto grid max-w-lg grid-cols-4">
         {NAVIGATION_ITEMS.map((item) => {
-          const isActive = isActiveRoute(pathname, item.href);
+          const isActive = pathname !== null && isActiveRoute(pathname, item.href);
           return (
             <li key={item.href}>
               <Link
@@ -59,4 +58,8 @@ export function BottomNavigation() {
       </ul>
     </nav>
   );
+}
+
+export function BottomNavigation() {
+  return <BottomNavigationBar pathname={usePathname()} />;
 }
