@@ -10,7 +10,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-3. **TRN-001** — decidir como o plano entra antes da Fase 3 (usuário) → `specs/010-treino.md`
+3. **TRN-001** — séries, repetições e descanso do plano atual (usuário) → `specs/010-treino.md`
 4. **2.2** — Tela de treino (esforço `high`) → `specs/010-treino.md`
 
 ---
@@ -47,7 +47,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **TRN-001** — como o plano entra antes da Fase 3 → `specs/010-treino.md`
+- **TRN-001** — importar o plano atual (faltam séries, repetições e descanso) → `specs/010-treino.md`
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
 - **AUTH-002** — teste manual de cadastro/login por e-mail → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`

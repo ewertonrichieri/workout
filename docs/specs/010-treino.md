@@ -15,13 +15,13 @@ Referência de UX (PRD): tela "Treino Diário" — abas A/B/C, validade com barr
 - 2.2 — Tela de treino (abas, validade, barra de progresso, cards por categoria)
 - 2.3 — Player de mídia com fallback (vídeo → GIF → YouTube)
 - 2.4 — Registro de séries/repetições/carga + check de concluído
-- 2.5 — Timer de descanso
 - 2.6 — "Finalizar treino": sessão e séries gravadas em transação
 - 2.7 — "Salvar carga para progredir": última carga vira a sugerida na próxima sessão
 - 2.8 — Histórico e gráfico de progressão por exercício
 
 **Não entra:**
 - Criar ou editar plano (geração por IA na 3.3; edição manual na 3.4) — ver TRN-001
+- Timer de descanso (removido a pedido do usuário; o descanso prescrito aparece só como informação)
 - Treino adaptativo, substituição na hora (V2)
 
 ## Modelo (já existente, spec 006)
@@ -57,7 +57,9 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| TRN-001 | Como o plano entra antes da Fase 3 (IA/edição manual): sem plano ativo a Fase 2 só mostra o estado vazio. Decisão do usuário (ex.: importar o plano atual do app de referência) | `plans`, `workouts`, `workout_exercises` | Alta (antes de testar a 2.2 com dados reais) |
+| TRN-001 | Importar o plano atual do usuário (decidido: treino único "Full body", 12 exercícios já escolhidos no catálogo — ver abaixo). Falta o usuário informar séries, repetições e descanso | `plans`, `workouts`, `workout_exercises` | Alta (antes de testar a 2.2 com dados reais) |
+
+**Plano atual do usuário (TRN-001), exercícios escolhidos no catálogo:** Supino reto com halteres (`dumbbell-bench-press`); Abdominal em V (`v-up`, no lugar do "abdominal remador"); Remada sentada na máquina (`lever-seated-row`); Prancha frontal (`front-plank`); Crucifixo reto com halteres (`dumbbell-fly`); Avanço com halteres (`dumbbell-lunge`); Elevação frontal com halteres (`dumbbell-front-raise`); Agachamento com halteres (`dumbbell-squat`); Elevação lateral com halteres (`dumbbell-lateral-raise`); Rosca direta com halteres (`dumbbell-biceps-curl`); Tríceps corda na polia (`cable-rope-triceps-pushdown`); Panturrilha em pé com halteres (`dumbbell-standing-calf-raise`).
 
 ## Checklist de aceite
 
@@ -65,7 +67,6 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - [ ] 2.2 — Tela de treino
 - [ ] 2.3 — Player com fallback
 - [ ] 2.4 — Registro de séries
-- [ ] 2.5 — Timer de descanso
 - [ ] 2.6 — Finalizar treino
 - [ ] 2.7 — Salvar carga para progredir
 - [ ] 2.8 — Histórico e gráfico
