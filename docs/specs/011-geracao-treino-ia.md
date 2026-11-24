@@ -70,7 +70,7 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 - [x] Formulário com erros por campo, carregamento, erro e sucesso; preenchido com a anamnese mais recente
 - [x] Acessível (rótulos, `fieldset`/`legend`, foco visível, toque ≥ 44px)
 - [x] Migration aplicada no Supabase (2026-11-24) e `save_assessment` testada lá num bloco desfeito no fim (gravação, equipamento desconhecido, RLS)
-- [ ] Envio testado no navegador (ver ASM-001)
+- [x] Envio testado no navegador (teste de ponta a ponta, 2026-11-24)
 
 ## Teste de ponta a ponta (2026-11-24)
 
