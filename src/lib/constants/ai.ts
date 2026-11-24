@@ -1,7 +1,8 @@
 import { MAX_RETRY_ATTEMPTS, RETRY_BASE_DELAY_MS } from "@/lib/constants/retry";
 
 /** Claude API defaults (spec 011, step 3.2). */
-export const CLAUDE_MODEL = "claude-opus-5-5";
+/** Cheaper model chosen by the user after the real call (PLN-001, 2026-11-24). */
+export const CLAUDE_MODEL = "claude-haiku-5-5";
 export const CLAUDE_EFFORTS = ["low", "medium", "high", "xhigh", "max"] as const;
 export type ClaudeEffort = (typeof CLAUDE_EFFORTS)[number];
 export const DEFAULT_CLAUDE_EFFORT: ClaudeEffort = "high";

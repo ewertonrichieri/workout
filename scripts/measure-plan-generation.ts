@@ -6,8 +6,8 @@ import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 import type { SavedAssessment } from "../src/lib/assessment/assessment-schema";
 import { parseClaudeConfig } from "../src/lib/config/claude-config";
-import { CLAUDE_EFFORTS } from "../src/lib/constants/ai";
-import { PLAN_GENERATION_EFFORT, PLAN_GENERATION_MODEL, PLAN_GENERATION_OPERATION } from "../src/lib/constants/plan-generation";
+import { CLAUDE_EFFORTS, CLAUDE_MODEL } from "../src/lib/constants/ai";
+import { PLAN_GENERATION_EFFORT, PLAN_GENERATION_OPERATION } from "../src/lib/constants/plan-generation";
 import { createStructuredOutputClient } from "../src/lib/integrations/claude/structured-output-client";
 import { createLogger } from "../src/lib/logger/logger";
 import { generatedPlanSchema } from "../src/lib/plan-generation/generated-plan-schema";
@@ -61,7 +61,7 @@ function computeCostUsd(usage: z.infer<typeof usageLineSchema>, model: string): 
 
 async function main() {
   const [candidatesPath, effortArgument, modelArgument] = process.argv.slice(2);
-  const model = modelArgument ?? PLAN_GENERATION_MODEL;
+  const model = modelArgument ?? CLAUDE_MODEL;
   if (!candidatesPath) throw new Error("usage: measure-plan-generation.ts <candidates.json> [effort]");
   const effort = z.enum(CLAUDE_EFFORTS).parse(effortArgument ?? PLAN_GENERATION_EFFORT);
   const candidates = await readCandidates(candidatesPath);
