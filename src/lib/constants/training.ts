@@ -22,3 +22,12 @@ export const WORKOUT_DRAFT_STORAGE_PREFIX = "workout-draft";
 
 /** Upper bound of sets accepted when finishing a workout (guards the request size). */
 export const MAX_SETS_PER_SESSION = 200;
+
+/** History (step 2.8): sessions per page in "Agenda" and how much progression is shown. */
+export const HISTORY_PAGE_SIZE = 20;
+export const MAX_PROGRESS_SESSIONS = 50;
+/** Set logs read to build the progression (several per session). */
+export const MAX_PROGRESS_SET_LOGS = 1000;
+
+/** Locale of numbers shown to the user (pt-BR only in the MVP). */
+export const APP_LOCALE = "pt-BR";

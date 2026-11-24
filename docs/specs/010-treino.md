@@ -106,6 +106,16 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - **Sem histórico:** nada é preenchido (nunca inventar carga)
 - **Arquivos:** migration `20261125010000_latest_set_loads.sql` (aplicada no Supabase em 2026-11-25, testada antes com rollback, incluindo isolamento entre usuários); `src/lib/http/send-json-request.ts` (chamadas do cliente à API); `src/lib/training/progression-repository.ts`, `suggested-loads.ts`, `workout-exercise-repository.ts`, `workout-exercise-service.ts`; `src/app/api/workout-exercises/[id]/route.ts`; `src/components/workout/track-progression-switch.tsx`
 
+## Histórico e gráfico (2.8)
+
+- **Agenda** (`/schedule`): treinos finalizados, mais recentes primeiro, paginados (`HISTORY_PAGE_SIZE`): data (DD/MM/AAAA no `APP_TIME_ZONE`), rótulo do treino ("Treino A"; treino apagado → "Treino removido"), séries registradas; sem sessões → estado vazio
+- **Evolução por exercício** (`/progress/[slug]`): uma linha por sessão finalizada com o exercício — data, maior carga (kg), repetições feitas nessa carga e número de séries; mais recentes primeiro na tabela, em ordem cronológica no gráfico (últimas `MAX_PROGRESS_SESSIONS` sessões)
+- **Gráfico:** linha única da maior carga por sessão (sessões sem carga ficam de fora do gráfico, aparecem na tabela); eixo Y com valores redondos a partir de 0, datas da primeira e última sessão no eixo X, valor final rotulado; linha 2px, pontos ≥ 8px com anel na cor do fundo; cor `--chart-series` (#9a971f, validada com o script de paleta no fundo escuro); tooltip ao passar o dedo/mouse (data + carga) com guia vertical; tabela sempre visível como alternativa acessível; sem legenda (série única, o título diz o que é)
+- **Sem registros:** estado vazio ("Nenhuma carga registrada ainda") — nada inventado
+- **Acesso:** link "Ver evolução" no card do treino e no detalhe do exercício; exercício inexistente → 404
+- **Dados:** leitura pela sessão do usuário (RLS) com filtro explícito por `user_id`; agregação por sessão em função pura testada
+- **Arquivos:** `src/lib/training/history-repository.ts`, `history-service.ts`, `load-history.ts`, `server-history-service.ts`; `src/components/history/` (lista, gráfico, tabela, escala); `src/components/layout/pagination-nav.tsx` (paginação genérica, reaproveitada pelo catálogo); `src/app/(app)/schedule/page.tsx`, `src/app/(app)/progress/[slug]/page.tsx`; `src/components/layout/route-error.tsx` e `list-skeleton.tsx` (estados de erro/carregamento compartilhados com catálogo e treino)
+
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
@@ -122,6 +132,6 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - [x] 2.4 — Registro de séries, com testes (rascunho no aparelho; gravação no banco na 2.6)
 - [x] 2.6 — Finalizar treino, com testes (função validada no Supabase com rollback)
 - [x] 2.7 — Salvar carga para progredir, com testes
-- [ ] 2.8 — Histórico e gráfico
+- [x] 2.8 — Histórico e gráfico, com testes (gráfico conferido visualmente em 375px com dados fictícios)
 
 ## Fim da spec

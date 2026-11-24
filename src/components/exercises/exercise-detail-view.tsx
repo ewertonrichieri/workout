@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { buildProgressHref } from "@/components/history/history-labels";
 import type { CatalogTerm, ExerciseDetail } from "@/lib/catalog/exercises/exercise-types";
 import { translate, type TranslationKey } from "@/lib/i18n/translate";
 import { describeDifficulty } from "./exercise-labels";
@@ -25,6 +27,9 @@ export function ExerciseDetailView({ exercise }: { exercise: ExerciseDetail }) {
         {exercise.difficulty && <p className="text-sm text-accent-strong">{describeDifficulty(exercise.difficulty)}</p>}
       </header>
       <ExerciseMediaPlayer key={exercise.slug} media={exercise.media} exerciseName={exercise.name} />
+      <Link href={buildProgressHref(exercise.slug)} className="flex min-h-11 items-center self-start font-medium text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong">
+        {translate("history.progressLink")}
+      </Link>
       <TermSection titleKey="catalog.primaryMuscles" terms={exercise.primaryMuscles} />
       <TermSection titleKey="catalog.secondaryMuscles" terms={exercise.secondaryMuscles} />
       <TermSection titleKey="catalog.equipment" terms={exercise.equipment} />
