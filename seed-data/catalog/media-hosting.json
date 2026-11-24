@@ -1,0 +1,19 @@
+{
+  "cdnBaseUrl": "https://cdn.jsdelivr.net/gh",
+  "sources": {
+    "workout-free-videos": {
+      "license": "CC0-1.0",
+      "priority": 10,
+      "repository": { "name": "ewertonrichieri/workout-free-videos", "commit": "346c9709eaecfe160a0500650a5f7a43b8425762" }
+    },
+    "free-exercise-db-with-videos": {
+      "license": "unverified",
+      "priority": 20
+    },
+    "exercise-library": {
+      "license": "unverified",
+      "priority": 30,
+      "repository": { "name": "ewertonrichieri/exercise-library", "commit": "a63d9e0c26a1c233439531f33f035139f5c41464" }
+    }
+  }
+}

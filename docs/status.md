@@ -11,12 +11,13 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **CAT-004** — aplicar migration `exercise_source_refs` no Supabase (usuário) → `specs/009-catalogo-exercicios.md`
-4. **1.4** — Mapear URLs das mídias (esforço `medium`) → `specs/009-catalogo-exercicios.md`
+4. **1.5** — Seed versionado do catálogo (esforço `medium`) → `specs/009-catalogo-exercicios.md`
 
 ---
 
 ## Concluído recentemente
 
+- **1.4 URLs das mídias** — `media-hosting.json` (fork + commit fixo, licença e prioridade por fonte) e resolução das URLs; jsDelivr depende dos forks (CAT-002) → `specs/009-catalogo-exercicios.md`
 - **1.3 Normalização do catálogo** — vocabulários curados (30 músculos, 30 equipamentos), dedup com revisão, 1.298 exercícios, 347 nomes pt-BR (todos com vídeo), script `catalog:build` → `specs/009-catalogo-exercicios.md`
 - **1.2 Parsers do catálogo** — schema comum, um parser por fonte, script `catalog:parse`, arquivos em `seed-data/catalog/sources/` (1.486 exercícios, 0 rejeitados), migration `exercise_source_refs` → `specs/009-catalogo-exercicios.md`
 - **1.1 Catálogo — análise das fontes** — formatos, campos, mídia e licenças das 3 fontes; regras de prioridade, dedup e rastreabilidade → `specs/009-catalogo-exercicios.md`
