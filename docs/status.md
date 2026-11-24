@@ -19,7 +19,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 ## Concluído recentemente
 
 - **3.4 Revisão e edição manual** — aviso de revisão depois da geração; `/workout/edit` edita séries, repetições, descanso, categoria e observação, reordena, remove, troca e adiciona exercícios do catálogo (rascunho com descartar); `PUT /api/workouts/:id/exercises` grava numa transação preservando o histórico; migration aplicada → `specs/011-geracao-treino-ia.md`
-- **3.3 Geração do plano pela IA** — catálogo filtrado por equipamento e mídia, prompt com cache, validação do plano, gravação atômica arquivando o plano anterior, `POST /api/plans`, botão na anamnese e no Início; migration aplicada no Supabase; medição da chamada real: PLN-001 → `specs/011-geracao-treino-ia.md`
 - **3.2 Wrapper da Claude API** — `generate()` com saída estruturada validada por zod, streaming, fallback de recusa (`fallbacks: "default"`), retry 3× com backoff (só 429/5xx/conexão; `Retry-After` respeitado), teto de 120 s para IA (exceção no `AGENTS.md`), erros pt-BR (429/502) e logs sem conteúdo → `specs/011-geracao-treino-ia.md`
 - **3.1 Anamnese** — `/assessment` (objetivo, nível, dias, tempo, divisão, equipamentos, limitações) com erros por campo e preenchida com a última anamnese; `POST /api/assessments` grava anamnese + equipamentos numa transação (`save_assessment`); link no Início e no Perfil. Migration aplicada no Supabase e função testada lá (bloco desfeito no fim); teste no navegador: ASM-001 → `specs/011-geracao-treino-ia.md`
 - **Teste de ponta a ponta (Fases 0–2)** — login por e-mail, treino, finalizar, carga sugerida, Agenda e evolução testados no navegador contra o Supabase real; corrigidos `Date.now()` na pré-renderização e miniatura quebrada → `specs/010-treino.md`
@@ -51,6 +50,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
+- **3.3 Geração do plano pela IA** — código na `main` e migration aplicada; etapa pendente até a chamada real (PLN-001), critério de aceite → `specs/011-geracao-treino-ia.md`
 - **0.7 Autenticação** — código na `main`; etapa pendente até AUTH-001/AUTH-002 (configuração do Google e teste manual) → `specs/007-autenticacao.md`
 
 ---

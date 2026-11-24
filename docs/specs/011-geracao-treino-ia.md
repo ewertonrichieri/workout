@@ -187,4 +187,10 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 - [x] Aviso de revisão depois da geração e link de edição na tela de treino
 - [x] Migration aplicada no Supabase (2026-11-24)
 
+### 2026-11-24 — 3.3 volta para em progresso
+
+- **Pedido:** o usuário pediu para voltar a 3.3 para em progresso.
+- **Mudança:** a chamada real (PLN-001) é critério de aceite da etapa (`pending-items.md`); a 3.3 só é concluída depois de medida.
+- **Pendências:** PLN-001
+
 ## Fim da spec
