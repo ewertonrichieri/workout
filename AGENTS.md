@@ -228,6 +228,8 @@ Seed:
   - Máximo 3 tentativas
   - Backoff exponencial (1s, 2s, 4s)
   - Timeout total: 15 segundos
+    (exceção: chamadas à IA/Claude API, 120 segundos no total com streaming —
+    decisão do usuário em 2026-11-24, ver docs/specs/011-geracao-treino-ia.md)
   - Não fazer retry em erros 4xx (exceto 429 com respeito ao Retry-After)
 
 ☐ Fallbacks definidos:

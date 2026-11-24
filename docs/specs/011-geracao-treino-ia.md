@@ -78,4 +78,41 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 |---|---|---|---|
 | ASM-001 | Testar o envio da anamnese no navegador (migration já aplicada; o Supabase está sem contas de usuário no momento) | `/assessment` | Alta (antes da 3.3) |
 
+## Atualizações
+
+### 2026-11-24 — 3.2 Wrapper da Claude API
+
+- **Pedido:** etapa 3.2 — cliente da Claude API no servidor, com retry, timeout e validação da saída.
+- **Mudança:** módulo `src/lib/integrations/claude/` (SDK oficial `@anthropic-ai/sdk`), retry genérico em `src/lib/http/retry-policy.ts`, chave em `src/lib/config/claude-config.ts`. Exceção de timeout para IA registrada no `AGENTS.md` (decisão do usuário).
+- **Pendências:** nenhuma (a chave da API entra quando a 3.3 fizer a primeira chamada real).
+
+#### Regras da 3.2
+
+- **Somente servidor:** `ANTHROPIC_API_KEY` lida e validada só no servidor (`server-only`); nunca vai ao cliente nem aos logs
+- **Modelo:** `claude-opus-5-5` (constante `CLAUDE_MODEL`); esforço por chamada (`low` a `max`, padrão `high`); pensamento adaptativo (padrão do modelo)
+- **Saída estruturada:** o schema zod vira JSON Schema (`betaZodOutputFormat`) e a API é obrigada a segui-lo; o servidor revalida com o mesmo schema. JSON inválido ou fora do schema = falha (sem retry), mensagem amigável
+- **Parada:** `refusal` (mesmo depois do fallback) e `max_tokens` (resposta cortada) = falha, sem retry
+- **Fallback de recusa:** `fallbacks: "default"` (beta `server-side-fallback-2026-07-01`): a própria API refaz a chamada noutro modelo quando o primeiro recusa por política; vale o texto depois do último bloco `fallback`
+- **Streaming:** sempre, com `finalMessage()`, para respostas longas não derrubarem a conexão
+- **Retry (AGENTS.md, seção 7):** até 3 tentativas, espera 1 s e 2 s (exponencial); repete só 429, 5xx/529 e falha de conexão/timeout por tentativa; nunca outros 4xx. 429 respeita `Retry-After`; se a espera não couber no tempo restante, desiste. O retry automático do SDK fica desligado (`maxRetries: 0`)
+- **Timeout:** exceção para IA — **120 s no total** (`AI_TOTAL_TIMEOUT_MS`), cada tentativa usa só o tempo que sobra; demais chamadas externas seguem 15 s
+- **Erros:** 429 esgotado → `RateLimitExceededError` (HTTP 429); timeout, recusa, saída inválida, 5xx e outros → `ExternalServiceError` (HTTP 502), com mensagem pt-BR específica; o que o usuário digitou nunca se perde (quem chama mantém a anamnese)
+- **Logs:** operação, tentativa, duração, tokens, `stop_reason`, nome/status do erro; nunca prompt, resposta ou chave
+- **Cache de prompt:** fica para a 3.3 (catálogo repetido entre chamadas)
+
+#### Implementação (3.2)
+
+- `src/lib/constants/ai.ts` — modelo, esforço, `max_tokens`, beta do fallback, timeout da IA
+- `src/lib/http/retry-policy.ts` — `runWithRetry` genérico (tentativas, backoff, teto total via `AbortSignal`, relógio/espera injetáveis)
+- `src/lib/integrations/claude/claude-errors.ts` — classificação (repetir ou não) e conversão para erros do app
+- `src/lib/integrations/claude/structured-output-client.ts` — `generate({ operation, system, prompt, schema, effort?, maxTokens? })`
+- `src/lib/integrations/claude/server-claude-client.ts` — composition root (cliente do SDK com a chave validada)
+
+#### Checklist de aceite (3.2)
+
+- [x] Retry: sucesso após falha temporária, desistência após 3 tentativas, sem retry em 4xx, 429 com `Retry-After`, teto total
+- [x] Saída: válida, JSON inválido, fora do schema, recusa, `max_tokens`, fallback
+- [x] Erros convertidos com mensagem pt-BR; logs sem conteúdo
+- [x] Nenhuma chamada real nos testes
+
 ## Fim da spec
