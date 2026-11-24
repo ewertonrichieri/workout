@@ -70,13 +70,24 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 - [x] Formulário com erros por campo, carregamento, erro e sucesso; preenchido com a anamnese mais recente
 - [x] Acessível (rótulos, `fieldset`/`legend`, foco visível, toque ≥ 44px)
 - [x] Migration aplicada no Supabase (2026-11-24) e `save_assessment` testada lá num bloco desfeito no fim (gravação, equipamento desconhecido, RLS)
-- [ ] Envio testado no navegador (ver ASM-001)
+- [x] Envio testado no navegador (teste de ponta a ponta, 2026-11-24)
+
+## Teste de ponta a ponta (2026-11-24)
+
+Usuário temporário (criado já confirmado pela API administrativa de autenticação) no Supabase real; app em modo produção nesta nuvem (`NODE_USE_ENV_PROXY=1`); navegador sem tela em 375px; geração real com Claude Haiku 5.5. Passaram:
+- Sem sessão: `/` → login; `POST /api/plans` → 401; `/manifest.webmanifest` → 200
+- Login → Início com "Fazer anamnese" → anamnese com aviso de saúde; salvar (hipertrofia, iniciante, 3 dias, 50 min, IA decide, halteres + banco + peso corporal, "dor leve no joelho direito") → reforço do aviso e botão de gerar
+- Gerar plano: 16 s (IA 12 s), divisão A/B, 6 exercícios no treino A, observações respeitando o joelho; `/workout?review=1` com aviso de revisão, aviso de saúde com reforço e validade de 6 semanas
+- Edição: 4 séries no 1º exercício + exercício adicionado pela busca ("panturrilha") → salvo e exibido
+- Progressão: interruptor ligado, 4 séries × 12 repetições com 20 kg, "Finalizar treino" → card "Você fez 12 repetições em todas as séries com 20 kg. Sugestão: 21 kg." e campo preenchido com 21; Agenda com o treino
+- Renovação: validade ajustada no banco para vencer em 3 dias → aviso no Início e no treino; "Renovar plano com a IA" → confirmação → novo plano em 15 s; o antigo ficou arquivado; o catálogo veio do cache (16.715 tokens lidos) e o histórico foi junto (entrada de 138 → 267 tokens)
+
+Observações (não são defeitos): o Next 16 mantém a tela anterior oculta no DOM depois de navegar (`cacheComponents`), então seletores de teste devem filtrar elementos visíveis; nomes em inglês de parte do catálogo seguem pendentes (CAT-005); as mídias (R2/jsDelivr) não carregam nesta nuvem porque os hosts não estão liberados. Usuário e todos os dados apagados ao final (contagens zeradas).
 
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| ASM-001 | Testar o envio da anamnese no navegador (migration já aplicada; o Supabase está sem contas de usuário no momento) | `/assessment` | Alta (antes da 3.3) |
 
 ## Atualizações
 

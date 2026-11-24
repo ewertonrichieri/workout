@@ -11,12 +11,12 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar o cadastro por e-mail (o login por e-mail já foi testado de ponta a ponta) (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
-4. **ASM-001** — testar o envio da anamnese no navegador (migration aplicada; criar conta antes) → `specs/011-geracao-treino-ia.md`
 
 ---
 
 ## Concluído recentemente
 
+- **Teste de ponta a ponta (Fase 3)** — anamnese, geração real com IA, revisão, edição, progressão de carga, renovação com histórico, aviso de saúde, PWA e API sem sessão testados no navegador contra o Supabase real; ASM-001 fechada; dados temporários apagados → `specs/011-geracao-treino-ia.md`
 - **3.8 PWA instalável** — recurso nativo do Next.js: `manifest.ts`, ícones gerados (`icon.tsx` 192/512/mascarável, `apple-icon.tsx`), `themeColor`; manifest e ícones públicos no proxy; conferido com o app rodando (sem login) → `specs/011-geracao-treino-ia.md`
 - **3.7 Aviso de saúde** — na anamnese e na tela de treino, com reforço quando há limitação informada → `specs/011-geracao-treino-ia.md`
 - **3.6 Sugestão de renovação** — aviso nos últimos 7 dias e depois de vencer (Início e treino) com "Renovar plano com a IA" (confirmação, plano antigo arquivado); a renovação envia à IA o histórico do plano (`plan_history_summary`); migration aplicada → `specs/011-geracao-treino-ia.md`
@@ -24,7 +24,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 - **3.3 Geração do plano pela IA** — chamada real medida (PLN-001): Haiku 5.5, esforço `medium`, 1.068 candidatos, ~16–19 s e ~US$ 0,002–0,005 por plano, plano válido e limitação respeitada; o app passa a usar `claude-haiku-5-5` como modelo padrão (`CLAUDE_MODEL`, decisão do usuário) → `specs/011-geracao-treino-ia.md`
 - **3.4 Revisão e edição manual** — aviso de revisão depois da geração; `/workout/edit` edita séries, repetições, descanso, categoria e observação, reordena, remove, troca e adiciona exercícios do catálogo (rascunho com descartar); `PUT /api/workouts/:id/exercises` grava numa transação preservando o histórico; migration aplicada → `specs/011-geracao-treino-ia.md`
 - **3.2 Wrapper da Claude API** — `generate()` com saída estruturada validada por zod, streaming, fallback de recusa (`fallbacks: "default"`), retry 3× com backoff (só 429/5xx/conexão; `Retry-After` respeitado), teto de 120 s para IA (exceção no `AGENTS.md`), erros pt-BR (429/502) e logs sem conteúdo → `specs/011-geracao-treino-ia.md`
-- **3.1 Anamnese** — `/assessment` (objetivo, nível, dias, tempo, divisão, equipamentos, limitações) com erros por campo e preenchida com a última anamnese; `POST /api/assessments` grava anamnese + equipamentos numa transação (`save_assessment`); link no Início e no Perfil. Migration aplicada no Supabase e função testada lá (bloco desfeito no fim); teste no navegador: ASM-001 → `specs/011-geracao-treino-ia.md`
+- **3.1 Anamnese** — `/assessment` (objetivo, nível, dias, tempo, divisão, equipamentos, limitações) com erros por campo e preenchida com a última anamnese; `POST /api/assessments` grava anamnese + equipamentos numa transação (`save_assessment`); link no Início e no Perfil. Migration aplicada no Supabase e função testada lá (bloco desfeito no fim); testada no navegador (ASM-001 fechada) → `specs/011-geracao-treino-ia.md`
 - **Teste de ponta a ponta (Fases 0–2)** — login por e-mail, treino, finalizar, carga sugerida, Agenda e evolução testados no navegador contra o Supabase real; corrigidos `Date.now()` na pré-renderização e miniatura quebrada → `specs/010-treino.md`
 - **2.8 Histórico e gráfico** — Agenda com treinos finalizados (paginada); `/progress/[slug]` com gráfico da maior carga por sessão (tooltip por toque/mouse/setas) e tabela acessível; link "Ver evolução" no card e no detalhe do exercício → `specs/010-treino.md`
 - **2.7 Salvar carga para progredir** — interruptor por exercício (`PATCH /api/workout-exercises/:id`); carga da última sessão preenchida em rascunho ainda não editado (`latest_set_loads`, aplicada no Supabase) → `specs/010-treino.md`
@@ -62,7 +62,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **ASM-001** — testar o envio da anamnese no navegador (migration já aplicada) → `specs/011-geracao-treino-ia.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
