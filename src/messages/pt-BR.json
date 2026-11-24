@@ -81,12 +81,8 @@
     "emptyDescription": "Tente outro termo ou remova algum filtro.",
     "invalidFilters": "Filtros inválidos. Ajuste a busca e tente novamente.",
     "paginationLabel": "Paginação dos exercícios",
-    "previousPage": "Anterior",
-    "nextPage": "Próxima",
-    "pageStatus": "Página {page} de {totalPages}",
     "loading": "Carregando exercícios...",
     "loadError": "Não foi possível carregar os exercícios.",
-    "retryButton": "Tentar novamente",
     "backToList": "Voltar para exercícios",
     "primaryMuscles": "Músculos principais",
     "secondaryMuscles": "Músculos auxiliares",
@@ -135,7 +131,6 @@
     "emptyWorkoutDescription": "Este treino ainda não tem exercícios cadastrados.",
     "loading": "Carregando treino...",
     "loadError": "Não foi possível carregar o treino.",
-    "retryButton": "Tentar novamente",
     "showDemo": "Ver demonstração",
     "repsTargetOne": "{count}",
     "repsTargetRange": "{min} a {max}",
@@ -171,5 +166,41 @@
       "suggestedNotice": "Carga sugerida da última sessão",
       "failed": "Não foi possível salvar a preferência. Tente de novo."
     }
+  },
+  "common": {
+    "retryButton": "Tentar novamente"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Próxima",
+    "status": "Página {page} de {totalPages}"
+  },
+  "history": {
+    "listLabel": "Treinos finalizados",
+    "paginationLabel": "Paginação do histórico",
+    "workoutLabel": "Treino {label}",
+    "removedWorkout": "Treino removido",
+    "setCountOne": "{count} série registrada",
+    "setCountOther": "{count} séries registradas",
+    "loading": "Carregando histórico...",
+    "loadError": "Não foi possível carregar o histórico.",
+    "invalidPage": "Página inválida. Volte para a primeira página.",
+    "progressTitle": "Evolução",
+    "progressLink": "Ver evolução",
+    "progressSubtitle": "Maior carga por sessão",
+    "progressLoadError": "Não foi possível carregar a evolução.",
+    "progressEmptyTitle": "Nenhuma carga registrada ainda",
+    "progressEmptyDescription": "Finalize um treino com este exercício para ver a evolução aqui.",
+    "chartLabel": "Gráfico da maior carga por sessão de {name}: de {firstLoad} em {firstDate} a {lastLoad} em {lastDate}.",
+    "chartKeyboardHint": "Use as setas para percorrer as sessões.",
+    "chartNoLoads": "As sessões registradas não têm carga (peso corporal). Veja os detalhes na tabela.",
+    "loadValue": "{value} kg",
+    "tableCaption": "Sessões de {name}",
+    "dateColumn": "Data",
+    "maxLoadColumn": "Maior carga",
+    "repsColumn": "Reps na maior carga",
+    "setsColumn": "Séries",
+    "noLoad": "Sem carga",
+    "backToWorkout": "Voltar para o treino"
   }
 }

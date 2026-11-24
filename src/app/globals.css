@@ -10,6 +10,8 @@
   --accent: #6b690c;
   --accent-foreground: #ffffff;
   --accent-strong: #d8d54e;
+  /* Single-series chart mark; validated on --surface with the dataviz palette script (spec 010, 2.8). */
+  --chart-series: #9a971f;
   color-scheme: dark;
 }
 
@@ -22,6 +24,7 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-strong: var(--accent-strong);
+  --color-chart-series: var(--chart-series);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

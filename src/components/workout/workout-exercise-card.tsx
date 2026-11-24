@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ExerciseCover } from "@/components/exercises/exercise-cover";
+import { buildProgressHref } from "@/components/history/history-labels";
 import { buildExerciseDetailHref } from "@/components/exercises/exercise-search-href";
 import { translate } from "@/lib/i18n/translate";
 import type { WorkoutExercise } from "@/lib/training/plan-types";
@@ -16,6 +17,9 @@ interface WorkoutExerciseCardProps {
   hasSuggestedLoad: boolean;
   onSetChange: (setIndex: number, patch: Partial<SetEntry>) => void;
 }
+
+const PROGRESS_LINK_CLASS =
+  "flex min-h-11 items-center self-start font-medium text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong";
 
 function PrescriptionSummary({ workoutExercise }: { workoutExercise: WorkoutExercise }) {
   const { exercise, notes } = workoutExercise;
@@ -50,6 +54,9 @@ export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, o
       <SetLogList exerciseName={exercise.name} repsTarget={describeRepsTarget(workoutExercise)} sets={sets} onSetChange={onSetChange} />
       <TrackProgressionSwitch workoutExerciseId={workoutExercise.id} exerciseName={exercise.name} isTracked={workoutExercise.trackProgression} />
       <ExerciseDemoDisclosure exercise={exercise} />
+      <Link href={buildProgressHref(exercise.slug)} className={PROGRESS_LINK_CLASS}>
+        {translate("history.progressLink")}
+      </Link>
     </article>
   );
 }
