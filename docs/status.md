@@ -9,14 +9,14 @@
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
 1. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
-2. **3B.5 Teste de ponta a ponta da Fase 3B** no navegador (esforço `medium`) → `specs/012-treino-adaptativo.md`
-3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
+2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
+3. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 
 ---
 
 ## Concluído recentemente
 
+- **3B.5 Teste de ponta a ponta (Fase 3B)** — check-in, ajuste da IA (aceitar, manter, desfazer, fallback quando a IA propôs mais que o plano), troca na hora com desfazer, esforço por série, finalizar e autorregulação (descer para 28,5 kg e manter com "no limite") testados no navegador contra o Supabase real com IA real; nenhum defeito; dados temporários apagados; Fase 3B concluída → `specs/012-treino-adaptativo.md`
 - **3B.4 Substituição na hora** — "Trocar exercício" no card (antes de qualquer série com check): motivo opcional (aparelho ocupado/quebrado/outro), a IA escolhe até 3 equivalentes entre exercícios com mídia, mesmo músculo principal e equipamento da anamnese (sem o aparelho do original quando ocupado/quebrado); se a IA falhar, sugestões automáticas avisadas; "Desfazer troca"; vale só para hoje; ao finalizar, `exercise_substitutions` e séries com o substituto; chamada real medida (1,7–3,4 s, ~US$ 0,0003); migration aplicada e testada no Supabase (bloco desfeito) → `specs/012-treino-adaptativo.md`
 - **3B.3 Esforço por série + autorregulação** — "fácil / ok / no limite" opcional depois do check da série, gravado em `set_logs.effort`; com "Salvar carga para progredir" ligado: "no limite" impede a subida da 3.5 (o card explica) e 2+ séries no limite abaixo do mínimo de repetições sugerem −5% (mín. 1 kg); interruptor desligado trava a carga; migration aplicada e testada no Supabase (bloco desfeito) → `specs/012-treino-adaptativo.md`
 - **3B.2 Ajuste do treino do dia pela IA** — depois de um check-in de dia mais leve, a IA propõe reduzir, remover ou trocar exercícios (nunca aumenta; trocas só por exercícios com mídia e equipamento da anamnese que trabalham o mesmo músculo); revisão antes/depois com "Usar treino ajustado" / "Manter treino original" e desfazer; o plano não muda; `session_adjustments` e finalização seguindo o ajuste; chamada real medida (6–10 s, ~US$ 0,001–0,002); migration aplicada e testada no Supabase (bloco desfeito) → `specs/012-treino-adaptativo.md`
