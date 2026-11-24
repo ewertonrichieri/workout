@@ -37,5 +37,13 @@ export const PROGRESSION_INCREASE_RATIO = 0.05;
 export const PROGRESSION_ROUNDING_KG = 0.5;
 export const PROGRESSION_MIN_INCREASE_KG = 1;
 
+/** Perceived effort per set (step 3B.3) and the simplified autoregulation rule (decision D5). */
+export const SET_EFFORTS = ["easy", "ok", "max"] as const;
+export type SetEffort = (typeof SET_EFFORTS)[number];
+export const MAX_SET_EFFORT: SetEffort = "max";
+export const PROGRESSION_DECREASE_RATIO = 0.05;
+export const PROGRESSION_MIN_DECREASE_KG = 1;
+export const MIN_MAX_EFFORT_SETS_FOR_DECREASE = 2;
+
 /** Renewal notice (step 3.6): last days of validity and after it ends. */
 export const RENEWAL_NOTICE_DAYS = 7;

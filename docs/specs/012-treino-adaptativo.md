@@ -161,6 +161,23 @@ Treino de exemplo com 6 exercícios (3×10, 60 s de descanso): supino reto com h
 - **Nunca automática no plano:** é só o valor inicial do campo, editável, e só preenche um rascunho ainda não editado (regra da 2.7)
 - Constantes nomeadas: `PROGRESSION_DECREASE_RATIO`, `MIN_MAX_EFFORT_SETS_FOR_DECREASE`
 
+### Regras de implementação (3B.3, 2026-11-24)
+
+- **Esforço no rascunho:** cada série guarda `effort` opcional; os botões aparecem só depois do check da série; desmarcar o check apaga o esforço daquela série
+- **Base da regra:** a mesma da 2.7/3.5, a última sessão finalizada com carga do exercício (`latest_set_loads` passa a devolver também o `effort`), só as séries prescritas
+- **Descida:** carga de partida = a maior carga entre as séries "no limite" abaixo de `reps_min`; a sugestão vale para todas as séries (como a subida da 3.5)
+- **Manter por "no limite":** quando a regra da 3.5 subiria a carga mas alguma série foi "no limite", o card diz o motivo: "Você chegou ao máximo de repetições, mas marcou 'no limite': a carga fica em {carga} kg."
+- **Código:** `LoadIncrease` vira `LoadAdjustment` (`increase` / `decrease` / `hold`), em `src/lib/training/load-adjustments.ts`
+
+### Implementação (3B.3)
+
+- Migration `supabase/migrations/20261127020000_set_effort.sql`: `set_logs.effort` (`easy` / `ok` / `max`, nulo), `finish_workout_session` grava o esforço (mantém as regras do ajuste da 3B.2) e `latest_set_loads` devolve o `effort`
+- `src/lib/constants/training.ts` — `SET_EFFORTS`, `MAX_SET_EFFORT`, `PROGRESSION_DECREASE_RATIO` (5%), `PROGRESSION_MIN_DECREASE_KG` (1 kg), `MIN_MAX_EFFORT_SETS_FOR_DECREASE` (2)
+- `src/lib/training/load-adjustments.ts` — `computeDecreasedLoad` e `buildLoadAdjustments` (descer antes de subir; subir só sem "no limite"; senão `hold` com o motivo); `plan-service.ts` aplica `increase` e `decrease` em todas as séries e deixa o `hold` com a carga repetida
+- Rascunho (`set-log-draft.ts`): `effort` opcional por série, apagado quando a série perde o check; valor desconhecido guardado no aparelho é descartado; "Finalizar treino" envia `effort` (nulo quando não marcado); `session-schema.ts` aceita `effort` opcional
+- Tela: `src/components/workout/set-effort-choice.tsx` (`role="radiogroup"`, "Esforço da série N de {exercício}", opções de 44 px) logo abaixo da série com check; avisos de descer e de manter no card
+- Validação: Postgres 16 local e Supabase real num bloco desfeito no fim (esforço gravado e devolvido, valor inválido recusado, RLS entre usuários)
+
 ## 3B.4 — Substituição na hora
 
 - **Botão "Trocar"** no card do exercício na tela de treino (antes ou durante o registro)
@@ -204,7 +221,7 @@ Treino de exemplo com 6 exercícios (3×10, 60 s de descanso): supino reto com h
 
 - [x] 3B.1: migration (`readiness_checkins`, `readiness_checkin_pains`, `workout_sessions.readiness_checkin_id`) aplicada no Supabase (2026-11-24); schema, regra `needsAdjustment`, serviço, repositório e API com testes; tela com pular, erro e carregamento, com testes (a conferência visual no navegador fica para o teste de ponta a ponta, 3B.5)
 - [x] 3B.2: validação do ajuste (nunca aumenta, candidatos só da lista, sobra ≥ 1 exercício) com testes; revisão antes/depois com aceitar, manter e desfazer; fallback da IA; chamada real medida (2026-11-24); migration aplicada e testada no Supabase (a conferência visual no navegador fica para a 3B.5)
-- [ ] 3B.3: `set_logs.effort` e `finish_workout_session` atualizada; regra de autorregulação com testes (sobe, desce, mantém, sem esforço); motivo no card
+- [x] 3B.3: `set_logs.effort` e `finish_workout_session` atualizada (migration aplicada no Supabase em 2026-11-24); regra de autorregulação com testes (sobe, desce, mantém, sem esforço, interruptor desligado); motivo no card
 - [ ] 3B.4: pré-filtro e fallback com testes; troca e desfazer na tela; gravação da troca com histórico coerente
 - [ ] Teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
 

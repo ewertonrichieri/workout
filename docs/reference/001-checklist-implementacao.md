@@ -79,7 +79,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 |---|---|---|---|
 | 3B.1 | Check-in pré-treino (sono, dor, tempo, energia) — spec `012-treino-adaptativo.md` | `medium` | [x] |
 | 3B.2 | Ajuste do treino do dia pela IA | `xhigh` | [x] |
-| 3B.3 | Percepção de esforço por série + autorregulação de carga (regra simplificada, D5) | `medium` | [ ] |
+| 3B.3 | Percepção de esforço por série + autorregulação de carga (regra simplificada, D5) | `medium` | [x] |
 | 3B.4 | Substituição na hora (exercício equivalente) | `high` | [ ] |
 | 3B.5 | Teste de ponta a ponta da Fase 3B no navegador | `medium` | [ ] |
 | 4.1 | Envio de fotos + identificação de equipamentos pela IA | `high` | [ ] |

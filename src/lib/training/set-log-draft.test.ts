@@ -112,7 +112,7 @@ describe("finish payload", () => {
     expect(buildFinishPayload(draft, "2026-11-24T12:00:00.000Z")).toEqual({
       workoutId: "workout-A",
       startedAt: "2026-11-24T10:00:00.000Z",
-      sets: [{ workoutExerciseId: FIRST, setNumber: 2, repsDone: 10, loadKg: 12.5 }],
+      sets: [{ workoutExerciseId: FIRST, setNumber: 2, repsDone: 10, loadKg: 12.5, effort: null }],
       readinessCheckinId: null,
     });
   });
@@ -204,5 +204,33 @@ describe("today's workout changes (step 3B.2)", () => {
     const readiness = { status: "done" as const, checkinId: proposal.checkinId, needsAdjustment: true, hasSeverePain: false, adjustment: { status: "accepted" as const, proposal } };
     const stored = { ...createEmptyDraft(WORKOUT, TODAY), readiness };
     expect(restoreDraft(JSON.parse(JSON.stringify(stored)), WORKOUT, TODAY).readiness).toEqual(readiness);
+  });
+});
+
+describe("perceived effort per set (step 3B.3)", () => {
+  it("records the effort of a checked set and sends it when finishing", async () => {
+    const { buildFinishPayload } = await import("./set-log-draft");
+    let draft = updateSetEntry(createEmptyDraft(WORKOUT, TODAY), SECOND, 0, { repsDone: "8", load: "20" });
+    draft = updateSetEntry(draft, SECOND, 0, { isDone: true });
+    draft = updateSetEntry(draft, SECOND, 0, { effort: "max" });
+    expect(draft.entries[SECOND][0].effort).toBe("max");
+    expect(buildFinishPayload(draft, "2026-11-24T12:00:00.000Z").sets).toEqual([{ workoutExerciseId: SECOND, setNumber: 1, repsDone: 8, loadKg: 20, effort: "max" }]);
+  });
+
+  it("ignores the effort of an unchecked set and clears it when the check goes away", () => {
+    const typed = updateSetEntry(createEmptyDraft(WORKOUT, TODAY), SECOND, 0, { repsDone: "8" });
+    expect(updateSetEntry(typed, SECOND, 0, { effort: "easy" }).entries[SECOND][0].effort).toBeUndefined();
+    const checked = updateSetEntry(updateSetEntry(typed, SECOND, 0, { isDone: true }), SECOND, 0, { effort: "ok" });
+    expect(updateSetEntry(checked, SECOND, 0, { isDone: false }).entries[SECOND][0].effort).toBeUndefined();
+    expect(updateSetEntry(checked, SECOND, 0, { repsDone: "" }).entries[SECOND][0].effort).toBeUndefined();
+  });
+
+  it("sends null when no effort was marked and restores a stored effort", async () => {
+    const { buildFinishPayload } = await import("./set-log-draft");
+    const checked = updateSetEntry(updateSetEntry(createEmptyDraft(WORKOUT, TODAY), SECOND, 0, { repsDone: "8" }), SECOND, 0, { isDone: true });
+    expect(buildFinishPayload(checked, "2026-11-24T12:00:00.000Z").sets[0]).toMatchObject({ effort: null });
+    const withEffort = updateSetEntry(checked, SECOND, 0, { effort: "easy" });
+    expect(restoreDraft(JSON.parse(JSON.stringify(withEffort)), WORKOUT, TODAY).entries[SECOND][0].effort).toBe("easy");
+    expect(restoreDraft({ ...withEffort, entries: { [SECOND]: [{ repsDone: "8", load: "", isDone: true, effort: "hard" }] } }, WORKOUT, TODAY).entries[SECOND][0].effort).toBeUndefined();
   });
 });

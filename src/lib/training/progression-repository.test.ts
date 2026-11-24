@@ -11,8 +11,8 @@ function createClient(result: { data: unknown; error: unknown }) {
 
 describe("progression repository", () => {
   it("reads the latest loads through the database function", async () => {
-    const client = createClient({ data: [{ exercise_id: EXERCISE_ID, set_number: 1, load_kg: "12.50", reps_done: 10 }], error: null });
-    await expect(createSupabaseProgressionRepository(client).findLatestSetLoads([EXERCISE_ID])).resolves.toEqual([{ exerciseId: EXERCISE_ID, setNumber: 1, loadKg: 12.5, repsDone: 10 }]);
+    const client = createClient({ data: [{ exercise_id: EXERCISE_ID, set_number: 1, load_kg: "12.50", reps_done: 10, effort: "max" }], error: null });
+    await expect(createSupabaseProgressionRepository(client).findLatestSetLoads([EXERCISE_ID])).resolves.toEqual([{ exerciseId: EXERCISE_ID, setNumber: 1, loadKg: 12.5, repsDone: 10, effort: "max" }]);
     expect(client.rpc).toHaveBeenCalledWith("latest_set_loads", { p_exercise_ids: [EXERCISE_ID] });
   });
 

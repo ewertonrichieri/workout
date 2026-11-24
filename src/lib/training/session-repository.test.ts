@@ -20,7 +20,7 @@ describe("session repository", () => {
     expect(client.rpc).toHaveBeenCalledWith("finish_workout_session", {
       p_workout_id: INPUT.workoutId,
       p_started_at: INPUT.startedAt,
-      p_sets: [{ workout_exercise_id: "22222222-2222-4222-8222-222222222222", set_number: 1, reps_done: 10, load_kg: 12.5 }],
+      p_sets: [{ workout_exercise_id: "22222222-2222-4222-8222-222222222222", set_number: 1, reps_done: 10, load_kg: 12.5, effort: null }],
       p_readiness_checkin_id: null,
     });
   });

@@ -3,7 +3,7 @@ import { ExerciseCover } from "@/components/exercises/exercise-cover";
 import { buildProgressHref } from "@/components/history/history-labels";
 import { buildExerciseDetailHref } from "@/components/exercises/exercise-search-href";
 import { translate } from "@/lib/i18n/translate";
-import type { LoadIncrease } from "@/lib/training/load-increases";
+import type { LoadAdjustment } from "@/lib/training/load-adjustments";
 import type { DailyChange, WorkoutExercise } from "@/lib/training/plan-types";
 import { formatLoadInput, isExerciseCompleted, type SetEntry } from "@/lib/training/set-log-draft";
 import { ExerciseDemoDisclosure } from "./exercise-demo-disclosure";
@@ -17,7 +17,7 @@ interface WorkoutExerciseCardProps {
   /** Load fields were prefilled from the latest session (step 2.7). */
   hasSuggestedLoad: boolean;
   /** Earned increase (step 3.5): the fields hold the new load and the card says why. */
-  loadIncrease?: LoadIncrease;
+  loadAdjustment?: LoadAdjustment;
   onSetChange: (setIndex: number, patch: Partial<SetEntry>) => void;
 }
 
@@ -43,11 +43,16 @@ function PrescriptionSummary({ workoutExercise }: { workoutExercise: WorkoutExer
 }
 
 /** One prescribed exercise: prescription, demonstration and set logging. */
-function SuggestionNotice({ hasSuggestedLoad, loadIncrease }: { hasSuggestedLoad: boolean; loadIncrease?: LoadIncrease }) {
-  if (loadIncrease) {
-    const params = { reps: loadIncrease.reps, from: formatLoadInput(loadIncrease.fromKg), to: formatLoadInput(loadIncrease.toKg) };
-    return <p className="text-sm font-medium text-accent-strong">{translate("training.progression.increaseNotice", params)}</p>;
-  }
+/** The card always says why the load changes or holds (steps 3.5, 3B.3). */
+function describeAdjustment(adjustment: LoadAdjustment): string {
+  if (adjustment.kind === "hold") return translate("training.progression.holdNotice", { load: formatLoadInput(adjustment.loadKg) });
+  const loads = { from: formatLoadInput(adjustment.fromKg), to: formatLoadInput(adjustment.toKg) };
+  if (adjustment.kind === "decrease") return translate("training.progression.decreaseNotice", { count: adjustment.maxEffortSets, reps: adjustment.repsMin, ...loads });
+  return translate("training.progression.increaseNotice", { reps: adjustment.reps, ...loads });
+}
+
+function SuggestionNotice({ hasSuggestedLoad, loadAdjustment }: { hasSuggestedLoad: boolean; loadAdjustment?: LoadAdjustment }) {
+  if (loadAdjustment) return <p className="text-sm font-medium text-accent-strong">{describeAdjustment(loadAdjustment)}</p>;
   return hasSuggestedLoad ? <p className="text-sm text-muted">{translate("training.progression.suggestedNotice")}</p> : null;
 }
 
@@ -60,7 +65,7 @@ function DailyChangeNotice({ change }: { change: DailyChange }) {
   return <p className="text-sm font-medium text-accent-strong">{text}</p>;
 }
 
-export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, loadIncrease, onSetChange }: WorkoutExerciseCardProps) {
+export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, loadAdjustment, onSetChange }: WorkoutExerciseCardProps) {
   const { exercise, dailyChange } = workoutExercise;
   const isCompleted = isExerciseCompleted(sets);
   // The switch belongs to the planned exercise, so a replacement of today does not show it.
@@ -73,7 +78,7 @@ export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, l
       </div>
       {dailyChange && <DailyChangeNotice change={dailyChange} />}
       {isCompleted && <p className="text-sm font-semibold text-accent-strong">{translate("training.exerciseCompleted")}</p>}
-      <SuggestionNotice hasSuggestedLoad={hasSuggestedLoad} loadIncrease={loadIncrease} />
+      <SuggestionNotice hasSuggestedLoad={hasSuggestedLoad} loadAdjustment={loadAdjustment} />
       <SetLogList exerciseName={exercise.name} repsTarget={describeRepsTarget(workoutExercise)} sets={sets} onSetChange={onSetChange} />
       {!isReplacedToday && (
         <TrackProgressionSwitch workoutExerciseId={workoutExercise.id} exerciseName={exercise.name} isTracked={workoutExercise.trackProgression} />

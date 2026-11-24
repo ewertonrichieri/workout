@@ -1,7 +1,7 @@
 import { useId } from "react";
 import type { WorkoutExercise } from "@/lib/training/plan-types";
 import type { WorkoutDraft } from "@/lib/training/set-log-draft";
-import type { LoadIncreases } from "@/lib/training/load-increases";
+import type { LoadAdjustments } from "@/lib/training/load-adjustments";
 import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 import { groupExercisesByCategory, type WorkoutExerciseGroup } from "@/lib/training/workout-display";
 import type { SetChangeHandler } from "./use-workout-draft";
@@ -10,13 +10,13 @@ import { WorkoutExerciseCard } from "./workout-exercise-card";
 interface DraftProps {
   draft: WorkoutDraft;
   suggestedLoads: SuggestedLoads;
-  loadIncreases: LoadIncreases;
+  loadAdjustments: LoadAdjustments;
   onSetChange: SetChangeHandler;
 }
 
 const NO_SETS: never[] = [];
 
-function ExerciseCardList({ exercises, draft, suggestedLoads, loadIncreases, onSetChange }: DraftProps & { exercises: readonly WorkoutExercise[] }) {
+function ExerciseCardList({ exercises, draft, suggestedLoads, loadAdjustments, onSetChange }: DraftProps & { exercises: readonly WorkoutExercise[] }) {
   return (
     <ul className="flex flex-col gap-3">
       {exercises.map((workoutExercise) => (
@@ -25,7 +25,7 @@ function ExerciseCardList({ exercises, draft, suggestedLoads, loadIncreases, onS
             workoutExercise={workoutExercise}
             sets={draft.entries[workoutExercise.id] ?? NO_SETS}
             hasSuggestedLoad={suggestedLoads[workoutExercise.id] !== undefined}
-            loadIncrease={loadIncreases[workoutExercise.id]}
+            loadAdjustment={loadAdjustments[workoutExercise.id]}
             onSetChange={(setIndex, patch) => onSetChange(workoutExercise.id, setIndex, patch)}
           />
         </li>

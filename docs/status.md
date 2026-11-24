@@ -9,7 +9,7 @@
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
 1. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
-2. **3B.3 Esforço por série + autorregulação** (esforço `medium`) → `specs/012-treino-adaptativo.md`
+2. **3B.4 Substituição na hora** (esforço `high`) → `specs/012-treino-adaptativo.md`
 3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 
@@ -17,6 +17,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Concluído recentemente
 
+- **3B.3 Esforço por série + autorregulação** — "fácil / ok / no limite" opcional depois do check da série, gravado em `set_logs.effort`; com "Salvar carga para progredir" ligado: "no limite" impede a subida da 3.5 (o card explica) e 2+ séries no limite abaixo do mínimo de repetições sugerem −5% (mín. 1 kg); interruptor desligado trava a carga; migration aplicada e testada no Supabase (bloco desfeito) → `specs/012-treino-adaptativo.md`
 - **3B.2 Ajuste do treino do dia pela IA** — depois de um check-in de dia mais leve, a IA propõe reduzir, remover ou trocar exercícios (nunca aumenta; trocas só por exercícios com mídia e equipamento da anamnese que trabalham o mesmo músculo); revisão antes/depois com "Usar treino ajustado" / "Manter treino original" e desfazer; o plano não muda; `session_adjustments` e finalização seguindo o ajuste; chamada real medida (6–10 s, ~US$ 0,001–0,002); migration aplicada e testada no Supabase (bloco desfeito) → `specs/012-treino-adaptativo.md`
 - **3B.1 Check-in antes do treino** — opcional, antes da primeira série: sono, energia, tempo (padrão da anamnese) e dor por região com intensidade; `POST /api/readiness-checkins`; tabelas `readiness_checkins` e `readiness_checkin_pains`; a sessão finalizada guarda o check-in do dia; migration aplicada e testada no Supabase (bloco desfeito) → `specs/012-treino-adaptativo.md`
 - **Spec da Fase 3B (V2)** — `specs/012-treino-adaptativo.md` aprovada (D1–D7 confirmadas): check-in, ajuste do dia pela IA, esforço por série com autorregulação e troca na hora → `specs/012-treino-adaptativo.md`

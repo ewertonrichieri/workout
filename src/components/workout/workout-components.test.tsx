@@ -29,10 +29,26 @@ describe("WorkoutPlanView", () => {
 
   it("explains an earned load increase on the card", () => {
     const tracked = buildWorkoutExercise(9, { trackProgression: true, sets: 2 });
-    const overview = { ...buildPlanOverview([buildWorkout("A", 1, [tracked])]), suggestedLoads: { [tracked.id]: [21, 21] }, loadIncreases: { [tracked.id]: { fromKg: 20, toKg: 21, reps: 12 } } };
+    const overview = { ...buildPlanOverview([buildWorkout("A", 1, [tracked])]), suggestedLoads: { [tracked.id]: [21, 21] }, loadAdjustments: { [tracked.id]: { kind: "increase" as const, fromKg: 20, toKg: 21, reps: 12 } } };
     render(<WorkoutPlanView overview={overview} />);
     expect(screen.getByText("Você fez 12 repetições em todas as séries com 20 kg. Sugestão: 21 kg.")).toBeInTheDocument();
     expect(screen.queryByText("Carga sugerida da última sessão")).not.toBeInTheDocument();
+  });
+
+  it("explains a lower load and a load held by a set at the limit (step 3B.3)", () => {
+    const lowered = buildWorkoutExercise(9, { trackProgression: true, sets: 2 });
+    const held = buildWorkoutExercise(10, { trackProgression: true, sets: 2 });
+    const overview = {
+      ...buildPlanOverview([buildWorkout("A", 1, [lowered, held])]),
+      suggestedLoads: { [lowered.id]: [28.5, 28.5], [held.id]: [20, 20] },
+      loadAdjustments: {
+        [lowered.id]: { kind: "decrease" as const, fromKg: 30, toKg: 28.5, maxEffortSets: 2, repsMin: 8 },
+        [held.id]: { kind: "hold" as const, loadKg: 20 },
+      },
+    };
+    render(<WorkoutPlanView overview={overview} />);
+    expect(screen.getByText("2 séries no limite abaixo de 8 repetições com 30 kg. Sugestão: 28,5 kg.")).toBeInTheDocument();
+    expect(screen.getByText('Você chegou ao máximo de repetições, mas marcou "no limite": a carga fica em 20 kg.')).toBeInTheDocument();
   });
 
   it("uses the label as title for a single workout plan", () => {

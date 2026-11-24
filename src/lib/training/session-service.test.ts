@@ -32,9 +32,16 @@ describe("session service: finishWorkout", () => {
     expect(sessionRepository.finishSession).toHaveBeenCalledWith({
       workoutId: WORKOUT_ID,
       startedAt: STARTED_AT,
-      sets: [VALID_SET, { ...VALID_SET, setNumber: 2, loadKg: null }],
+      sets: [{ ...VALID_SET, effort: null }, { ...VALID_SET, setNumber: 2, loadKg: null, effort: null }],
       readinessCheckinId: null,
     });
+  });
+
+  it("accepts an optional effort per set and rejects unknown values (step 3B.3)", async () => {
+    const { service, sessionRepository } = setup();
+    await service.finishWorkout("user-1", buildInput([{ ...VALID_SET, effort: "max" }]));
+    expect(sessionRepository.finishSession).toHaveBeenCalledWith(expect.objectContaining({ sets: [{ ...VALID_SET, effort: "max" }] }));
+    await expect(service.finishWorkout("user-1", buildInput([{ ...VALID_SET, effort: "hard" }]))).rejects.toBeInstanceOf(InvalidInputError);
   });
 
   it("passes the check-in of the day and rejects an invalid id", async () => {

@@ -123,6 +123,18 @@ describe("daily adjustment (step 3B.2)", () => {
   });
 });
 
+describe("set effort (step 3B.3)", () => {
+  it("saves the effort when finishing and returns it with the latest loads", () => {
+    const sql = readAllMigrations();
+    expect(sql).toContain("add column effort text check (effort in ('easy', 'ok', 'max'))");
+    const finish = sql.slice(sql.lastIndexOf("function public.finish_workout_session("));
+    expect(finish).toContain("s.effort");
+    const latest = sql.slice(sql.lastIndexOf("create function public.latest_set_loads"));
+    expect(latest).toContain("sl.effort");
+    expect(latest).toContain("security invoker");
+  });
+});
+
 describe("table privileges", () => {
   it("lets authenticated users read the catalog and their training data (RLS filters rows)", () => {
     const sql = readAllMigrations();
