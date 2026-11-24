@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export type JsonRequestResult = { ok: true } | { ok: false; message: string };
 
-type JsonMethod = "POST" | "PATCH";
+type JsonMethod = "POST" | "PATCH" | "PUT";
 
 const envelopeSchema = z.object({ success: z.boolean(), error: z.string().optional() });
 

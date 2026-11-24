@@ -144,3 +144,21 @@ describe("generated plans (step 3.3)", () => {
     expect(sql).toContain("grant update (status) on public.plans to authenticated");
   });
 });
+
+describe("workout editing (step 3.4)", () => {
+  const SAVE_SIGNATURE = "public.save_workout_exercises(uuid, jsonb)";
+
+  it("saves through a security invoker function executable only by authenticated users", () => {
+    const sql = readAllMigrations();
+    const definition = sql.slice(sql.indexOf("create or replace function public.save_workout_exercises"));
+    expect(definition.slice(0, definition.indexOf("$$;"))).toContain("security invoker");
+    expect(sql).toContain(`revoke all on function ${SAVE_SIGNATURE} from public, anon`);
+    expect(sql).toContain(`grant execute on function ${SAVE_SIGNATURE} to authenticated`);
+  });
+
+  it("lets users change only the prescription columns and remove exercises (RLS filters rows)", () => {
+    const sql = readAllMigrations();
+    expect(sql).toContain("grant update (category, position, sets, reps_min, reps_max, rest_seconds, notes) on public.workout_exercises to authenticated");
+    expect(sql).toContain("grant delete on public.workout_exercises to authenticated");
+  });
+});

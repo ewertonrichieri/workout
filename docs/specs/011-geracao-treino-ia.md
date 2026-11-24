@@ -77,6 +77,7 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
 | PLN-001 | Fazer uma chamada real à Claude API (tempo, tokens, custo; ajustar esforço). Migration já aplicada no Supabase em 2026-11-24 (1.079 candidatos para uma academia comum) | `supabase/migrations/`, `src/lib/constants/plan-generation.ts` | Alta |
+| WED-001 | Aplicar a migration `20261126020000_edit_workout_exercises.sql` no Supabase | `supabase/migrations/` | Alta |
 | ASM-001 | Testar o envio da anamnese no navegador (migration já aplicada; o Supabase está sem contas de usuário no momento) | `/assessment` | Alta (antes da 3.3) |
 
 ## Atualizações
@@ -148,5 +149,43 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 - [x] Tela: confirmação de substituição, carregamento longo, erro e sucesso
 - [x] Migration aplicada no Supabase (2026-11-24)
 - [ ] Uma chamada real medida (PLN-001)
+
+### 2026-11-24 — 3.3 concluída com medição pendente
+
+- **Pedido:** o usuário pediu para seguir para a 3.4 e deixar a medição da chamada real como pendência.
+- **Mudança:** 3.3 marcada como concluída no checklist; PLN-001 continua aberta (medir tempo, tokens e custo de uma chamada real e reavaliar o esforço).
+- **Pendências:** PLN-001
+
+### 2026-11-24 — 3.4 Revisão e edição manual do plano
+
+- **Pedido:** etapa 3.4 — revisar o plano gerado e editar os exercícios de cada treino (escopo confirmado pelo usuário).
+- **Mudança:** tela `/workout/edit?workout=<rótulo>`, `PUT /api/workouts/:id/exercises`, função `save_workout_exercises` (migration `20261126020000_edit_workout_exercises.sql`), aviso de revisão depois da geração.
+- **Pendências:** WED-001 (aplicar a migration no Supabase)
+
+#### Regras da 3.4
+
+- **Revisão:** depois de gerar, a tela de treino abre com o aviso "Plano gerado pela IA — revise e ajuste o que quiser" e o link de edição (`/workout?review=1`)
+- **Editar treino:** botão na tela de treino abre a edição do treino selecionado; só o plano **ativo** do usuário da sessão
+- **Por exercício:** séries, repetições mín./máx., descanso (vazio = sem descanso), categoria e observação (vazias = sem); subir/descer; remover; trocar por outro do catálogo (mantém a prescrição); adicionar do catálogo (busca em `/api/exercises`, que só lista exercícios com mídia; já usados no treino ficam fora)
+- **Rascunho:** nada é gravado até "Salvar alterações"; "Descartar alterações" volta ao estado salvo (é o desfazer das remoções e trocas)
+- **Limites (os mesmos da geração):** 1 a 12 exercícios por treino, sem repetir exercício; 1–10 séries; 1–50 repetições com máx. ≥ mín.; descanso 0–600 s; categoria até 40 e observação até 300 caracteres. Validados no aparelho (erro por campo) e de novo no servidor
+- **Histórico:** exercício mantido conserva o id (carga sugerida, "Salvar carga para progredir" e gráfico continuam). Exercício **trocado** vira um item novo (sem carga sugerida do exercício antigo, interruptor desligado). Removido sai do plano; as séries já registradas ficam no histórico (`set_logs.workout_exercise_id` vira nulo, `exercise_id` continua)
+- **Gravação:** `save_workout_exercises(p_workout_id, p_exercises jsonb)` numa transação (`security invoker`, RLS): remove os que saíram, atualiza os mantidos, insere os novos, na ordem enviada; exercício sem mídia ou inexistente aborta tudo
+- **Fora da 3.4:** criar, remover ou renomear treinos; plano do zero sem IA (TRN-001 segue pendente)
+
+#### Implementação (3.4)
+
+- `src/lib/training/workout-edit-schema.ts` (zod, mesmos limites da geração), `workout-edit-draft.ts` (rascunho puro: mover, remover, trocar, adicionar, validar), `workout-edit-repository.ts`, `workout-edit-service.ts` (dono do treino, duplicados, troca vira item novo), `server-workout-edit-service.ts`
+- `src/app/api/workouts/[id]/exercises/route.ts` (`PUT`), `src/app/(app)/workout/edit/` (página + `error.tsx`)
+- `src/components/plan-edit/` — `WorkoutEditor`, `EditExerciseCard`, `ExercisePicker` (busca em `/api/exercises`)
+- Link "Editar treino {rótulo}" e aviso de revisão (`?review=1`) em `WorkoutPlanView`; a geração redireciona para `/workout?review=1`
+
+#### Checklist de aceite (3.4)
+
+- [x] Schema, rascunho, serviço e repositório com testes
+- [x] Função SQL validada em Postgres local (edição, ordem, remoção com histórico preservado, rollback, outro usuário)
+- [x] Editor com testes: editar, reordenar, remover e descartar, adicionar e trocar pelo catálogo, erros por campo, falha ao salvar sem perder alterações
+- [x] Aviso de revisão depois da geração e link de edição na tela de treino
+- [ ] Migration aplicada no Supabase (WED-001)
 
 ## Fim da spec
