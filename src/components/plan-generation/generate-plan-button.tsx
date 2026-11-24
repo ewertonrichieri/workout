@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { APP_ROUTES, REVIEW_QUERY_PARAM, REVIEW_QUERY_VALUE } from "@/lib/constants/routes";
 import { sendJsonRequest } from "@/lib/http/send-json-request";
-import { translate } from "@/lib/i18n/translate";
+import { translate, type TranslationKey } from "@/lib/i18n/translate";
 
 export const PLANS_ENDPOINT = "/api/plans";
 
@@ -41,7 +41,7 @@ function useGeneratePlan() {
 }
 
 /** "Gerar plano com IA": asks before replacing an active plan (the old one is archived). */
-export function GeneratePlanButton({ hasActivePlan }: { hasActivePlan: boolean }) {
+export function GeneratePlanButton({ hasActivePlan, labelKey = "planGeneration.generateButton" }: { hasActivePlan: boolean; labelKey?: TranslationKey }) {
   const { step, setStep, generate } = useGeneratePlan();
   if (step.name === "confirming") {
     return <ConfirmReplace onConfirm={() => void generate(true)} onCancel={() => setStep({ name: "idle" })} />;
@@ -53,7 +53,7 @@ export function GeneratePlanButton({ hasActivePlan }: { hasActivePlan: boolean }
       {isGenerating && <p role="status" className="text-muted">{translate("planGeneration.generatingHint")}</p>}
       {step.name === "error" && <p role="alert" className="font-medium text-accent-strong">{step.message}</p>}
       <button type="button" onClick={start} disabled={isGenerating} aria-busy={isGenerating} className={PRIMARY_CLASS}>
-        {translate(isGenerating ? "planGeneration.generating" : "planGeneration.generateButton")}
+        {translate(isGenerating ? "planGeneration.generating" : labelKey)}
       </button>
     </div>
   );

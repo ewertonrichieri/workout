@@ -46,4 +46,17 @@ describe("plan prompt", () => {
   it("says when there are no limitations", () => {
     expect(buildPlanRequestPrompt({ ...ASSESSMENT, limitations: null }, { min: 1, max: 1 })).toMatch(/no injuries or limitations/i);
   });
+
+  it("adds the history of the previous plan when renewing", () => {
+    const history = { sessions: 9, exercises: [{ slug: "goblet-squat", sessions: 5, firstMaxLoadKg: 12, lastMaxLoadKg: 16, lastReps: 12 }] };
+    const prompt = buildPlanRequestPrompt(ASSESSMENT, { min: 1, max: 3 }, history);
+    expect(prompt).toContain("9 finished sessions");
+    expect(prompt).toContain("goblet-squat | 5 sessions | heaviest load 12 kg → 16 kg | 12 reps at the last heaviest set");
+  });
+
+  it("describes bodyweight history without loads", () => {
+    const history = { sessions: 2, exercises: [{ slug: "push-up", sessions: 2, firstMaxLoadKg: null, lastMaxLoadKg: null, lastReps: 15 }] };
+    expect(buildPlanRequestPrompt(ASSESSMENT, { min: 1, max: 3 }, history)).toContain("push-up | 2 sessions | no load | 15 reps at the last heaviest set");
+  });
 });
+

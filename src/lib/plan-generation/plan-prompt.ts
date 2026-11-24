@@ -2,6 +2,7 @@ import type { SavedAssessment } from "@/lib/assessment/assessment-schema";
 import { FULL_BODY_LABEL, SPLIT_LABELS } from "@/lib/constants/plan-generation";
 import type { PlanGoal } from "@/lib/training/plan-types";
 import type { PlanCandidate } from "./plan-candidate";
+import type { PlanHistoryExercise, PlanHistorySummary } from "./plan-history";
 import type { SplitPreference, WorkoutCountRange } from "./split-rule";
 
 /** Prompt text for the model (not UI). JSON keys stay in English; user-facing text is Brazilian Portuguese. */
@@ -48,8 +49,26 @@ function formatLimitations(limitations: string | null): string {
   return `Injuries or limitations, as written by the person:\n<user_limitations>\n${escaped}\n</user_limitations>`;
 }
 
+function formatLoad(loadKg: number | null): string {
+  return loadKg === null ? "no load" : `${loadKg} kg`;
+}
+
+function formatHistoryExercise(item: PlanHistoryExercise): string {
+  const loads = item.firstMaxLoadKg === null && item.lastMaxLoadKg === null ? "no load" : `heaviest load ${formatLoad(item.firstMaxLoadKg)} → ${formatLoad(item.lastMaxLoadKg)}`;
+  const reps = item.lastReps === null ? "" : ` | ${item.lastReps} reps at the last heaviest set`;
+  return `${item.slug} | ${item.sessions} sessions | ${loads}${reps}`;
+}
+
+/** Renewal (step 3.6): what the previous plan achieved, so the new one builds on it. */
+function formatHistory(history: PlanHistorySummary): string {
+  return [
+    `This plan replaces the previous one, in which the person completed ${history.sessions} finished sessions. Build on it: keep what progressed, vary what stalled and adjust the volume. Exercise history (slug | sessions | heaviest load first → last | reps):`,
+    ...history.exercises.map(formatHistoryExercise),
+  ].join("\n");
+}
+
 /** Only what the plan needs: no ids, names or contact data. */
-export function buildPlanRequestPrompt(assessment: SavedAssessment, range: WorkoutCountRange): string {
+export function buildPlanRequestPrompt(assessment: SavedAssessment, range: WorkoutCountRange, history?: PlanHistorySummary): string {
   const workoutCount = range.min === range.max ? `exactly ${range.min} workout${range.min === 1 ? "" : "s"}` : `between ${range.min} and ${range.max} workouts`;
   return [
     "Build a plan for this person:",
@@ -59,5 +78,6 @@ export function buildPlanRequestPrompt(assessment: SavedAssessment, range: Worko
     `- Split preference: ${SPLIT_DESCRIPTIONS[assessment.splitPreference]}`,
     `- Create ${workoutCount}.`,
     formatLimitations(assessment.limitations),
+    ...(history && history.sessions > 0 ? [formatHistory(history)] : []),
   ].join("\n");
 }

@@ -31,3 +31,11 @@ export const MAX_PROGRESS_SET_LOGS = 1000;
 
 /** Locale of numbers shown to the user (pt-BR only in the MVP). */
 export const APP_LOCALE = "pt-BR";
+
+/** Load progression (step 3.5, user decision 2026-11-24): +5%, rounded to 0.5 kg, at least 1 kg. */
+export const PROGRESSION_INCREASE_RATIO = 0.05;
+export const PROGRESSION_ROUNDING_KG = 0.5;
+export const PROGRESSION_MIN_INCREASE_KG = 1;
+
+/** Renewal notice (step 3.6): last days of validity and after it ends. */
+export const RENEWAL_NOTICE_DAYS = 7;

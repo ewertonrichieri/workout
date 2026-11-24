@@ -27,6 +27,14 @@ describe("WorkoutPlanView", () => {
     expect(screen.getByText("Plano gerado pela IA — revise e ajuste o que quiser.")).toBeInTheDocument();
   });
 
+  it("explains an earned load increase on the card", () => {
+    const tracked = buildWorkoutExercise(9, { trackProgression: true, sets: 2 });
+    const overview = { ...buildPlanOverview([buildWorkout("A", 1, [tracked])]), suggestedLoads: { [tracked.id]: [21, 21] }, loadIncreases: { [tracked.id]: { fromKg: 20, toKg: 21, reps: 12 } } };
+    render(<WorkoutPlanView overview={overview} />);
+    expect(screen.getByText("Você fez 12 repetições em todas as séries com 20 kg. Sugestão: 21 kg.")).toBeInTheDocument();
+    expect(screen.queryByText("Carga sugerida da última sessão")).not.toBeInTheDocument();
+  });
+
   it("uses the label as title for a single workout plan", () => {
     render(<WorkoutPlanView overview={buildPlanOverview([buildWorkout("Full body", 1, [buildWorkoutExercise(1)])])} />);
     expect(screen.queryByRole("navigation", { name: "Treinos do plano" })).not.toBeInTheDocument();

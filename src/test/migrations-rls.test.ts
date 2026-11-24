@@ -162,3 +162,14 @@ describe("workout editing (step 3.4)", () => {
     expect(sql).toContain("grant delete on public.workout_exercises to authenticated");
   });
 });
+
+describe("progression and renewal (steps 3.5 and 3.6)", () => {
+  it("returns reps with the latest loads and summarizes a plan's history through security invoker functions", () => {
+    const sql = readAllMigrations();
+    expect(sql).toMatch(/returns table \(exercise_id uuid, set_number integer, load_kg numeric, reps_done integer\)/);
+    const summary = sql.slice(sql.indexOf("create or replace function public.plan_history_summary"));
+    expect(summary.slice(0, summary.indexOf("$$;"))).toContain("security invoker");
+    expect(sql).toContain("revoke all on function public.plan_history_summary(uuid) from public, anon");
+    expect(sql).toContain("grant execute on function public.plan_history_summary(uuid) to authenticated");
+  });
+});

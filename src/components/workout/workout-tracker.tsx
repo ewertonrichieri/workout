@@ -3,6 +3,7 @@
 import { translate } from "@/lib/i18n/translate";
 import type { Workout } from "@/lib/training/plan-types";
 import { countCompletedExercises } from "@/lib/training/set-log-draft";
+import type { LoadIncreases } from "@/lib/training/load-increases";
 import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,13 +11,17 @@ import { FinishWorkoutButton } from "./finish-workout-button";
 import { useWorkoutDraft } from "./use-workout-draft";
 import { WorkoutExerciseGroups } from "./workout-exercise-groups";
 
+const NO_INCREASES: LoadIncreases = {};
+
 /** Set logging for the selected workout; the draft stays on the device until "Finalizar treino" (2.6). */
 interface WorkoutTrackerProps {
   workout: Workout;
   suggestedLoads: SuggestedLoads;
+  /** Earned increases (step 3.5); empty when none. */
+  loadIncreases?: LoadIncreases;
 }
 
-export function WorkoutTracker({ workout, suggestedLoads }: WorkoutTrackerProps) {
+export function WorkoutTracker({ workout, suggestedLoads, loadIncreases = NO_INCREASES }: WorkoutTrackerProps) {
   const router = useRouter();
   const { draft, changeSet, clearDraft } = useWorkoutDraft(workout, suggestedLoads);
   const [hasFinished, setHasFinished] = useState(false);
@@ -40,7 +45,7 @@ export function WorkoutTracker({ workout, suggestedLoads }: WorkoutTrackerProps)
         <p className="text-sm text-muted">{translate("training.draftNotice")}</p>
         {hasFinished && <p role="status" className="font-semibold text-accent-strong">{translate("training.finish.success")}</p>}
       </div>
-      <WorkoutExerciseGroups exercises={workout.exercises} draft={draft} suggestedLoads={suggestedLoads} onSetChange={changeSetAfterFinish} />
+      <WorkoutExerciseGroups exercises={workout.exercises} draft={draft} suggestedLoads={suggestedLoads} loadIncreases={loadIncreases} onSetChange={changeSetAfterFinish} />
       <FinishWorkoutButton draft={draft} onFinished={finish} />
     </div>
   );
