@@ -23,6 +23,8 @@ export interface StructuredOutputRequest<T> {
   system: string;
   prompt: string;
   schema: z.ZodType<T>;
+  /** Defaults to CLAUDE_MODEL. */
+  model?: string;
   effort?: ClaudeEffort;
   maxTokens?: number;
   /** Marks the system prompt for prompt caching (large, stable prefixes such as the catalog). */
@@ -53,7 +55,7 @@ function buildSystem<T>(request: StructuredOutputRequest<T>): BetaMessageStreamP
 
 function buildRequestBody<T>(request: StructuredOutputRequest<T>): BetaMessageStreamParams {
   return {
-    model: CLAUDE_MODEL,
+    model: request.model ?? CLAUDE_MODEL,
     max_tokens: request.maxTokens ?? DEFAULT_CLAUDE_MAX_TOKENS,
     betas: [CLAUDE_FALLBACK_BETA],
     fallbacks: CLAUDE_FALLBACK_MODE,
