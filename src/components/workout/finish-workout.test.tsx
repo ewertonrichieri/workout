@@ -32,7 +32,7 @@ afterEach(() => {
 describe("Finalizar treino", () => {
   it("warns and sends nothing without checked sets", () => {
     const fetchMock = mockFetch(201, {});
-    render(<WorkoutTracker workout={WORKOUT} />);
+    render(<WorkoutTracker workout={WORKOUT} suggestedLoads={{}} />);
     fireEvent.click(screen.getByRole("button", { name: "Finalizar treino" }));
     expect(screen.getByRole("alert")).toHaveTextContent("Marque pelo menos uma série antes de finalizar o treino.");
     expect(fetchMock).not.toHaveBeenCalled();
@@ -40,7 +40,7 @@ describe("Finalizar treino", () => {
 
   it("asks for confirmation with unchecked sets, then saves and clears the draft", async () => {
     const fetchMock = mockFetch(201, { success: true, data: { sessionId: "33333333-3333-4333-8333-333333333333" } });
-    render(<WorkoutTracker workout={WORKOUT} />);
+    render(<WorkoutTracker workout={WORKOUT} suggestedLoads={{}} />);
     completeFirstSet();
     fireEvent.click(screen.getByRole("button", { name: "Finalizar treino" }));
     expect(screen.getByText("Ainda há séries sem check. Elas não serão salvas.")).toBeInTheDocument();
@@ -55,7 +55,7 @@ describe("Finalizar treino", () => {
 
   it("keeps the draft and shows the server message when saving fails", async () => {
     mockFetch(422, { success: false, error: "Algumas séries não correspondem ao treino atual. Recarregue a página e tente de novo." });
-    render(<WorkoutTracker workout={WORKOUT} />);
+    render(<WorkoutTracker workout={WORKOUT} suggestedLoads={{}} />);
     completeFirstSet();
     fireEvent.click(screen.getByRole("button", { name: "Finalizar treino" }));
     fireEvent.click(screen.getByRole("button", { name: "Finalizar mesmo assim" }));
@@ -65,7 +65,7 @@ describe("Finalizar treino", () => {
 
   it("shows a friendly message when the network fails", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => { throw new TypeError("Failed to fetch"); }));
-    render(<WorkoutTracker workout={buildWorkout("A", 1, [buildWorkoutExercise(1, { sets: 1 })])} />);
+    render(<WorkoutTracker workout={buildWorkout("A", 1, [buildWorkoutExercise(1, { sets: 1 })])} suggestedLoads={{}} />);
     completeFirstSet();
     fireEvent.click(screen.getByRole("button", { name: "Finalizar treino" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Não foi possível salvar o treino.");

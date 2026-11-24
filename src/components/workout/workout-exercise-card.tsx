@@ -6,11 +6,14 @@ import type { WorkoutExercise } from "@/lib/training/plan-types";
 import { isExerciseCompleted, type SetEntry } from "@/lib/training/set-log-draft";
 import { ExerciseDemoDisclosure } from "./exercise-demo-disclosure";
 import { SetLogList } from "./set-log-list";
+import { TrackProgressionSwitch } from "./track-progression-switch";
 import { describeRepsTarget, describeRest, describeSetsAndReps } from "./workout-labels";
 
 interface WorkoutExerciseCardProps {
   workoutExercise: WorkoutExercise;
   sets: readonly SetEntry[];
+  /** Load fields were prefilled from the latest session (step 2.7). */
+  hasSuggestedLoad: boolean;
   onSetChange: (setIndex: number, patch: Partial<SetEntry>) => void;
 }
 
@@ -33,7 +36,7 @@ function PrescriptionSummary({ workoutExercise }: { workoutExercise: WorkoutExer
 }
 
 /** One prescribed exercise: prescription, demonstration and set logging. */
-export function WorkoutExerciseCard({ workoutExercise, sets, onSetChange }: WorkoutExerciseCardProps) {
+export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, onSetChange }: WorkoutExerciseCardProps) {
   const { exercise } = workoutExercise;
   const isCompleted = isExerciseCompleted(sets);
   return (
@@ -43,7 +46,9 @@ export function WorkoutExerciseCard({ workoutExercise, sets, onSetChange }: Work
         <PrescriptionSummary workoutExercise={workoutExercise} />
       </div>
       {isCompleted && <p className="text-sm font-semibold text-accent-strong">{translate("training.exerciseCompleted")}</p>}
+      {hasSuggestedLoad && <p className="text-sm text-muted">{translate("training.progression.suggestedNotice")}</p>}
       <SetLogList exerciseName={exercise.name} repsTarget={describeRepsTarget(workoutExercise)} sets={sets} onSetChange={onSetChange} />
+      <TrackProgressionSwitch workoutExerciseId={workoutExercise.id} exerciseName={exercise.name} isTracked={workoutExercise.trackProgression} />
       <ExerciseDemoDisclosure exercise={exercise} />
     </article>
   );

@@ -5,7 +5,8 @@ import { APP_TIME_ZONE } from "@/lib/constants/training";
 import { buildDraftStorageKey, readStoredDraft, removeStoredDraft, writeStoredDraft } from "@/lib/training/draft-storage";
 import type { Workout } from "@/lib/training/plan-types";
 import { toDateInTimeZone } from "@/lib/training/plan-validity";
-import { createEmptyDraft, markStarted, restoreDraft, updateSetEntry, type SetEntry, type WorkoutDraft } from "@/lib/training/set-log-draft";
+import { createEmptyDraft, markStarted, refreshUntouchedDraft, restoreDraft, updateSetEntry, type SetEntry, type WorkoutDraft } from "@/lib/training/set-log-draft";
+import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 
 export type SetChangeHandler = (workoutExerciseId: string, setIndex: number, patch: Partial<SetEntry>) => void;
 
@@ -23,8 +24,9 @@ function today(): string {
   return toDateInTimeZone(new Date(), APP_TIME_ZONE);
 }
 
-export function useWorkoutDraft(workout: Workout): WorkoutDraftState {
-  const [draft, setDraft] = useState(() => createEmptyDraft(workout, DATE_PENDING));
+/** `suggestedLoads` fill a draft only while it was not edited (step 2.7). */
+export function useWorkoutDraft(workout: Workout, suggestedLoads: SuggestedLoads): WorkoutDraftState {
+  const [draft, setDraft] = useState(() => createEmptyDraft(workout, DATE_PENDING, suggestedLoads));
   const [storageKey, setStorageKey] = useState<string | null>(null);
 
   useEffect(() => {
@@ -32,9 +34,9 @@ export function useWorkoutDraft(workout: Workout): WorkoutDraftState {
     const key = buildDraftStorageKey(workout.id, date);
     // Device storage only exists after hydration, so the draft is restored here.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDraft(restoreDraft(readStoredDraft(key), workout, date));
+    setDraft(refreshUntouchedDraft(restoreDraft(readStoredDraft(key), workout, date), workout, suggestedLoads));
     setStorageKey(key);
-  }, [workout]);
+  }, [workout, suggestedLoads]);
 
   useEffect(() => {
     if (storageKey) writeStoredDraft(storageKey, draft);
@@ -46,8 +48,8 @@ export function useWorkoutDraft(workout: Workout): WorkoutDraftState {
 
   const clearDraft = useCallback(() => {
     if (storageKey) removeStoredDraft(storageKey);
-    setDraft(createEmptyDraft(workout, today()));
-  }, [storageKey, workout]);
+    setDraft(createEmptyDraft(workout, today(), suggestedLoads));
+  }, [storageKey, workout, suggestedLoads]);
 
   return { draft, changeSet, clearDraft };
 }

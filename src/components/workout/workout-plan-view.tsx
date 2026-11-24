@@ -1,6 +1,7 @@
 import { EmptyState } from "@/components/layout/empty-state";
 import { translate } from "@/lib/i18n/translate";
 import type { ActivePlanOverview, Workout } from "@/lib/training/plan-types";
+import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 import { selectWorkout } from "@/lib/training/workout-display";
 import { PlanValiditySummary } from "./plan-validity-summary";
 import { WorkoutTracker } from "./workout-tracker";
@@ -16,9 +17,9 @@ function EmptyWorkout() {
   return <EmptyState title={translate("training.emptyWorkoutTitle")} description={translate("training.emptyWorkoutDescription")} />;
 }
 
-function SelectedWorkout({ workout }: { workout: Workout }) {
+function SelectedWorkout({ workout, suggestedLoads }: { workout: Workout; suggestedLoads: SuggestedLoads }) {
   if (workout.exercises.length === 0) return <EmptyWorkout />;
-  return <WorkoutTracker key={workout.id} workout={workout} />;
+  return <WorkoutTracker key={workout.id} workout={workout} suggestedLoads={suggestedLoads} />;
 }
 
 function WorkoutHeading({ workouts, selected }: { workouts: readonly Workout[]; selected: Workout }) {
@@ -36,7 +37,7 @@ export function WorkoutPlanView({ overview, requestedLabel }: WorkoutPlanViewPro
       {selected ? (
         <>
           <WorkoutHeading workouts={plan.workouts} selected={selected} />
-          <SelectedWorkout workout={selected} />
+          <SelectedWorkout workout={selected} suggestedLoads={overview.suggestedLoads} />
         </>
       ) : (
         <EmptyWorkout />

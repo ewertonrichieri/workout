@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { APP_TIME_ZONE } from "@/lib/constants/training";
 import { buildDraftStorageKey } from "@/lib/training/draft-storage";
 import { toDateInTimeZone } from "@/lib/training/plan-validity";
-import { createEmptyDraft, updateSetEntry } from "@/lib/training/set-log-draft";
+import { createEmptyDraft, markStarted, updateSetEntry } from "@/lib/training/set-log-draft";
 import { buildWorkout, buildWorkoutExercise } from "@/test/training-fixtures";
 import { WorkoutTracker } from "./workout-tracker";
 
@@ -18,14 +18,14 @@ afterEach(() => window.localStorage.clear());
 
 describe("WorkoutTracker", () => {
   it("renders one labelled row per prescribed set", () => {
-    render(<WorkoutTracker workout={WORKOUT} />);
+    render(<WorkoutTracker workout={WORKOUT} suggestedLoads={{}} />);
     expect(screen.getByLabelText("Repetições da série 2 de Exercício falso 1")).toHaveAttribute("placeholder", "8 a 12");
     expect(screen.getByLabelText("Carga (kg) da série 1 de Exercício falso 1")).toHaveAttribute("inputmode", "decimal");
     expect(screen.getAllByRole("checkbox")).toHaveLength(3);
   });
 
   it("enables the check only with reps and marks the exercise as completed", () => {
-    render(<WorkoutTracker workout={WORKOUT} />);
+    render(<WorkoutTracker workout={WORKOUT} suggestedLoads={{}} />);
     const check = screen.getByRole("checkbox", { name: `Concluir série 1 de ${NAME}` });
     expect(check).toBeDisabled();
     fireEvent.change(screen.getByLabelText(`Repetições da série 1 de ${NAME}`), { target: { value: "10" } });
@@ -37,7 +37,7 @@ describe("WorkoutTracker", () => {
   });
 
   it("shows a field error after leaving an invalid load", () => {
-    render(<WorkoutTracker workout={WORKOUT} />);
+    render(<WorkoutTracker workout={WORKOUT} suggestedLoads={{}} />);
     const load = screen.getByLabelText(`Carga (kg) da série 1 de ${NAME}`);
     fireEvent.change(load, { target: { value: "1,234" } });
     fireEvent.blur(load);
@@ -46,9 +46,10 @@ describe("WorkoutTracker", () => {
   });
 
   it("saves the draft on the device and restores it after reload", async () => {
-    const stored = updateSetEntry(createEmptyDraft(WORKOUT, today()), "workout-exercise-1", 1, { repsDone: "9", load: "20" });
+    const edited = updateSetEntry(createEmptyDraft(WORKOUT, today()), "workout-exercise-1", 1, { repsDone: "9", load: "20" });
+    const stored = markStarted(edited, "2026-11-24T10:00:00.000Z");
     window.localStorage.setItem(buildDraftStorageKey(WORKOUT.id, today()), JSON.stringify(stored));
-    render(<WorkoutTracker workout={WORKOUT} />);
+    render(<WorkoutTracker workout={WORKOUT} suggestedLoads={{}} />);
     const reps = screen.getByLabelText("Repetições da série 2 de Exercício falso 1");
     await waitFor(() => expect(reps).toHaveValue("9"));
     fireEvent.change(reps, { target: { value: "11" } });

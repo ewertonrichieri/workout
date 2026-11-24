@@ -122,3 +122,20 @@ describe("finish payload", () => {
     expect(markStarted(started, "2026-11-24T11:00:00.000Z").startedAt).toBe("2026-11-24T10:00:00.000Z");
   });
 });
+
+describe("suggested loads in the draft", () => {
+  it("prefills the load of a new draft with comma decimals", async () => {
+    const { createEmptyDraft: create } = await import("./set-log-draft");
+    const draft = create(WORKOUT, TODAY, { [FIRST]: [20, 22.5] });
+    expect(draft.entries[FIRST].map((entry) => entry.load)).toEqual(["20", "22,5"]);
+    expect(draft.entries[SECOND][0].load).toBe("");
+  });
+
+  it("refreshes suggestions only while the draft was not edited", async () => {
+    const { refreshUntouchedDraft, markStarted } = await import("./set-log-draft");
+    const untouched = createEmptyDraft(WORKOUT, TODAY);
+    expect(refreshUntouchedDraft(untouched, WORKOUT, { [SECOND]: [30] }).entries[SECOND][0].load).toBe("30");
+    const edited = markStarted(untouched, "2026-11-24T10:00:00.000Z");
+    expect(refreshUntouchedDraft(edited, WORKOUT, { [SECOND]: [30] })).toBe(edited);
+  });
+});

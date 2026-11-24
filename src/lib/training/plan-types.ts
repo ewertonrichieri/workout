@@ -1,5 +1,6 @@
 import type { ExerciseMediaItem } from "@/lib/catalog/exercises/exercise-types";
 import type { PLAN_GOALS, PLAN_ORIGINS } from "@/lib/constants/training";
+import type { SuggestedLoads } from "./suggested-loads";
 
 export type PlanGoal = (typeof PLAN_GOALS)[number];
 export type PlanOrigin = (typeof PLAN_ORIGINS)[number];
@@ -57,4 +58,6 @@ export interface PlanValidity {
 export interface ActivePlanOverview {
   plan: ActivePlan;
   validity: PlanValidity;
+  /** "Salvar carga para progredir" suggestions per workout exercise (step 2.7). */
+  suggestedLoads: SuggestedLoads;
 }
