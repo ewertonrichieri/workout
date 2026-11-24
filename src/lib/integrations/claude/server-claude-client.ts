@@ -7,8 +7,18 @@ import { createStructuredOutputClient, type StructuredOutputClient } from "./str
 /** SDK retries off: the project's retry policy (runWithRetry) is the only one. */
 const SDK_MAX_RETRIES = 0;
 
-/** Composition root for Claude calls on the server. */
-export function createServerStructuredOutputClient(): StructuredOutputClient {
+function buildClient(): StructuredOutputClient {
   const client = new Anthropic({ apiKey: getClaudeConfig().apiKey, maxRetries: SDK_MAX_RETRIES });
   return createStructuredOutputClient({ client, logger: createServerLogger() });
+}
+
+/** Composition root for Claude calls; the key is read on the first call, so screens that never call AI work without it. */
+export function createServerStructuredOutputClient(): StructuredOutputClient {
+  let client: StructuredOutputClient | undefined;
+  return {
+    generate(request) {
+      client ??= buildClient();
+      return client.generate(request);
+    },
+  };
 }

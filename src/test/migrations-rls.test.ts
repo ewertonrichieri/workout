@@ -123,3 +123,24 @@ describe("assessments (step 3.1)", () => {
     expect(readAllMigrations()).toContain("grant select, insert on public.assessments, public.assessment_equipment to authenticated");
   });
 });
+
+describe("generated plans (step 3.3)", () => {
+  const CREATE_SIGNATURE = "public.create_generated_plan(uuid, text, date, date, boolean, jsonb)";
+  const CANDIDATES_SIGNATURE = "public.list_plan_candidates(text[])";
+
+  it("creates and lists through security invoker functions executable only by authenticated users", () => {
+    const sql = readAllMigrations();
+    for (const [name, signature] of [["create_generated_plan", CREATE_SIGNATURE], ["list_plan_candidates", CANDIDATES_SIGNATURE]]) {
+      const definition = sql.slice(sql.indexOf(`create or replace function public.${name}`));
+      expect(definition.slice(0, definition.indexOf("$$;"))).toContain("security invoker");
+      expect(sql).toContain(`revoke all on function ${signature} from public, anon`);
+      expect(sql).toContain(`grant execute on function ${signature} to authenticated`);
+    }
+  });
+
+  it("lets authenticated users write their plans (RLS filters rows) and only archive old ones", () => {
+    const sql = readAllMigrations();
+    expect(sql).toContain("grant insert on public.plans, public.workouts, public.workout_exercises to authenticated");
+    expect(sql).toContain("grant update (status) on public.plans to authenticated");
+  });
+});
