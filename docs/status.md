@@ -8,17 +8,16 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **PLN-002** — aplicar no Supabase a migration do controle de custo da IA (precisa de autorização do usuário; sem ela, gerar plano e ajuste do dia falham) → `specs/011-geracao-treino-ia.md`
-2. **SUB-001** — voltar a conversar sobre o custo da troca na hora (ideia: trocas prontas em cache) → `specs/012-treino-adaptativo.md`
-3. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
-4. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-5. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
+1. **SUB-001** — voltar a conversar sobre o custo da troca na hora (ideia: trocas prontas em cache) → `specs/012-treino-adaptativo.md`
+2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
+3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
+4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 
 ---
 
 ## Concluído recentemente
 
-- **Controle de custo da IA** — limite por usuário em 24 horas (gerar/renovar plano: 3; ajuste do dia: 5; troca na hora sem limite por decisão do usuário, SUB-001) com HTTP 429 em português; proposta do ajuste guardada por check-in (pedir de novo não paga a IA); troca sem IA quando sobram até 3 opções; migration testada no Supabase num bloco desfeito, aplicação pendente (PLN-002) → `specs/011-geracao-treino-ia.md`, `specs/012-treino-adaptativo.md`
+- **Controle de custo da IA** — limite por usuário em 24 horas (gerar/renovar plano: 3; ajuste do dia: 5; troca na hora sem limite por decisão do usuário, SUB-001) com HTTP 429 em português; proposta do ajuste guardada por check-in (pedir de novo não paga a IA); troca sem IA quando sobram até 3 opções; migration testada num bloco desfeito e aplicada no Supabase → `specs/011-geracao-treino-ia.md`, `specs/012-treino-adaptativo.md`
 - **3B.5 Teste de ponta a ponta (Fase 3B)** — check-in, ajuste da IA (aceitar, manter, desfazer, fallback quando a IA propôs mais que o plano), troca na hora com desfazer, esforço por série, finalizar e autorregulação (descer para 28,5 kg e manter com "no limite") testados no navegador contra o Supabase real com IA real; nenhum defeito; dados temporários apagados; Fase 3B concluída → `specs/012-treino-adaptativo.md`
 - **3B.4 Substituição na hora** — "Trocar exercício" no card (antes de qualquer série com check): motivo opcional (aparelho ocupado/quebrado/outro), a IA escolhe até 3 equivalentes entre exercícios com mídia, mesmo músculo principal e equipamento da anamnese (sem o aparelho do original quando ocupado/quebrado); se a IA falhar, sugestões automáticas avisadas; "Desfazer troca"; vale só para hoje; ao finalizar, `exercise_substitutions` e séries com o substituto; chamada real medida (1,7–3,4 s, ~US$ 0,0003); migration aplicada e testada no Supabase (bloco desfeito) → `specs/012-treino-adaptativo.md`
 - **3B.3 Esforço por série + autorregulação** — "fácil / ok / no limite" opcional depois do check da série, gravado em `set_logs.effort`; com "Salvar carga para progredir" ligado: "no limite" impede a subida da 3.5 (o card explica) e 2+ séries no limite abaixo do mínimo de repetições sugerem −5% (mín. 1 kg); interruptor desligado trava a carga; migration aplicada e testada no Supabase (bloco desfeito) → `specs/012-treino-adaptativo.md`
@@ -72,7 +71,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **PLN-002** — aplicar a migration `20261128000000_ai_cost_control.sql` no Supabase → `specs/011-geracao-treino-ia.md`
 - **SUB-001** — voltar a conversar sobre o custo da troca na hora (trocas prontas em cache) → `specs/012-treino-adaptativo.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`

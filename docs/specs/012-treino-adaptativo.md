@@ -277,7 +277,7 @@ Observações (não são defeitos): para a puxada frontal a IA pôs remadas ante
 
 - **Pedido:** análise de custo da IA (itens 1 e 2): não pagar duas vezes pelo mesmo ajuste e limitar os pedidos de ajuste por usuário.
 - **Mudança:** a proposta da IA fica guardada por check-in (`adjustment_proposals` + `adjustment_proposal_changes`, gravadas numa transação por `save_adjustment_proposal`); pedir de novo o ajuste do mesmo check-in (recarregar no meio, outro aparelho, chamada direta à API) devolve a proposta guardada sem chamar a IA. Pedidos que vão à IA passam pelo limite da spec 011 (`readiness.adjust`: 5 em 24 horas → HTTP 429).
-- **Pendências:** PLN-002 (aplicar a migration no Supabase, spec 011)
+- **Pendências:** nenhuma (migration aplicada no Supabase em 2026-11-24)
 
 #### Regras
 
