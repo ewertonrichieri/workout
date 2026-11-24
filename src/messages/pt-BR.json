@@ -173,7 +173,15 @@
       "switchLabel": "Salvar carga para progredir em {name}",
       "suggestedNotice": "Carga sugerida da última sessão",
       "failed": "Não foi possível salvar a preferência. Tente de novo.",
-      "increaseNotice": "Você fez {reps} repetições em todas as séries com {from} kg. Sugestão: {to} kg."
+      "increaseNotice": "Você fez {reps} repetições em todas as séries com {from} kg. Sugestão: {to} kg.",
+      "decreaseNotice": "{count} séries no limite abaixo de {reps} repetições com {from} kg. Sugestão: {to} kg.",
+      "holdNotice": "Você chegou ao máximo de repetições, mas marcou \"no limite\": a carga fica em {load} kg."
+    },
+    "effort": {
+      "label": "Esforço da série {number} de {name}",
+      "easy": "Fácil",
+      "ok": "Ok",
+      "max": "No limite"
     }
   },
   "common": {

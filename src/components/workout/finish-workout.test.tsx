@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { APP_TIME_ZONE } from "@/lib/constants/training";
 import { buildDraftStorageKey } from "@/lib/training/draft-storage";
@@ -48,9 +48,25 @@ describe("Finalizar treino", () => {
     await screen.findByText("Treino finalizado e salvo.");
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe("/api/workout-sessions");
-    expect(JSON.parse(String(init.body)).sets).toEqual([{ workoutExerciseId: "workout-exercise-1", setNumber: 1, repsDone: 10, loadKg: null }]);
+    expect(JSON.parse(String(init.body)).sets).toEqual([{ workoutExerciseId: "workout-exercise-1", setNumber: 1, repsDone: 10, loadKg: null, effort: null }]);
     expect(screen.getByLabelText(`Repetições da série 1 de ${NAME}`)).toHaveValue("");
     await waitFor(() => expect(JSON.parse(window.localStorage.getItem(storageKey()) ?? "null")?.entries["workout-exercise-1"][0].repsDone).toBe(""));
+  });
+
+  it("offers the effort only after the check and sends the chosen one (step 3B.3)", async () => {
+    const fetchMock = mockFetch(201, { success: true, data: { sessionId: "33333333-3333-4333-8333-333333333333" } });
+    render(<WorkoutTracker workout={WORKOUT} suggestedLoads={{}} />);
+    expect(screen.queryByRole("radiogroup", { name: `Esforço da série 1 de ${NAME}` })).not.toBeInTheDocument();
+    completeFirstSet();
+    const effort = screen.getByRole("radiogroup", { name: `Esforço da série 1 de ${NAME}` });
+    expect(within(effort).getAllByRole("radio").map((radio) => radio.closest("label")?.textContent)).toEqual(["Fácil", "Ok", "No limite"]);
+    fireEvent.click(within(effort).getByRole("radio", { name: "No limite" }));
+    expect(within(effort).getByRole("radio", { name: "No limite" })).toBeChecked();
+    fireEvent.click(screen.getByRole("button", { name: "Finalizar treino" }));
+    fireEvent.click(screen.getByRole("button", { name: "Finalizar mesmo assim" }));
+    await screen.findByText("Treino finalizado e salvo.");
+    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
+    expect(JSON.parse(String(init.body)).sets[0]).toMatchObject({ setNumber: 1, effort: "max" });
   });
 
   it("keeps the draft and shows the server message when saving fails", async () => {

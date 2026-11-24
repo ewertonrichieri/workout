@@ -2,6 +2,7 @@
 
 import { useId, useState } from "react";
 import { translate } from "@/lib/i18n/translate";
+import { SetEffortChoice } from "./set-effort-choice";
 import { canCompleteSet, parseLoadKg, parseRepsDone, type ParsedNumber, type SetEntry } from "@/lib/training/set-log-draft";
 
 interface SetLogRowProps {
@@ -68,15 +69,21 @@ function CompleteSetCheck({ label, entry, onChange }: { label: string; entry: Se
   );
 }
 
-/** One set: reps done, load (kg) and done check. */
+/** One set: reps done, load (kg), done check and, once checked, the optional effort (step 3B.3). */
 export function SetLogRow({ setNumber, exerciseName, entry, repsTarget, onChange }: SetLogRowProps) {
   const labelParams = { number: setNumber, name: exerciseName };
+  const effortName = useId();
   return (
     <li className="grid grid-cols-[3rem_1fr_1fr_2.75rem] items-start gap-2">
       <span className="flex min-h-11 items-center justify-center font-semibold">{setNumber}</span>
       <NumberField label={translate("training.repsDoneLabel", labelParams)} value={entry.repsDone} placeholder={repsTarget} inputMode="numeric" errorMessage={translate("training.invalidReps")} parse={parseRepsDone} onChange={(repsDone) => onChange({ repsDone })} />
       <NumberField label={translate("training.loadLabel", labelParams)} value={entry.load} inputMode="decimal" errorMessage={translate("training.invalidLoad")} parse={parseLoadKg} onChange={(load) => onChange({ load })} />
       <CompleteSetCheck label={translate("training.completeSetLabel", labelParams)} entry={entry} onChange={onChange} />
+      {entry.isDone && (
+        <div className="col-span-4">
+          <SetEffortChoice label={translate("training.effort.label", labelParams)} name={effortName} selected={entry.effort} onSelect={(effort) => onChange({ effort })} />
+        </div>
+      )}
     </li>
   );
 }

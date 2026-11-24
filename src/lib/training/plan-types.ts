@@ -1,4 +1,4 @@
-import type { LoadIncreases } from "./load-increases";
+import type { LoadAdjustments } from "./load-adjustments";
 import type { ExerciseMediaItem } from "@/lib/catalog/exercises/exercise-types";
 import type { PLAN_GOALS, PLAN_ORIGINS } from "@/lib/constants/training";
 import type { SuggestedLoads } from "./suggested-loads";
@@ -72,5 +72,5 @@ export interface ActivePlanOverview {
   /** "Salvar carga para progredir" suggestions per workout exercise (step 2.7). */
   suggestedLoads: SuggestedLoads;
   /** Tracked exercises that earned more load (step 3.5), keyed by workout exercise id. */
-  loadIncreases: LoadIncreases;
+  loadAdjustments: LoadAdjustments;
 }

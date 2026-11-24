@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LOAD_DECIMAL_PLACES, MAX_LOAD_KG, MAX_REPS_DONE } from "@/lib/constants/training";
+import { LOAD_DECIMAL_PLACES, MAX_LOAD_KG, MAX_REPS_DONE, SET_EFFORTS } from "@/lib/constants/training";
 import { draftAdjustmentSchema } from "@/lib/readiness/adjustment-schema";
 import { checkinResultSchema } from "@/lib/readiness/readiness-schema";
 import type { Workout } from "./plan-types";
@@ -7,7 +7,13 @@ import type { FinishedSet, FinishWorkoutInput } from "./session-schema";
 import type { SuggestedLoads } from "./suggested-loads";
 
 /** One set as typed by the user (raw text keeps partial input like "12,"). */
-export const setEntrySchema = z.object({ repsDone: z.string(), load: z.string(), isDone: z.boolean() });
+export const setEntrySchema = z.object({
+  repsDone: z.string(),
+  load: z.string(),
+  isDone: z.boolean(),
+  /** "fácil / ok / no limite" (step 3B.3), only for a checked set; an unknown stored value is dropped. */
+  effort: z.enum(SET_EFFORTS).optional().catch(undefined),
+});
 export type SetEntry = z.infer<typeof setEntrySchema>;
 
 /** Check-in of the day (step 3B.1): done (saved on the server) or skipped by the user. */
@@ -101,7 +107,7 @@ function toFinishedSet(workoutExerciseId: string, entry: SetEntry, index: number
   const reps = parseRepsDone(entry.repsDone);
   const load = parseLoadKg(entry.load);
   if (!entry.isDone || !reps.isValid || reps.value === null || !load.isValid) return null;
-  return { workoutExerciseId, setNumber: index + 1, repsDone: reps.value, loadKg: load.value };
+  return { workoutExerciseId, setNumber: index + 1, repsDone: reps.value, loadKg: load.value, effort: entry.effort ?? null };
 }
 
 /** Body of "Finalizar treino": only checked sets; the server validates it again. */
@@ -117,13 +123,20 @@ export function hasUncheckedSets(draft: WorkoutDraft): boolean {
   return Object.values(draft.entries).some((entries) => entries.some((entry) => !entry.isDone));
 }
 
+/** The check needs a completable set; the effort only exists on a checked set. */
+function keepEffortOnlyWhenDone(entry: SetEntry): SetEntry {
+  const isDone = entry.isDone && canCompleteSet(entry);
+  if (isDone) return { ...entry, isDone };
+  const { repsDone, load } = entry;
+  return { repsDone, load, isDone };
+}
+
 /** Immutable update of one set; a set that can no longer be completed is unchecked. */
 export function updateSetEntry(draft: WorkoutDraft, workoutExerciseId: string, setIndex: number, patch: Partial<SetEntry>): WorkoutDraft {
   const sets = draft.entries[workoutExerciseId];
   const current = sets?.[setIndex];
   if (!sets || !current) return draft;
-  const merged = { ...current, ...patch };
-  const updated = { ...merged, isDone: merged.isDone && canCompleteSet(merged) };
+  const updated = keepEffortOnlyWhenDone({ ...current, ...patch });
   const nextSets = sets.map((entry, index) => (index === setIndex ? updated : entry));
   return { ...draft, entries: { ...draft.entries, [workoutExerciseId]: nextSets } };
 }
@@ -139,7 +152,7 @@ export function countCompletedExercises(draft: WorkoutDraft, workout: Workout): 
 function alignSets(stored: readonly SetEntry[] | undefined, prescribedSets: number): SetEntry[] {
   return emptySets(prescribedSets).map((empty, index) => {
     const entry = stored?.[index];
-    return entry ? { ...entry, isDone: entry.isDone && canCompleteSet(entry) } : empty;
+    return entry ? keepEffortOnlyWhenDone(entry) : empty;
   });
 }
 

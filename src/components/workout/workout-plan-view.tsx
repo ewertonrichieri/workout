@@ -53,7 +53,7 @@ function SelectedWorkout({ workout, overview, sessionMinutes }: SelectedWorkoutP
       key={workout.id}
       workout={workout}
       suggestedLoads={overview.suggestedLoads}
-      loadIncreases={overview.loadIncreases}
+      loadAdjustments={overview.loadAdjustments}
       sessionMinutes={sessionMinutes}
     />
   );

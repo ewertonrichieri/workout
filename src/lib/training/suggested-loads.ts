@@ -1,3 +1,4 @@
+import type { SetEffort } from "@/lib/constants/training";
 import type { Workout } from "./plan-types";
 
 /** Load logged in the latest finished session of an exercise (from `latest_set_loads`). */
@@ -7,6 +8,8 @@ export interface LatestSetLoad {
   loadKg: number;
   /** Reps of that set (step 3.5); null when not logged. */
   repsDone: number | null;
+  /** Perceived effort of that set (step 3B.3); null when not marked. */
+  effort: SetEffort | null;
 }
 
 /** Suggested load per prescribed set, keyed by workout exercise id (only tracked exercises with history). */

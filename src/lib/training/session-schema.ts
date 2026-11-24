@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MAX_LOAD_KG, MAX_REPS_DONE, MAX_SETS_PER_SESSION } from "@/lib/constants/training";
+import { MAX_LOAD_KG, MAX_REPS_DONE, MAX_SETS_PER_SESSION, SET_EFFORTS } from "@/lib/constants/training";
 
 const LOAD_STEP_KG = 0.01;
 
@@ -8,6 +8,8 @@ export const finishedSetSchema = z.object({
   setNumber: z.number().int().positive(),
   repsDone: z.number().int().min(0).max(MAX_REPS_DONE),
   loadKg: z.number().min(0).max(MAX_LOAD_KG).multipleOf(LOAD_STEP_KG).nullable(),
+  /** Perceived effort (step 3B.3); optional. */
+  effort: z.enum(SET_EFFORTS).nullable().default(null),
 });
 
 /** Body of POST /api/workout-sessions (step 2.6); same limits as the set logging draft. */
@@ -19,5 +21,5 @@ export const finishWorkoutInputSchema = z.object({
   readinessCheckinId: z.uuid().nullable().default(null),
 });
 
-export type FinishedSet = z.infer<typeof finishedSetSchema>;
+export type FinishedSet = z.input<typeof finishedSetSchema>;
 export type FinishWorkoutInput = z.input<typeof finishWorkoutInputSchema>;

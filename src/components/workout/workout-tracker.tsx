@@ -4,7 +4,7 @@ import { translate } from "@/lib/i18n/translate";
 import type { Workout } from "@/lib/training/plan-types";
 import { countCompletedExercises, hasCheckedSets } from "@/lib/training/set-log-draft";
 import { omitPrescriptions } from "@/lib/readiness/adjusted-workout";
-import type { LoadIncreases } from "@/lib/training/load-increases";
+import type { LoadAdjustments } from "@/lib/training/load-adjustments";
 import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -13,14 +13,14 @@ import { FinishWorkoutButton } from "./finish-workout-button";
 import { useWorkoutDraft } from "./use-workout-draft";
 import { WorkoutExerciseGroups } from "./workout-exercise-groups";
 
-const NO_INCREASES: LoadIncreases = {};
+const NO_ADJUSTMENTS: LoadAdjustments = {};
 
 /** Set logging for the selected workout; the draft stays on the device until "Finalizar treino" (2.6). */
 interface WorkoutTrackerProps {
   workout: Workout;
   suggestedLoads: SuggestedLoads;
   /** Earned increases (step 3.5); empty when none. */
-  loadIncreases?: LoadIncreases;
+  loadAdjustments?: LoadAdjustments;
   /** Time per workout of the latest assessment, the default answer of the check-in (step 3B.1). */
   sessionMinutes?: number | null;
 }
@@ -35,11 +35,11 @@ function TrackerSummary({ completed, total, hasFinished }: { completed: number; 
   );
 }
 
-export function WorkoutTracker({ workout: planned, suggestedLoads, loadIncreases = NO_INCREASES, sessionMinutes = null }: WorkoutTrackerProps) {
+export function WorkoutTracker({ workout: planned, suggestedLoads, loadAdjustments = NO_ADJUSTMENTS, sessionMinutes = null }: WorkoutTrackerProps) {
   const router = useRouter();
   const day = useWorkoutDraft(planned, suggestedLoads);
   const { draft, workout, changeSet } = day;
-  const todayIncreases = useMemo(() => omitPrescriptions(loadIncreases, day.changedIds), [loadIncreases, day.changedIds]);
+  const todayAdjustments = useMemo(() => omitPrescriptions(loadAdjustments, day.changedIds), [loadAdjustments, day.changedIds]);
   const [hasFinished, setHasFinished] = useState(false);
   const finish = () => {
     day.clearDraft();
@@ -62,7 +62,7 @@ export function WorkoutTracker({ workout: planned, suggestedLoads, loadIncreases
         sessionMinutes={sessionMinutes}
         onChange={day.changeReadiness}
       />
-      <WorkoutExerciseGroups exercises={workout.exercises} draft={draft} suggestedLoads={day.suggestedLoads} loadIncreases={todayIncreases} onSetChange={changeSetAfterFinish} />
+      <WorkoutExerciseGroups exercises={workout.exercises} draft={draft} suggestedLoads={day.suggestedLoads} loadAdjustments={todayAdjustments} onSetChange={changeSetAfterFinish} />
       <FinishWorkoutButton draft={draft} onFinished={finish} />
     </div>
   );

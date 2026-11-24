@@ -18,6 +18,7 @@ function toSetRows(input: FinishWorkoutInput) {
     set_number: set.setNumber,
     reps_done: set.repsDone,
     load_kg: set.loadKg,
+    effort: set.effort ?? null,
   }));
 }
 
