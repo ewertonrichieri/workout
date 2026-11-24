@@ -11,12 +11,13 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **CAT-004** — aplicar migration `exercise_source_refs` no Supabase (usuário) → `specs/009-catalogo-exercicios.md`
-4. **1.3** — Normalização, dedup e tradução pt-BR (esforço `xhigh`) → `specs/009-catalogo-exercicios.md`
+4. **1.4** — Mapear URLs das mídias (esforço `medium`) → `specs/009-catalogo-exercicios.md`
 
 ---
 
 ## Concluído recentemente
 
+- **1.3 Normalização do catálogo** — vocabulários curados (30 músculos, 30 equipamentos), dedup com revisão, 1.298 exercícios, 347 nomes pt-BR (todos com vídeo), script `catalog:build` → `specs/009-catalogo-exercicios.md`
 - **1.2 Parsers do catálogo** — schema comum, um parser por fonte, script `catalog:parse`, arquivos em `seed-data/catalog/sources/` (1.486 exercícios, 0 rejeitados), migration `exercise_source_refs` → `specs/009-catalogo-exercicios.md`
 - **1.1 Catálogo — análise das fontes** — formatos, campos, mídia e licenças das 3 fontes; regras de prioridade, dedup e rastreabilidade → `specs/009-catalogo-exercicios.md`
 - **0.8 Layout base** — tema escuro oliva, navegação inferior, rotas com estado vazio (merge na `main`, PR #1) → `specs/008-layout-base.md`
@@ -45,6 +46,9 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`
 - **CAT-003** — licença dos GIFs da Exercise Library a confirmar → `specs/009-catalogo-exercicios.md`
 - **CAT-004** — aplicar migration `exercise_source_refs` no Supabase → `specs/009-catalogo-exercicios.md`
+- **CAT-005** — traduzir nomes dos 951 exercícios só com GIF → `specs/009-catalogo-exercicios.md`
+- **CAT-006** — traduzir instruções para pt-BR → `specs/009-catalogo-exercicios.md`
+- **CAT-007** — revisar 65 candidatos a duplicata → `specs/009-catalogo-exercicios.md`
 - **CAT-002** — forks de Workout Free Videos e Exercise Library → `specs/009-catalogo-exercicios.md`
 
 ---

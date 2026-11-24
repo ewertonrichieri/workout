@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { CATALOG_SOURCES } from "../catalog-sources";
+import { repairMojibake } from "../normalization/text-normalization";
 import type { SourceExercise } from "../source-exercise";
 import { parseSourceItems, type ParsedSource } from "./parse-source-items";
 
@@ -22,7 +23,7 @@ function mapExercise(raw: RawExercise): SourceExercise {
   return {
     source: CATALOG_SOURCES.exerciseLibrary,
     externalId: raw.id,
-    nameEn: raw.name,
+    nameEn: repairMojibake(raw.name),
     aliases: [],
     primaryMuscles: raw.targetMuscles,
     secondaryMuscles: raw.secondaryMuscles,

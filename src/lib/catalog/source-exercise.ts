@@ -3,7 +3,7 @@ import { CATALOG_SOURCE_VALUES, EXERCISE_DIFFICULTIES, VIDEO_VARIANTS } from "./
 
 const nonEmptyText = z.string().trim().min(1);
 
-const remoteMediaSchema = z.object({
+export const remoteMediaSchema = z.object({
   location: z.literal("url"),
   mediaType: z.enum(["video", "gif"]),
   url: z.url(),
@@ -12,7 +12,7 @@ const remoteMediaSchema = z.object({
 });
 
 /** Media stored inside the source repository; turned into a CDN URL in step 1.4. */
-const repositoryMediaSchema = z.object({
+export const repositoryMediaSchema = z.object({
   location: z.literal("repository_path"),
   mediaType: z.enum(["video", "gif"]),
   path: nonEmptyText.refine((path) => !path.split("/").includes(".."), "path must stay inside the repository"),

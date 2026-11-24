@@ -1,0 +1,266 @@
+{
+  "merges": [
+    {
+      "refKeys": [
+        "workout-free-videos:c04",
+        "free-exercise-db-with-videos:drv-chest-dips",
+        "exercise-library:9WTm7dq"
+      ],
+      "reason": "same exercise; equipment tagged differently (dip bars vs bodyweight)"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:l02",
+        "exercise-library:Qqi7bko"
+      ],
+      "reason": "same exercise; pull-up bar vs bodyweight tagging"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:t03",
+        "exercise-library:bZq4bwK"
+      ],
+      "reason": "same exercise; dip bars vs extra weight tagging"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:1378",
+        "exercise-library:1LVFcEn"
+      ],
+      "reason": "same name; rope vs band tagging"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:t01",
+        "free-exercise-db-with-videos:0030",
+        "exercise-library:J6Dx1Mu"
+      ],
+      "reason": "same exercise with/without equipment word"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:b01",
+        "free-exercise-db-with-videos:0031",
+        "exercise-library:25GPyDY"
+      ],
+      "reason": "standing is the default barbell curl"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:c02",
+        "free-exercise-db-with-videos:0047",
+        "exercise-library:3TZduzM"
+      ],
+      "reason": "same exercise with/without equipment word"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:h01",
+        "free-exercise-db-with-videos:0116",
+        "exercise-library:hrVQWvE"
+      ],
+      "reason": "stiff-leg and straight-leg deadlift are synonyms"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:s03",
+        "free-exercise-db-with-videos:0154"
+      ],
+      "reason": "cable reverse fly is the rear delt fly"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0194",
+        "exercise-library:2IxROQ1"
+      ],
+      "reason": "same exercise, rope attachment"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:l01",
+        "free-exercise-db-with-videos:0198",
+        "exercise-library:RVwzP10"
+      ],
+      "reason": "cable pulldown is the lat pulldown"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0200",
+        "exercise-library:dU605di"
+      ],
+      "reason": "same exercise, rope attachment"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0218",
+        "exercise-library:qcY50ZD"
+      ],
+      "reason": "same exercise, word order"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:l03",
+        "free-exercise-db-with-videos:0238",
+        "exercise-library:x69MAlq"
+      ],
+      "reason": "same exercise with/without equipment word"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0274",
+        "exercise-library:TFqbd8t"
+      ],
+      "reason": "same exercise, word order"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0289",
+        "exercise-library:3d7wHyd"
+      ],
+      "reason": "same exercise, seated dumbbell shoulder press on a bench"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0301",
+        "exercise-library:DwhEmmE"
+      ],
+      "reason": "same exercise, word order"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0302",
+        "exercise-library:xXm4nYq"
+      ],
+      "reason": "same exercise, word order"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:b02",
+        "free-exercise-db-with-videos:0318",
+        "exercise-library:ae9UoXQ"
+      ],
+      "reason": "same exercise, word order"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:b02",
+        "free-exercise-db-with-videos:0322",
+        "exercise-library:F3xgbjF"
+      ],
+      "reason": "same exercise, biceps word only"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0343",
+        "exercise-library:FkBIE6a"
+      ],
+      "reason": "lying femoral is the lying leg curl"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0350",
+        "exercise-library:KUaZst7"
+      ],
+      "reason": "same exercise, word order"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:g02",
+        "free-exercise-db-with-videos:0489"
+      ],
+      "reason": "back extension on a 45 degree bench"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:s01",
+        "free-exercise-db-with-videos:0553"
+      ],
+      "reason": "overhead press and military press are synonyms"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:v02",
+        "free-exercise-db-with-videos:0594"
+      ],
+      "reason": "lever is the machine"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:h02",
+        "free-exercise-db-with-videos:0599"
+      ],
+      "reason": "lever is the machine"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0620",
+        "exercise-library:lJJ7Yq8"
+      ],
+      "reason": "flat bench cable fly is the lying cable fly"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0748",
+        "exercise-library:7zdxRTl"
+      ],
+      "reason": "same exercise, smith machine wording"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:0752",
+        "exercise-library:UfePqpx"
+      ],
+      "reason": "same exercise, smith machine wording"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:1429",
+        "exercise-library:Qqi7bko"
+      ],
+      "reason": "same exercise, word order"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:1585",
+        "exercise-library:0mB6wHO"
+      ],
+      "reason": "same exercise, apostrophe only"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:1723",
+        "exercise-library:3ZflifB"
+      ],
+      "reason": "same exercise, triceps word only"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:2327",
+        "exercise-library:YAk5dIw",
+        "exercise-library:T2mxWqc"
+      ],
+      "reason": "reverse grip pull-up is the chin-up"
+    },
+    {
+      "refKeys": [
+        "free-exercise-db-with-videos:3144",
+        "exercise-library:Nu7jqFE"
+      ],
+      "reason": "same exercise, resistance band wording"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:d01",
+        "free-exercise-db-with-videos:0598"
+      ],
+      "reason": "lever seated hip adduction is the hip adduction machine"
+    },
+    {
+      "refKeys": [
+        "workout-free-videos:v01",
+        "free-exercise-db-with-videos:0605"
+      ],
+      "reason": "lever standing calf raise is the standing calf raise machine"
+    }
+  ]
+}
