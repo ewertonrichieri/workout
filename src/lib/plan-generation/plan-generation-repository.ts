@@ -5,6 +5,7 @@ import { translate } from "@/lib/i18n/translate";
 import type { PlanGoal } from "@/lib/training/plan-types";
 import type { GeneratedPlan } from "./generated-plan-schema";
 import type { PlanCandidate } from "./plan-candidate";
+import type { PlanHistorySummary } from "./plan-history";
 
 export interface NewGeneratedPlan {
   assessmentId: string;
@@ -20,6 +21,8 @@ export interface PlanGenerationRepository {
   listCandidates(equipmentSlugs: readonly string[]): Promise<PlanCandidate[]>;
   /** Archives the active plan (when confirmed) and saves the new one atomically; returns its id. */
   createGeneratedPlan(input: NewGeneratedPlan): Promise<string>;
+  /** Sessions and per-exercise loads of a plan (renewal, step 3.6). */
+  summarizePlanHistory(planId: string): Promise<PlanHistorySummary>;
 }
 
 /** SQLSTATE raised by create_generated_plan when an active plan exists without confirmation. */
@@ -27,6 +30,31 @@ const ACTIVE_PLAN_EXISTS_CODE = "WK001";
 
 const candidateRowsSchema = z.array(z.object({ slug: z.string(), primary_muscles: z.array(z.string()), equipment: z.array(z.string()) }));
 const planIdSchema = z.uuid();
+/** `numeric` may arrive as number or string. */
+const loadSchema = z.union([z.number(), z.string()]).transform(Number).pipe(z.number().nonnegative()).nullable();
+const historySchema = z.object({
+  sessions: z.number().int().nonnegative(),
+  exercises: z.array(z.object({
+    slug: z.string(),
+    sessions: z.number().int().nonnegative(),
+    first_max_load_kg: loadSchema,
+    last_max_load_kg: loadSchema,
+    last_reps: z.number().int().nonnegative().nullable(),
+  })),
+});
+
+function mapHistory(data: z.infer<typeof historySchema>): PlanHistorySummary {
+  return {
+    sessions: data.sessions,
+    exercises: data.exercises.map((row) => ({
+      slug: row.slug,
+      sessions: row.sessions,
+      firstMaxLoadKg: row.first_max_load_kg,
+      lastMaxLoadKg: row.last_max_load_kg,
+      lastReps: row.last_reps,
+    })),
+  };
+}
 
 function toWorkoutRows(plan: GeneratedPlan) {
   return plan.workouts.map((workout) => ({
@@ -69,6 +97,12 @@ export function createSupabasePlanGenerationRepository(client: SupabaseClient): 
       const planId = planIdSchema.safeParse(data);
       if (error || !planId.success) throw new RepositoryError(translate("errors.internal"), "plans.createGeneratedPlan");
       return planId.data;
+    },
+    async summarizePlanHistory(planId) {
+      const { data, error } = await client.rpc("plan_history_summary", { p_plan_id: planId });
+      const history = historySchema.safeParse(data);
+      if (error || !history.success) throw new RepositoryError(translate("errors.internal"), "plans.summarizePlanHistory");
+      return mapHistory(history.data);
     },
   };
 }

@@ -14,9 +14,9 @@ describe("suggested loads", () => {
 
   it("uses the load of the same set number, falling back to the last logged set", () => {
     const latest = [
-      { exerciseId: "exercise-1", setNumber: 1, loadKg: 20 },
-      { exerciseId: "exercise-1", setNumber: 2, loadKg: 22.5 },
-      { exerciseId: "exercise-2", setNumber: 1, loadKg: 50 },
+      { exerciseId: "exercise-1", setNumber: 1, loadKg: 20, repsDone: 10 },
+      { exerciseId: "exercise-1", setNumber: 2, loadKg: 22.5, repsDone: 10 },
+      { exerciseId: "exercise-2", setNumber: 1, loadKg: 50, repsDone: 10 },
     ];
     expect(buildSuggestedLoads(WORKOUTS, latest)).toEqual({ [TRACKED.id]: [20, 22.5, 22.5] });
   });

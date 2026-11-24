@@ -21,6 +21,8 @@ const ASSESSMENT: SavedAssessment = {
 
 const CANDIDATES = [{ slug: "goblet-squat", primaryMuscles: ["quadriceps"], equipment: ["dumbbell"] }];
 
+const HISTORY = { sessions: 6, exercises: [{ slug: "goblet-squat", sessions: 6, firstMaxLoadKg: 10, lastMaxLoadKg: 14, lastReps: 12 }] };
+
 const FULL_BODY: GeneratedPlan = {
   workouts: [{ label: "Full body", exercises: [{ exerciseSlug: "goblet-squat", category: null, sets: 3, repsMin: 10, repsMax: 12, restSeconds: 60, notes: null }] }],
 };
@@ -31,7 +33,11 @@ function setup(overrides: { latest?: SavedAssessment | null; hasActivePlan?: boo
   const dependencies: PlanGenerationDependencies = {
     assessmentRepository: { findLatestAssessment: vi.fn(async () => (overrides.latest === undefined ? ASSESSMENT : overrides.latest)) },
     planRepository: { findActivePlan: vi.fn(async () => activePlan) },
-    generationRepository: { listCandidates: vi.fn(async () => overrides.candidates ?? CANDIDATES), createGeneratedPlan: vi.fn(async () => "plan-1") },
+    generationRepository: {
+      listCandidates: vi.fn(async () => overrides.candidates ?? CANDIDATES),
+      createGeneratedPlan: vi.fn(async () => "plan-1"),
+      summarizePlanHistory: vi.fn(async () => HISTORY),
+    },
     structuredOutputClient: { generate } as unknown as StructuredOutputClient,
     logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } satisfies Logger,
     now: () => new Date("2026-11-24T15:00:00Z"),
@@ -87,7 +93,33 @@ describe("plan generation service", () => {
   });
 
   it("tells whether the user has an assessment and an active plan", async () => {
-    await expect(setup({ hasActivePlan: true }).service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: true, hasActivePlan: true });
-    await expect(setup({ latest: null }).service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: false, hasActivePlan: false });
+    await expect(setup({ hasActivePlan: true }).service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: true, hasActivePlan: true, renewal: null });
+    await expect(setup({ latest: null }).service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: false, hasActivePlan: false, renewal: null });
+  });
+
+  it("sends the history of the plan being replaced to the AI", async () => {
+    const { service, dependencies, generate } = setup({ hasActivePlan: true });
+    await service.generatePlan("user-1", { replaceActivePlan: true });
+    expect(dependencies.generationRepository.summarizePlanHistory).toHaveBeenCalledWith("plan-1");
+    expect(generate).toHaveBeenCalledWith(expect.objectContaining({ prompt: expect.stringContaining("6 finished sessions") }));
+  });
+
+  it("does not read history when there is no plan to replace", async () => {
+    const { service, dependencies } = setup();
+    await service.generatePlan("user-1", { replaceActivePlan: true });
+    expect(dependencies.generationRepository.summarizePlanHistory).not.toHaveBeenCalled();
+  });
+
+  it("reports when the active plan is due for renewal", async () => {
+    const { service } = setup({ hasActivePlan: true });
+    // Fixture plan: 2026-11-01 to 2026-12-13; "now" is 2026-11-24 → 19 days left.
+    await expect(service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: true, hasActivePlan: true, renewal: null });
+    const late = createPlanGenerationService({ ...setup({ hasActivePlan: true }).dependencies, now: () => new Date("2026-12-10T15:00:00Z") });
+    await expect(late.getGenerationStatus("user-1")).resolves.toEqual({
+      hasAssessment: true,
+      hasActivePlan: true,
+      renewal: { validUntil: "2026-12-13", remainingDays: 3, isExpired: false },
+    });
   });
 });
+

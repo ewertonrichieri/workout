@@ -171,7 +171,8 @@
       "switchText": "Salvar carga para progredir",
       "switchLabel": "Salvar carga para progredir em {name}",
       "suggestedNotice": "Carga sugerida da última sessão",
-      "failed": "Não foi possível salvar a preferência. Tente de novo."
+      "failed": "Não foi possível salvar a preferência. Tente de novo.",
+      "increaseNotice": "Você fez {reps} repetições em todas as séries com {from} kg. Sugestão: {to} kg."
     }
   },
   "common": {
@@ -282,7 +283,15 @@
     "activePlanExists": "Você já tem um plano ativo. Confirme a substituição para gerar um novo.",
     "noCandidates": "Nenhum exercício do catálogo combina com os equipamentos marcados. Revise os equipamentos na anamnese.",
     "viewWorkoutLink": "Ver meu treino",
-    "loading": "Carregando..."
+    "loading": "Carregando...",
+    "renewButton": "Renovar plano com a IA",
+    "renewTitle": "Hora de renovar o plano",
+    "renewDescription": "A IA monta o próximo plano a partir da sua anamnese e do que você fez neste plano. Você confirma antes de substituir.",
+    "renewDaysOne": "Seu plano vence em 1 dia.",
+    "renewDaysOther": "Seu plano vence em {count} dias.",
+    "renewLastDay": "Hoje é o último dia do seu plano.",
+    "renewExpired": "Seu plano venceu em {date}.",
+    "renewAssessmentLink": "Atualizar anamnese antes"
   },
   "planEdit": {
     "duplicateExercise": "O mesmo exercício aparece mais de uma vez no treino.",

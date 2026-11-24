@@ -60,3 +60,23 @@ describe("plan generation repository: createGeneratedPlan", () => {
     await expect(createSupabasePlanGenerationRepository(failure).createGeneratedPlan(NEW_PLAN)).rejects.toBeInstanceOf(RepositoryError);
   });
 });
+
+describe("plan generation repository: summarizePlanHistory", () => {
+  it("reads the history of a plan", async () => {
+    const client = createClient({
+      data: { sessions: 4, exercises: [{ slug: "db-press", sessions: 4, first_max_load_kg: 20, last_max_load_kg: "22.50", last_reps: 12 }] },
+      error: null,
+    });
+    await expect(createSupabasePlanGenerationRepository(client).summarizePlanHistory(PLAN_ID)).resolves.toEqual({
+      sessions: 4,
+      exercises: [{ slug: "db-press", sessions: 4, firstMaxLoadKg: 20, lastMaxLoadKg: 22.5, lastReps: 12 }],
+    });
+    expect(client.rpc).toHaveBeenCalledWith("plan_history_summary", { p_plan_id: PLAN_ID });
+  });
+
+  it("fails on database errors or data outside the schema", async () => {
+    await expect(createSupabasePlanGenerationRepository(createClient({ data: null, error: { message: "x" } })).summarizePlanHistory(PLAN_ID)).rejects.toBeInstanceOf(RepositoryError);
+    await expect(createSupabasePlanGenerationRepository(createClient({ data: { sessions: "x" }, error: null })).summarizePlanHistory(PLAN_ID)).rejects.toBeInstanceOf(RepositoryError);
+  });
+});
+

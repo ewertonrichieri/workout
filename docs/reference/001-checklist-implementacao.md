@@ -66,8 +66,8 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 3.2 | Wrapper da Claude API (servidor, retry, timeout, validação da saída) | `high` | [x] |
 | 3.3 | Geração do plano: prompt + catálogo filtrado + só exercícios com mídia + divisão full body ou A/B/C conforme dias/semana e preferência — concluída; chamada real medida com Haiku 5.5 (PLN-001) | `xhigh` | [x] |
 | 3.4 | Revisão e edição manual do plano | `high` | [x] |
-| 3.5 | Sugestão de progressão de carga pelo histórico | `medium` | [ ] |
-| 3.6 | Sugestão de renovação ao fim da validade (6 semanas) | `medium` | [ ] |
+| 3.5 | Sugestão de progressão de carga pelo histórico | `medium` | [x] |
+| 3.6 | Sugestão de renovação ao fim da validade (6 semanas) | `medium` | [x] |
 | 3.7 | Aviso de saúde na anamnese e no plano | `low` | [ ] |
 | 3.8 | PWA instalável (manifest, ícones) | `low` | [ ] |
 

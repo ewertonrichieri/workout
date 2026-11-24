@@ -220,4 +220,17 @@ Catálogo real do Supabase (`list_plan_candidates` com barra, banco, peso corpor
 - **Mudança:** `CLAUDE_MODEL = "claude-haiku-5-5"` (`src/lib/constants/ai.ts`), padrão de todas as chamadas à IA; a constante `PLAN_GENERATION_MODEL` saiu (a geração usa o padrão). O script de medição também usa o padrão.
 - **Pendências:** nenhuma
 
+### 2026-11-24 — 3.6 Sugestão de renovação
+
+- **Pedido:** etapa 3.6 — sugerir a renovação do plano ao fim da validade usando o histórico (regra confirmada pelo usuário).
+- **Mudança:** aviso no Início e na tela de treino; a geração com plano ativo envia à IA um resumo do histórico do plano atual (migration `20261126030000_progression_reps.sql`, função `plan_history_summary`).
+- **Pendências:** nenhuma
+
+#### Regras da 3.6
+
+- **Quando avisar:** nos últimos 7 dias de validade (`RENEWAL_NOTICE_DAYS`, `remainingDays <= 7`) e depois de vencer
+- **Aviso:** "Seu plano vence em N dias" / "Seu plano venceu em DD/MM/AAAA" + botão "Renovar plano com a IA" (mesmo fluxo da 3.3: confirmação, plano antigo arquivado) + link para atualizar a anamnese antes. Nunca renova sozinho
+- **Histórico enviado à IA** (só ao substituir um plano ativo): sessões finalizadas no plano e, por exercício do plano (slug), quantas sessões, maior carga na primeira e na última sessão e repetições na última. Nada que identifique o usuário. A IA pode manter o que funcionou, variar exercícios e ajustar o volume
+- Sem histórico (nenhuma sessão), a geração segue só com a anamnese
+
 ## Fim da spec

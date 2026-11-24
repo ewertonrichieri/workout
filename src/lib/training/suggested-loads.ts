@@ -5,6 +5,8 @@ export interface LatestSetLoad {
   exerciseId: string;
   setNumber: number;
   loadKg: number;
+  /** Reps of that set (step 3.5); null when not logged. */
+  repsDone: number | null;
 }
 
 /** Suggested load per prescribed set, keyed by workout exercise id (only tracked exercises with history). */

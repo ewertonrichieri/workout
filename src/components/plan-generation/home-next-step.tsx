@@ -4,6 +4,7 @@ import { APP_ROUTES } from "@/lib/constants/routes";
 import { translate } from "@/lib/i18n/translate";
 import type { GenerationStatus } from "@/lib/plan-generation/plan-generation-service";
 import { GeneratePlanButton } from "./generate-plan-button";
+import { RenewalNotice } from "./renewal-notice";
 
 const LINK_CLASS =
   "flex min-h-11 items-center justify-center rounded-lg px-4 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong";
@@ -12,6 +13,14 @@ const SECONDARY_LINK_CLASS = `${LINK_CLASS} border border-border font-medium`;
 
 /** Next step for the user: answer the assessment, generate the plan, or open the workout. */
 export function HomeNextStep({ status }: { status: GenerationStatus }) {
+  if (status.hasActivePlan && status.renewal) {
+    return (
+      <>
+        <RenewalNotice renewal={status.renewal} />
+        <Link href={APP_ROUTES.workout} className={SECONDARY_LINK_CLASS}>{translate("planGeneration.viewWorkoutLink")}</Link>
+      </>
+    );
+  }
   if (status.hasActivePlan) {
     return (
       <EmptyState title={translate("pages.home.planReadyTitle")} description={translate("pages.home.planReadyDescription")}>

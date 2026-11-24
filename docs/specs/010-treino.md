@@ -138,4 +138,19 @@ Usuário temporário confirmado pela API + plano fictício (2 exercícios do pla
 - [x] 2.7 — Salvar carga para progredir, com testes
 - [x] 2.8 — Histórico e gráfico, com testes (gráfico conferido visualmente em 375px com dados fictícios)
 
+### 2026-11-24 — 3.5 Sugestão de progressão de carga
+
+- **Pedido:** etapa 3.5 — sugerir aumento de carga pelo histórico (regra confirmada pelo usuário).
+- **Mudança:** `latest_set_loads` passa a devolver também as repetições (migration `20261126030000_progression_reps.sql`); `buildLoadIncreases` em `suggested-loads.ts`; aviso no card com o motivo.
+- **Pendências:** nenhuma
+
+#### Regras da 3.5
+
+- Só para exercícios com "Salvar carga para progredir" ligado e com histórico (mesma base da 2.7)
+- **Sobe a carga** quando, na última sessão com carga do exercício: foram registradas pelo menos as séries prescritas, **todas** com o **máximo de repetições prescrito** (`reps_max`) ou mais, e **todas com a mesma carga** (> 0 kg)
+- **Quanto:** +5% da carga, arredondado para 0,5 kg, com aumento mínimo de 1 kg (`PROGRESSION_INCREASE_RATIO`, `PROGRESSION_ROUNDING_KG`, `PROGRESSION_MIN_INCREASE_KG`). Ex.: 20 kg → 21 kg; 50 kg → 52,5 kg; 100 kg → 105 kg
+- Senão, a sugestão continua a da 2.7 (repete a última carga)
+- A sugestão só preenche o campo de um rascunho ainda não editado e continua editável; o card diz o motivo: "Você fez {reps} repetições em todas as séries com {de} kg. Sugestão: {para} kg."
+- Nunca é automática no plano: a prescrição não muda; é só o valor inicial do campo
+
 ## Fim da spec

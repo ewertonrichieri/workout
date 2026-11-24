@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { EmptyState } from "@/components/layout/empty-state";
+import { RenewalNotice } from "@/components/plan-generation/renewal-notice";
+import { isRenewalDue } from "@/lib/training/plan-renewal";
 import { APP_ROUTES } from "@/lib/constants/routes";
 import { WORKOUT_QUERY_PARAM } from "@/lib/constants/training";
 import { translate } from "@/lib/i18n/translate";
 import type { ActivePlanOverview, Workout } from "@/lib/training/plan-types";
-import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 import { selectWorkout } from "@/lib/training/workout-display";
 import { PlanValiditySummary } from "./plan-validity-summary";
 import { WorkoutTracker } from "./workout-tracker";
@@ -34,9 +35,9 @@ function EmptyWorkout() {
   return <EmptyState title={translate("training.emptyWorkoutTitle")} description={translate("training.emptyWorkoutDescription")} />;
 }
 
-function SelectedWorkout({ workout, suggestedLoads }: { workout: Workout; suggestedLoads: SuggestedLoads }) {
+function SelectedWorkout({ workout, overview }: { workout: Workout; overview: ActivePlanOverview }) {
   if (workout.exercises.length === 0) return <EmptyWorkout />;
-  return <WorkoutTracker key={workout.id} workout={workout} suggestedLoads={suggestedLoads} />;
+  return <WorkoutTracker key={workout.id} workout={workout} suggestedLoads={overview.suggestedLoads} loadIncreases={overview.loadIncreases} />;
 }
 
 function WorkoutHeading({ workouts, selected }: { workouts: readonly Workout[]; selected: Workout }) {
@@ -51,12 +52,13 @@ export function WorkoutPlanView({ overview, requestedLabel, showReviewNotice = f
   return (
     <>
       {showReviewNotice && <ReviewNotice />}
+      {isRenewalDue(validity) && <RenewalNotice renewal={{ validUntil: plan.validUntil, remainingDays: validity.remainingDays, isExpired: validity.isExpired }} />}
       <PlanValiditySummary validity={validity} validUntil={plan.validUntil} />
       {selected ? (
         <>
           <WorkoutHeading workouts={plan.workouts} selected={selected} />
           <EditWorkoutLink label={selected.label} />
-          <SelectedWorkout workout={selected} suggestedLoads={overview.suggestedLoads} />
+          <SelectedWorkout workout={selected} overview={overview} />
         </>
       ) : (
         <EmptyWorkout />

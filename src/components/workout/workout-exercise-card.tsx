@@ -3,8 +3,9 @@ import { ExerciseCover } from "@/components/exercises/exercise-cover";
 import { buildProgressHref } from "@/components/history/history-labels";
 import { buildExerciseDetailHref } from "@/components/exercises/exercise-search-href";
 import { translate } from "@/lib/i18n/translate";
+import type { LoadIncrease } from "@/lib/training/load-increases";
 import type { WorkoutExercise } from "@/lib/training/plan-types";
-import { isExerciseCompleted, type SetEntry } from "@/lib/training/set-log-draft";
+import { formatLoadInput, isExerciseCompleted, type SetEntry } from "@/lib/training/set-log-draft";
 import { ExerciseDemoDisclosure } from "./exercise-demo-disclosure";
 import { SetLogList } from "./set-log-list";
 import { TrackProgressionSwitch } from "./track-progression-switch";
@@ -15,6 +16,8 @@ interface WorkoutExerciseCardProps {
   sets: readonly SetEntry[];
   /** Load fields were prefilled from the latest session (step 2.7). */
   hasSuggestedLoad: boolean;
+  /** Earned increase (step 3.5): the fields hold the new load and the card says why. */
+  loadIncrease?: LoadIncrease;
   onSetChange: (setIndex: number, patch: Partial<SetEntry>) => void;
 }
 
@@ -40,7 +43,15 @@ function PrescriptionSummary({ workoutExercise }: { workoutExercise: WorkoutExer
 }
 
 /** One prescribed exercise: prescription, demonstration and set logging. */
-export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, onSetChange }: WorkoutExerciseCardProps) {
+function SuggestionNotice({ hasSuggestedLoad, loadIncrease }: { hasSuggestedLoad: boolean; loadIncrease?: LoadIncrease }) {
+  if (loadIncrease) {
+    const params = { reps: loadIncrease.reps, from: formatLoadInput(loadIncrease.fromKg), to: formatLoadInput(loadIncrease.toKg) };
+    return <p className="text-sm font-medium text-accent-strong">{translate("training.progression.increaseNotice", params)}</p>;
+  }
+  return hasSuggestedLoad ? <p className="text-sm text-muted">{translate("training.progression.suggestedNotice")}</p> : null;
+}
+
+export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, loadIncrease, onSetChange }: WorkoutExerciseCardProps) {
   const { exercise } = workoutExercise;
   const isCompleted = isExerciseCompleted(sets);
   return (
@@ -50,7 +61,7 @@ export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, o
         <PrescriptionSummary workoutExercise={workoutExercise} />
       </div>
       {isCompleted && <p className="text-sm font-semibold text-accent-strong">{translate("training.exerciseCompleted")}</p>}
-      {hasSuggestedLoad && <p className="text-sm text-muted">{translate("training.progression.suggestedNotice")}</p>}
+      <SuggestionNotice hasSuggestedLoad={hasSuggestedLoad} loadIncrease={loadIncrease} />
       <SetLogList exerciseName={exercise.name} repsTarget={describeRepsTarget(workoutExercise)} sets={sets} onSetChange={onSetChange} />
       <TrackProgressionSwitch workoutExerciseId={workoutExercise.id} exerciseName={exercise.name} isTracked={workoutExercise.trackProgression} />
       <ExerciseDemoDisclosure exercise={exercise} />
