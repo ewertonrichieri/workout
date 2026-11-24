@@ -106,12 +106,24 @@ Resultado sobre os dados reais (2026-11-23):
 
 **Resultado (2026-11-24):** 1.486 registros → **1.298 exercícios** (188 registros unidos a outros), 65 candidatos em revisão, 347 com nome pt-BR (todos os que têm vídeo), 951 sem tradução (só GIF).
 
+## URLs das mídias (1.4)
+
+- Código: `src/lib/catalog/media/` — `media-hosting.ts` (schema da configuração) e `resolve-exercise-media.ts`
+- Configuração curada: `seed-data/catalog/media-hosting.json` — licença, prioridade base e repositório (fork + commit fixo) por fonte; CDN `https://cdn.jsdelivr.net/gh`
+- URL de mídia do repositório: `{cdn}/{fork}@{commit}/{caminho}` (ex.: `https://cdn.jsdelivr.net/gh/ewertonrichieri/workout-free-videos@346c970…/media/video/barbell-back-squat.mp4`); commit fixo para o arquivo nunca mudar por baixo do app
+- Free Exercise DB: URL de origem (R2 do autor) e **um** vídeo por exercício (masculino; feminino se for o único), com a capa como `thumbnail_url`
+- Exercise Library: todos os GIFs do exercício (ângulos diferentes), prioridade 30, 31…
+- Licenças: `CC0-1.0` (Workout Free Videos), `unverified` (Free Exercise DB e Exercise Library — ver 6.1, CAT-003)
+- Ordem final por prioridade: vídeo CC0 (10) → vídeo Free Exercise DB (20) → GIFs (30+)
+- Teste sobre os dados reais garante ao menos uma URL `https` por exercício
+- ⚠️ As URLs do jsDelivr só funcionam depois dos forks (CAT-002)
+
 ## Checklist de aceite
 
 - [x] 1.1 — Fontes analisadas (formato, campos, mídia, licença) e decisões registradas nesta spec
 - [x] 1.2 — Parsers das três fontes com schema e testes
 - [x] 1.3 — Normalização, dedup e tradução (limitações: CAT-005, CAT-006, CAT-007)
-- [ ] 1.4 — URLs das mídias com `source`/`license`/`priority`
+- [x] 1.4 — URLs das mídias com `source`/`license`/`priority` (depende de CAT-002 para as URLs do jsDelivr)
 - [ ] 1.5 — Seed versionado aplicado
 - [ ] 1.6 — Repositório + API
 - [ ] 1.7 — Tela de busca/visualização

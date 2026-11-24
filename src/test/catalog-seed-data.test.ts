@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { CATALOG_SOURCE_VALUES } from "@/lib/catalog/catalog-sources";
 import { buildCatalog } from "@/lib/catalog/normalization/build-catalog";
+import { mediaHostingSchema } from "@/lib/catalog/media/media-hosting";
+import { resolveExerciseMedia } from "@/lib/catalog/media/resolve-exercise-media";
 import { duplicateDecisionsSchema } from "@/lib/catalog/normalization/deduplicate-exercises";
 import { vocabularySchema } from "@/lib/catalog/normalization/vocabulary";
 import { sourceExerciseSchema } from "@/lib/catalog/source-exercise";
@@ -44,5 +46,14 @@ describe("versioned catalog seed data", () => {
   it("matches the committed catalog output", () => {
     const committed: unknown = JSON.parse(readFileSync(join(CATALOG_DIRECTORY, "catalog.json"), "utf8"));
     expect(result.exercises).toEqual(committed);
+  });
+
+  it("resolves at least one https media URL for every exercise", () => {
+    const hosting = readJson("media-hosting.json", mediaHostingSchema);
+    const withoutMedia = result.exercises.filter((exercise) => {
+      const media = resolveExerciseMedia(exercise.media, hosting);
+      return media.length === 0 || media.some((item) => !item.url.startsWith("https://"));
+    });
+    expect(withoutMedia.map((exercise) => exercise.slug)).toEqual([]);
   });
 });
