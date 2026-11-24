@@ -11,12 +11,12 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar o cadastro por e-mail (o login por e-mail já foi testado de ponta a ponta) (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
-4. **ASM-001** — testar o envio da anamnese no navegador (migration aplicada; criar conta antes) → `specs/011-geracao-treino-ia.md`
 
 ---
 
 ## Concluído recentemente
 
+- **Teste de ponta a ponta (Fase 3)** — anamnese, geração real com IA, revisão, edição, progressão de carga, renovação com histórico, aviso de saúde, PWA e API sem sessão testados no navegador contra o Supabase real; ASM-001 fechada; dados temporários apagados → `specs/011-geracao-treino-ia.md`
 - **3.8 PWA instalável** — recurso nativo do Next.js: `manifest.ts`, ícones gerados (`icon.tsx` 192/512/mascarável, `apple-icon.tsx`), `themeColor`; manifest e ícones públicos no proxy; conferido com o app rodando (sem login) → `specs/011-geracao-treino-ia.md`
 - **3.7 Aviso de saúde** — na anamnese e na tela de treino, com reforço quando há limitação informada → `specs/011-geracao-treino-ia.md`
 - **3.6 Sugestão de renovação** — aviso nos últimos 7 dias e depois de vencer (Início e treino) com "Renovar plano com a IA" (confirmação, plano antigo arquivado); a renovação envia à IA o histórico do plano (`plan_history_summary`); migration aplicada → `specs/011-geracao-treino-ia.md`
@@ -62,7 +62,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **ASM-001** — testar o envio da anamnese no navegador (migration já aplicada) → `specs/011-geracao-treino-ia.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
