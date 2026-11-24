@@ -233,4 +233,28 @@ Catálogo real do Supabase (`list_plan_candidates` com barra, banco, peso corpor
 - **Histórico enviado à IA** (só ao substituir um plano ativo): sessões finalizadas no plano e, por exercício do plano (slug), quantas sessões, maior carga na primeira e na última sessão e repetições na última. Nada que identifique o usuário. A IA pode manter o que funcionou, variar exercícios e ajustar o volume
 - Sem histórico (nenhuma sessão), a geração segue só com a anamnese
 
+### 2026-11-24 — 3.7 Aviso de saúde
+
+- **Pedido:** etapa 3.7 — aviso de saúde na anamnese e no plano.
+- **Mudança:** componente `HealthNotice` no topo da anamnese e abaixo da validade na tela de treino; reforço quando a anamnese mais recente tem limitação (`GenerationStatus.hasLimitations`).
+- **Pendências:** nenhuma
+
+#### Regras da 3.7
+
+- Texto fixo (pt-BR): o plano é gerado por IA e não substitui profissional de educação física ou de saúde; com lesão, dor ou condição médica, consultar antes; parar se sentir dor
+- Reforço quando há limitação escrita na anamnese mais recente: procurar orientação profissional antes de seguir o plano
+- Informativo: não bloqueia nada; `role="note"`
+
+### 2026-11-24 — 3.8 PWA instalável
+
+- **Pedido:** etapa 3.8 — app instalável no celular, usando o recurso do próprio Next.js (pedido do usuário).
+- **Mudança:** `src/app/manifest.ts` (`MetadataRoute.Manifest`), `src/app/icon.tsx` (192, 512 e mascarável, gerados com `ImageResponse` + `generateImageMetadata`), `src/app/apple-icon.tsx` (180), `viewport.themeColor` e `appleWebApp` no layout; manifest e ícones liberados no proxy de autenticação.
+- **Pendências:** nenhuma
+
+#### Regras da 3.8
+
+- Nome "Workout", `display: standalone`, `start_url: /`, cores do tema (`#12120e` fundo, `#6b690c` destaque), idioma pt-BR
+- Sem service worker: o PRD pede só "instalável" e o app depende do servidor; offline (ex.: Serwist) fica fora do MVP
+- `/manifest.webmanifest`, `/icon/*` e `/apple-icon` são públicos (o navegador os busca sem sessão)
+
 ## Fim da spec

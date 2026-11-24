@@ -55,3 +55,14 @@ describe("sanitizeRedirectPath", () => {
     expect(sanitizeRedirectPath(input)).toBe(expected);
   });
 });
+
+describe("decideRouteAccess: installable app files", () => {
+  it.each(["/manifest.webmanifest", "/icon/192", "/icon/maskable", "/apple-icon"])("lets anyone fetch %s", (pathname) => {
+    expect(decideRouteAccess({ pathname, isAuthenticated: false })).toEqual({ type: "allow" });
+  });
+
+  it("does not open other paths that only start like them", () => {
+    expect(decideRouteAccess({ pathname: "/iconography", isAuthenticated: false }).type).toBe("redirect");
+  });
+});
+

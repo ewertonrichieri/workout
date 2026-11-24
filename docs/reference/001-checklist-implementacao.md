@@ -68,8 +68,8 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 3.4 | Revisão e edição manual do plano | `high` | [x] |
 | 3.5 | Sugestão de progressão de carga pelo histórico | `medium` | [x] |
 | 3.6 | Sugestão de renovação ao fim da validade (6 semanas) | `medium` | [x] |
-| 3.7 | Aviso de saúde na anamnese e no plano | `low` | [ ] |
-| 3.8 | PWA instalável (manifest, ícones) | `low` | [ ] |
+| 3.7 | Aviso de saúde na anamnese e no plano | `low` | [x] |
+| 3.8 | PWA instalável (manifest, ícones) | `low` | [x] |
 
 ---
 

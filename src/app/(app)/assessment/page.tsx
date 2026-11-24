@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { AssessmentForm } from "@/components/assessment/assessment-form";
 import { EmptyState } from "@/components/layout/empty-state";
+import { HealthNotice } from "@/components/layout/health-notice";
 import { ListSkeleton } from "@/components/layout/list-skeleton";
 import { PageHeader } from "@/components/layout/page-header";
 import { GeneratePlanSection } from "@/components/plan-generation/generate-plan-section";
@@ -18,6 +19,7 @@ async function AssessmentContent() {
   }
   return (
     <>
+      <HealthNotice hasLimitations={status.hasLimitations} />
       <AssessmentForm equipment={equipment} latest={latest} />
       {latest && <GeneratePlanSection hasActivePlan={status.hasActivePlan} />}
     </>

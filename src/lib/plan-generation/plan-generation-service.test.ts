@@ -93,8 +93,8 @@ describe("plan generation service", () => {
   });
 
   it("tells whether the user has an assessment and an active plan", async () => {
-    await expect(setup({ hasActivePlan: true }).service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: true, hasActivePlan: true, renewal: null });
-    await expect(setup({ latest: null }).service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: false, hasActivePlan: false, renewal: null });
+    await expect(setup({ hasActivePlan: true }).service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: true, hasActivePlan: true, hasLimitations: false, renewal: null });
+    await expect(setup({ latest: null }).service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: false, hasActivePlan: false, hasLimitations: false, renewal: null });
   });
 
   it("sends the history of the plan being replaced to the AI", async () => {
@@ -113,13 +113,18 @@ describe("plan generation service", () => {
   it("reports when the active plan is due for renewal", async () => {
     const { service } = setup({ hasActivePlan: true });
     // Fixture plan: 2026-11-01 to 2026-12-13; "now" is 2026-11-24 → 19 days left.
-    await expect(service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: true, hasActivePlan: true, renewal: null });
+    await expect(service.getGenerationStatus("user-1")).resolves.toEqual({ hasAssessment: true, hasActivePlan: true, hasLimitations: false, renewal: null });
     const late = createPlanGenerationService({ ...setup({ hasActivePlan: true }).dependencies, now: () => new Date("2026-12-10T15:00:00Z") });
     await expect(late.getGenerationStatus("user-1")).resolves.toEqual({
       hasAssessment: true,
       hasActivePlan: true,
+      hasLimitations: false,
       renewal: { validUntil: "2026-12-13", remainingDays: 3, isExpired: false },
     });
   });
-});
 
+  it("flags limitations for the health notice", async () => {
+    const { service } = setup({ latest: { ...ASSESSMENT, limitations: "Joelho" } });
+    await expect(service.getGenerationStatus("user-1")).resolves.toMatchObject({ hasLimitations: true });
+  });
+});
