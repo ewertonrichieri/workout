@@ -76,7 +76,7 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| PLN-001 | Aplicar a migration `20261126010000_generated_plans.sql` no Supabase e fazer uma chamada real (tempo, tokens, custo; ajustar esforço) | `supabase/migrations/`, `src/lib/constants/plan-generation.ts` | Alta |
+| PLN-001 | Fazer uma chamada real à Claude API (tempo, tokens, custo; ajustar esforço). Migration já aplicada no Supabase em 2026-11-24 (1.079 candidatos para uma academia comum) | `supabase/migrations/`, `src/lib/constants/plan-generation.ts` | Alta |
 | ASM-001 | Testar o envio da anamnese no navegador (migration já aplicada; o Supabase está sem contas de usuário no momento) | `/assessment` | Alta (antes da 3.3) |
 
 ## Atualizações
@@ -146,6 +146,7 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 - [x] Serviço com testes (sem anamnese, plano ativo sem confirmação, catálogo vazio, saída inválida, sucesso)
 - [x] Gravação atômica validada em Postgres local
 - [x] Tela: confirmação de substituição, carregamento longo, erro e sucesso
-- [ ] Migration aplicada no Supabase e uma chamada real medida (PLN-001)
+- [x] Migration aplicada no Supabase (2026-11-24)
+- [ ] Uma chamada real medida (PLN-001)
 
 ## Fim da spec
