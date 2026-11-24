@@ -25,6 +25,8 @@ export interface StructuredOutputRequest<T> {
   schema: z.ZodType<T>;
   effort?: ClaudeEffort;
   maxTokens?: number;
+  /** Marks the system prompt for prompt caching (large, stable prefixes such as the catalog). */
+  cacheSystem?: boolean;
 }
 
 export interface StructuredOutputClient {
@@ -44,13 +46,18 @@ function toOutputFormat<T>(schema: z.ZodType<T>): BetaJSONOutputFormat {
   return { type: format.type, schema: format.schema };
 }
 
+function buildSystem<T>(request: StructuredOutputRequest<T>): BetaMessageStreamParams["system"] {
+  if (!request.cacheSystem) return request.system;
+  return [{ type: "text", text: request.system, cache_control: { type: "ephemeral" } }];
+}
+
 function buildRequestBody<T>(request: StructuredOutputRequest<T>): BetaMessageStreamParams {
   return {
     model: CLAUDE_MODEL,
     max_tokens: request.maxTokens ?? DEFAULT_CLAUDE_MAX_TOKENS,
     betas: [CLAUDE_FALLBACK_BETA],
     fallbacks: CLAUDE_FALLBACK_MODE,
-    system: request.system,
+    system: buildSystem(request),
     messages: [{ role: "user", content: request.prompt }],
     output_config: { effort: request.effort ?? DEFAULT_CLAUDE_EFFORT, format: toOutputFormat(request.schema) },
   };
@@ -84,7 +91,13 @@ function readOutput<T>(message: BetaMessage, schema: z.ZodType<T>): T {
 
 /** Metadata only: never the prompt, the answer or the key. */
 function describeMessage(message: BetaMessage) {
-  return { stopReason: message.stop_reason, inputTokens: message.usage?.input_tokens, outputTokens: message.usage?.output_tokens };
+  return {
+    stopReason: message.stop_reason,
+    inputTokens: message.usage?.input_tokens,
+    outputTokens: message.usage?.output_tokens,
+    cacheReadTokens: message.usage?.cache_read_input_tokens,
+    cacheWriteTokens: message.usage?.cache_creation_input_tokens,
+  };
 }
 
 export function createStructuredOutputClient({ client, logger, policy = AI_RETRY_POLICY }: StructuredOutputDependencies): StructuredOutputClient {

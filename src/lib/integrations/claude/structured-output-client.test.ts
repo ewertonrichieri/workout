@@ -68,6 +68,12 @@ describe("structured output client", () => {
     expect(options.signal).toBeInstanceOf(AbortSignal);
   });
 
+  it("caches the system prompt when asked", async () => {
+    const { service, stream } = setup([textMessage('{"title":"Plano","days":3}')]);
+    await service.generate({ ...REQUEST, cacheSystem: true });
+    expect(stream.mock.calls[0][0].system).toEqual([{ type: "text", text: REQUEST.system, cache_control: { type: "ephemeral" } }]);
+  });
+
   it("uses the text after the last fallback switch", async () => {
     const message: FakeMessage = {
       stop_reason: "end_turn",

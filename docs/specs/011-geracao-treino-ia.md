@@ -76,6 +76,7 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
+| PLN-001 | Aplicar a migration `20261126010000_generated_plans.sql` no Supabase e fazer uma chamada real (tempo, tokens, custo; ajustar esforço) | `supabase/migrations/`, `src/lib/constants/plan-generation.ts` | Alta |
 | ASM-001 | Testar o envio da anamnese no navegador (migration já aplicada; o Supabase está sem contas de usuário no momento) | `/assessment` | Alta (antes da 3.3) |
 
 ## Atualizações
@@ -114,5 +115,37 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 - [x] Saída: válida, JSON inválido, fora do schema, recusa, `max_tokens`, fallback
 - [x] Erros convertidos com mensagem pt-BR; logs sem conteúdo
 - [x] Nenhuma chamada real nos testes
+
+### 2026-11-24 — 3.3 Geração do plano pela IA
+
+- **Pedido:** etapa 3.3 — a IA monta o plano a partir da anamnese usando só exercícios do catálogo com mídia, com divisão full body ou A/B/C.
+- **Mudança:** migration `20261126010000_generated_plans.sql` (`list_plan_candidates`, `create_generated_plan`, permissões de escrita do plano); módulo `src/lib/plan-generation/`; `POST /api/plans`; botão "Gerar plano com IA" na anamnese e no Início.
+- **Pendências:** PLN-001 (migration no Supabase + chamada real medida), ASM-001 (teste no navegador).
+
+#### Regras da 3.3 (decisões do usuário em 2026-11-24)
+
+- **Plano ativo existente:** a tela pede confirmação ("substituir o plano atual?"); confirmado, o plano antigo é **arquivado** (histórico mantido) e o novo vira o ativo, na mesma transação. Sem confirmação, a API recusa (422)
+- **Divisão (quantidade de treinos):**
+  - "Full body" → exatamente 1 treino, rótulo "Full body"
+  - "Dividido" → de 2 a `min(dias por semana, 5)` treinos, nunca menos de 2; rótulos "A", "B", "C"…
+  - "Deixar a IA decidir" → até 2 dias por semana: 1 treino full body; 3 ou mais: a IA escolhe entre 1 e `min(dias, 5)`
+  - A preferência do usuário sempre vence
+- **Catálogo enviado:** só exercícios com mídia ativa cujos equipamentos estão **todos** entre os marcados na anamnese (`list_plan_candidates`); linha compacta por exercício (`slug`, músculos principais, equipamentos). Nada que identifique o usuário vai para a IA
+- **Limitações:** o texto digitado vai para a IA marcado como informação do usuário (não como instrução); a IA deve evitar exercícios contraindicados
+- **Saída da IA:** chaves em inglês; textos visíveis (categoria, observações) em pt-BR. O servidor rejeita o plano inteiro (falha amigável, sem retry automático) se houver: exercício fora da lista, exercício repetido no mesmo treino, rótulos repetidos, quantidade de treinos fora da regra, `repsMax < repsMin` ou valores fora dos limites (1–12 exercícios por treino, 1–10 séries, 1–50 repetições, descanso 0–600 s)
+- **Gravação:** `create_generated_plan` (transação, `security invoker`): arquiva o ativo (se confirmado), cria plano (`origin = 'ai'`, objetivo e id da anamnese), treinos (ordem da IA) e exercícios (ordem da IA, `track_progression = false`). Exercício sem mídia ou inexistente aborta tudo
+- **Validade:** começa hoje (`APP_TIME_ZONE`) e vale 6 semanas: `valid_until = starts_on + 41 dias` (42 dias de calendário, o último incluído)
+- **Esforço:** `medium` (cabe nos 120 s); reavaliar depois de medir a chamada real
+- **Cache de prompt:** instruções + catálogo no `system` com `cache_control` (nova tentativa com o mesmo equipamento sai mais barata)
+- **Rota:** `POST /api/plans` `{ replaceActivePlan: boolean }`, `maxDuration = 130` s; usa a anamnese mais recente do usuário da sessão (sem anamnese → 422)
+
+#### Checklist de aceite (3.3)
+
+- [x] Regra da divisão e validação do plano com testes
+- [x] Prompt sem dados de identificação; limitações marcadas como dado do usuário
+- [x] Serviço com testes (sem anamnese, plano ativo sem confirmação, catálogo vazio, saída inválida, sucesso)
+- [x] Gravação atômica validada em Postgres local
+- [x] Tela: confirmação de substituição, carregamento longo, erro e sucesso
+- [ ] Migration aplicada no Supabase e uma chamada real medida (PLN-001)
 
 ## Fim da spec

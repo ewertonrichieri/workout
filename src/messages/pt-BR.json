@@ -39,7 +39,11 @@
     "home": {
       "title": "Início",
       "emptyTitle": "Nenhum plano de treino ainda",
-      "emptyDescription": "Responda a anamnese para a IA montar seu plano de treino."
+      "emptyDescription": "Responda a anamnese para a IA montar seu plano de treino.",
+      "planReadyTitle": "Seu plano está pronto",
+      "planReadyDescription": "Abra o treino do dia para começar. Para mudar o plano, atualize a anamnese e gere outro.",
+      "assessmentReadyDescription": "Sua anamnese está salva. Gere o plano com a IA quando quiser.",
+      "loadError": "Não foi possível carregar o início."
     },
     "workout": {
       "title": "Treino",
@@ -264,5 +268,20 @@
     "rateLimited": "A IA recebeu muitos pedidos agora. Aguarde um pouco e tente de novo.",
     "refused": "A IA não conseguiu atender a este pedido. Revise as informações e tente novamente.",
     "invalidOutput": "A IA respondeu em um formato inesperado. Seus dados foram mantidos; tente novamente."
+  },
+  "planGeneration": {
+    "generateButton": "Gerar plano com IA",
+    "generating": "Gerando plano...",
+    "generatingHint": "A IA está montando seu plano. Isso pode levar até 2 minutos; não feche esta página.",
+    "intro": "Com a anamnese salva, a IA monta seu plano usando só exercícios do catálogo com vídeo ou GIF.",
+    "confirmReplace": "Você já tem um plano ativo. Gerar um novo vai substituí-lo; o plano atual fica arquivado no histórico.",
+    "confirmButton": "Substituir plano",
+    "cancelButton": "Cancelar",
+    "failed": "Não foi possível gerar o plano. Sua anamnese continua salva; tente novamente.",
+    "noAssessment": "Responda a anamnese antes de gerar o plano.",
+    "activePlanExists": "Você já tem um plano ativo. Confirme a substituição para gerar um novo.",
+    "noCandidates": "Nenhum exercício do catálogo combina com os equipamentos marcados. Revise os equipamentos na anamnese.",
+    "viewWorkoutLink": "Ver meu treino",
+    "loading": "Carregando..."
   }
 }
