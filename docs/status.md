@@ -10,12 +10,14 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-3. **2.1** — Spec do treino + repositórios (esforço `medium`) → `reference/001-checklist-implementacao.md`
+3. **TRN-001** — decidir como o plano entra antes da Fase 3 (usuário) → `specs/010-treino.md`
+4. **2.2** — Tela de treino (esforço `high`) → `specs/010-treino.md`
 
 ---
 
 ## Concluído recentemente
 
+- **2.1 Spec do treino + leitura do plano** — `specs/010-treino.md`; repositório/serviço do plano ativo (treinos, exercícios, mídias) e cálculo de validade → `specs/010-treino.md`
 - **CAT-004 Banco do catálogo** — migrations `exercise_source_refs` e `search_exercises` + seed aplicados no Supabase (1.298 exercícios, 0 sem mídia) → `specs/009-catalogo-exercicios.md`
 - **1.7 Tela de exercícios** — `/exercises` (busca, filtros, paginação) e `/exercises/[slug]` (mídia, músculos, equipamentos, crédito), estados de carregamento/vazio/erro; link na tela de Treino → `specs/009-catalogo-exercicios.md`
 - **1.6 API de exercícios** — função `search_exercises` (sem acento, filtros, só com mídia), repositório, serviço e rotas `/api/exercises`, `/api/exercises/:slug`, `/api/exercise-filters` → `specs/009-catalogo-exercicios.md`
@@ -45,6 +47,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
+- **TRN-001** — como o plano entra antes da Fase 3 → `specs/010-treino.md`
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
 - **AUTH-002** — teste manual de cadastro/login por e-mail → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`
