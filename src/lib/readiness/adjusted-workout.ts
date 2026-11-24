@@ -1,4 +1,5 @@
 import type { Workout, WorkoutExercise } from "@/lib/training/plan-types";
+import type { DraftSubstitution } from "@/lib/substitution/substitution-schema";
 import type { DraftReadiness } from "@/lib/training/set-log-draft";
 import type { ProposedChange } from "./adjustment-schema";
 
@@ -26,8 +27,27 @@ function applyChange(prescription: WorkoutExercise, change: ProposedChange): Wor
   return { ...lighter, dailyChange: { changeType: "reduced", reason: change.reason, originalName: null } };
 }
 
-/** Applies only an accepted adjustment; proposals under review and declined ones keep the plan. */
-export function adjustWorkoutForDay(workout: Workout, readiness: DraftReadiness | null): WorkoutForDay {
+/** Swap on the spot (3B.4), on top of the adjustment: same prescription, the switch belongs to the planned exercise. */
+function applySubstitution(prescription: WorkoutExercise, substitution: DraftSubstitution): WorkoutExercise {
+  const dailyChange = { changeType: "substituted" as const, reason: null, originalName: prescription.exercise.name };
+  return { ...prescription, exercise: substitution.exercise, trackProgression: false, dailyChange };
+}
+
+function applySubstitutions(day: WorkoutForDay, substitutions: Readonly<Record<string, DraftSubstitution>>): WorkoutForDay {
+  const swappedIds = Object.keys(substitutions).filter((id) => day.workout.exercises.some((item) => item.id === id));
+  if (swappedIds.length === 0) return day;
+  const exercises = day.workout.exercises.map((item) => (substitutions[item.id] ? applySubstitution(item, substitutions[item.id]) : item));
+  return { workout: { ...day.workout, exercises }, changedIds: new Set([...day.changedIds, ...swappedIds]) };
+}
+
+const NO_SUBSTITUTIONS: Readonly<Record<string, DraftSubstitution>> = {};
+
+/** Today's workout: the accepted adjustment (proposals under review and declined ones keep the plan), then the swaps. */
+export function adjustWorkoutForDay(workout: Workout, readiness: DraftReadiness | null, substitutions = NO_SUBSTITUTIONS): WorkoutForDay {
+  return applySubstitutions(applyAdjustment(workout, readiness), substitutions);
+}
+
+function applyAdjustment(workout: Workout, readiness: DraftReadiness | null): WorkoutForDay {
   const changes = acceptedChanges(readiness);
   if (changes.length === 0) return { workout, changedIds: NO_CHANGES };
   const exercises = workout.exercises.flatMap((prescription) => {

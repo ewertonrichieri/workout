@@ -182,6 +182,27 @@
       "easy": "Fácil",
       "ok": "Ok",
       "max": "No limite"
+    },
+    "substitution": {
+      "noCandidates": "Nenhum exercício equivalente com o seu equipamento. Siga com o exercício do plano ou pule-o hoje.",
+      "substitutionsMismatch": "As trocas não correspondem ao treino atual. Recarregue a página e tente de novo.",
+      "openButton": "Trocar exercício",
+      "panelLabel": "Trocar {name}",
+      "reasonLegend": "Por que trocar?",
+      "reasons": {
+        "equipment_busy": "Aparelho ocupado",
+        "equipment_broken": "Aparelho quebrado",
+        "other": "Outro motivo"
+      },
+      "searchButton": "Buscar substitutos",
+      "searching": "Buscando exercícios equivalentes...",
+      "failed": "Não foi possível buscar substitutos agora. Tente de novo ou siga com o exercício do plano.",
+      "automaticNotice": "Sugestões automáticas (mesmo músculo principal); confira se o movimento serve para você.",
+      "suggestionsLabel": "Substitutos sugeridos",
+      "chooseButton": "Usar {name}",
+      "cancelButton": "Cancelar",
+      "undoButton": "Desfazer troca",
+      "cardNotice": "No lugar de {original} hoje"
     }
   },
   "common": {

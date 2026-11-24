@@ -26,6 +26,7 @@ const USER_TABLES = [
   "readiness_checkins",
   "readiness_checkin_pains",
   "session_adjustments",
+  "exercise_substitutions",
 ];
 
 function readAllMigrations(): string {
@@ -39,6 +40,12 @@ function readAllMigrations(): string {
 
 function findCreatedTables(sql: string): string[] {
   return [...sql.matchAll(/create table (?:if not exists )?public\.(\w+)/g)].map((match) => match[1]);
+}
+
+/** Text of the newest `create [or replace] function public.<name>(`, up to the end of the migrations. */
+function latestDefinition(sql: string, name: string): string {
+  const start = Math.max(sql.lastIndexOf(`create function public.${name}(`), sql.lastIndexOf(`create or replace function public.${name}(`));
+  return sql.slice(start);
 }
 
 function findPolicies(sql: string, table: string): string[] {
@@ -117,8 +124,8 @@ describe("daily adjustment (step 3B.2)", () => {
 
   it("lets the owner replace adjustments and makes finishing follow them", () => {
     expect(sql).toContain("grant select, insert, delete on public.session_adjustments to authenticated");
-    const finish = sql.slice(sql.lastIndexOf("function public.finish_workout_session("));
-    expect(finish).toContain("coalesce(a.replacement_exercise_id, we.exercise_id)");
+    const finish = latestDefinition(sql, "finish_workout_session");
+    expect(finish).toContain("a.replacement_exercise_id");
     expect(finish).toContain("a.change_type is distinct from 'removed'");
   });
 });
@@ -127,11 +134,31 @@ describe("set effort (step 3B.3)", () => {
   it("saves the effort when finishing and returns it with the latest loads", () => {
     const sql = readAllMigrations();
     expect(sql).toContain("add column effort text check (effort in ('easy', 'ok', 'max'))");
-    const finish = sql.slice(sql.lastIndexOf("function public.finish_workout_session("));
+    const finish = latestDefinition(sql, "finish_workout_session");
     expect(finish).toContain("s.effort");
     const latest = sql.slice(sql.lastIndexOf("create function public.latest_set_loads"));
     expect(latest).toContain("sl.effort");
     expect(latest).toContain("security invoker");
+  });
+});
+
+describe("exercise substitution (step 3B.4)", () => {
+  const sql = readAllMigrations();
+
+  it.each(["list_substitution_candidates(text, text[])", "save_exercise_substitutions(uuid, uuid, uuid, jsonb)", "finish_workout_session(uuid, timestamptz, jsonb, uuid, jsonb)"])(
+    "%s is executable only by authenticated users",
+    (signature) => {
+      expect(sql).toContain(`revoke all on function public.${signature} from public, anon`);
+      expect(sql).toContain(`grant execute on function public.${signature} to authenticated`);
+    },
+  );
+
+  it("logs the substitute exercise from the database when finishing", () => {
+    const finish = latestDefinition(sql, "finish_workout_session");
+    expect(finish).toContain("p_substitutions jsonb default '[]'::jsonb");
+    expect(finish).toContain("coalesce(es.replacement_exercise_id, a.replacement_exercise_id, we.exercise_id)");
+    expect(finish).toContain("s.effort");
+    expect(finish).toContain("security invoker");
   });
 });
 

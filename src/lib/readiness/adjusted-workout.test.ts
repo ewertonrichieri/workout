@@ -48,3 +48,26 @@ describe("omitPrescriptions", () => {
     expect(omitPrescriptions({ [FIRST_ID]: [20], [THIRD_ID]: [10] }, new Set([THIRD_ID]))).toEqual({ [FIRST_ID]: [20] });
   });
 });
+
+describe("substitutions in today's workout (step 3B.4)", () => {
+  const PUSH_UP = { id: "e-push", slug: "push-up", name: "Flexão", coverMedia: null, media: [] };
+
+  it("shows the substitute with the planned prescription and drops its suggestions", () => {
+    const { workout, changedIds } = adjustWorkoutForDay(WORKOUT, null, { [FIRST_ID]: { exercise: PUSH_UP, reason: null } });
+    expect(workout.exercises[0]).toMatchObject({
+      id: FIRST_ID,
+      sets: 4,
+      exercise: PUSH_UP,
+      trackProgression: false,
+      dailyChange: { changeType: "substituted", reason: null, originalName: "Exercício falso 1" },
+    });
+    expect([...changedIds]).toEqual([FIRST_ID]);
+  });
+
+  it("applies on top of the accepted adjustment and ignores removed exercises", () => {
+    const readiness = { ...DONE, adjustment: { status: "accepted" as const, proposal: PROPOSAL } };
+    const { workout } = adjustWorkoutForDay(WORKOUT, readiness, { [THIRD_ID]: { exercise: PUSH_UP, reason: null }, [SECOND_ID]: { exercise: PUSH_UP, reason: null } });
+    expect(workout.exercises.map((item) => item.id)).toEqual([FIRST_ID, THIRD_ID]);
+    expect(workout.exercises[1]).toMatchObject({ exercise: PUSH_UP, sets: 3, dailyChange: { changeType: "substituted", originalName: "Agachamento goblet" } });
+  });
+});

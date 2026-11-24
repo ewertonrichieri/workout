@@ -31,6 +31,7 @@ export function createSupabaseSessionRepository(client: SupabaseClient): Session
         p_started_at: input.startedAt,
         p_sets: toSetRows(input),
         p_readiness_checkin_id: input.readinessCheckinId ?? null,
+        p_substitutions: (input.substitutions ?? []).map((item) => ({ workout_exercise_id: item.workoutExerciseId, exercise_slug: item.exerciseSlug, reason: item.reason })),
       });
       const sessionId = sessionIdSchema.safeParse(data);
       if (error || !sessionId.success) throw new RepositoryError(translate("errors.internal"), "sessions.finishSession");

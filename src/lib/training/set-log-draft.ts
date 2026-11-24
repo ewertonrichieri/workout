@@ -2,6 +2,7 @@ import { z } from "zod";
 import { LOAD_DECIMAL_PLACES, MAX_LOAD_KG, MAX_REPS_DONE, SET_EFFORTS } from "@/lib/constants/training";
 import { draftAdjustmentSchema } from "@/lib/readiness/adjustment-schema";
 import { checkinResultSchema } from "@/lib/readiness/readiness-schema";
+import { draftSubstitutionSchema, type DraftSubstitution } from "@/lib/substitution/substitution-schema";
 import type { Workout } from "./plan-types";
 import type { FinishedSet, FinishWorkoutInput } from "./session-schema";
 import type { SuggestedLoads } from "./suggested-loads";
@@ -32,6 +33,8 @@ export const workoutDraftSchema = z.object({
   entries: z.record(z.string(), z.array(setEntrySchema)),
   /** `null` until the user answers or skips the check-in; older drafts have none. */
   readiness: draftReadinessSchema.nullable().default(null),
+  /** Swaps of today keyed by workout exercise id (step 3B.4); an invalid stored list is dropped. */
+  substitutions: z.record(z.string(), draftSubstitutionSchema).default({}).catch({}),
 });
 export type WorkoutDraft = z.infer<typeof workoutDraftSchema>;
 
@@ -84,7 +87,16 @@ export function formatLoadInput(loadKg: number): string {
 /** New draft; tracked exercises get the suggested load of the latest session (step 2.7). */
 export function createEmptyDraft(workout: Workout, date: string, suggestedLoads: SuggestedLoads = {}): WorkoutDraft {
   const entries = Object.fromEntries(workout.exercises.map((exercise) => [exercise.id, emptySets(exercise.sets, suggestedLoads[exercise.id])]));
-  return { workoutId: workout.id, date, startedAt: null, entries, readiness: null };
+  return { workoutId: workout.id, date, startedAt: null, entries, readiness: null, substitutions: {} };
+}
+
+/** Swaps (or undoes, with null) one exercise of today; its typed sets start over for the new exercise. */
+export function setSubstitution(draft: WorkoutDraft, workoutExerciseId: string, substitution: DraftSubstitution | null): WorkoutDraft {
+  const others = Object.fromEntries(Object.entries(draft.substitutions).filter(([id]) => id !== workoutExerciseId));
+  const substitutions = substitution ? { ...others, [workoutExerciseId]: substitution } : others;
+  const sets = draft.entries[workoutExerciseId];
+  const entries = sets ? { ...draft.entries, [workoutExerciseId]: emptySets(sets.length) } : draft.entries;
+  return { ...draft, substitutions, entries };
 }
 
 export function setReadiness(draft: WorkoutDraft, readiness: DraftReadiness): WorkoutDraft {
@@ -94,7 +106,7 @@ export function setReadiness(draft: WorkoutDraft, readiness: DraftReadiness): Wo
 /** New suggestions replace a draft only while the user has not edited it. */
 export function refreshUntouchedDraft(draft: WorkoutDraft, workout: Workout, suggestedLoads: SuggestedLoads): WorkoutDraft {
   if (draft.startedAt !== null) return draft;
-  return { ...createEmptyDraft(workout, draft.date, suggestedLoads), readiness: draft.readiness };
+  return { ...createEmptyDraft(workout, draft.date, suggestedLoads), readiness: draft.readiness, substitutions: draft.substitutions };
 }
 
 /** Records the session start on the first edit; later edits keep it. */
@@ -116,7 +128,12 @@ export function buildFinishPayload(draft: WorkoutDraft, nowIso: string): FinishW
     entries.map((entry, index) => toFinishedSet(workoutExerciseId, entry, index)).filter((set) => set !== null),
   );
   const readinessCheckinId = draft.readiness?.status === "done" ? draft.readiness.checkinId : null;
-  return { workoutId: draft.workoutId, startedAt: draft.startedAt ?? nowIso, sets, readinessCheckinId };
+  const substitutions = Object.entries(draft.substitutions).map(([workoutExerciseId, substitution]) => ({
+    workoutExerciseId,
+    exerciseSlug: substitution.exercise.slug,
+    reason: substitution.reason,
+  }));
+  return { workoutId: draft.workoutId, startedAt: draft.startedAt ?? nowIso, sets, readinessCheckinId, substitutions };
 }
 
 export function hasUncheckedSets(draft: WorkoutDraft): boolean {

@@ -15,11 +15,13 @@ export interface PlannedExerciseInfo {
   media: ExerciseMediaItem[];
 }
 
-/** Today-only change accepted from the daily adjustment (step 3B.2); the plan keeps its prescription. */
+/** Today-only change (daily adjustment or swap on the spot); the plan keeps its prescription. */
 export interface DailyChange {
-  changeType: "reduced" | "replaced";
-  reason: string;
-  /** Name of the planned exercise when it was replaced; null for a reduction. */
+  /** reduced / replaced: AI adjustment (3B.2); substituted: swap on the spot (3B.4). */
+  changeType: "reduced" | "replaced" | "substituted";
+  /** Reason given by the AI; null for a swap on the spot. */
+  reason: string | null;
+  /** Name of the exercise it took the place of; null for a reduction. */
   originalName: string | null;
 }
 

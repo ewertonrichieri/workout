@@ -114,6 +114,7 @@ describe("finish payload", () => {
       startedAt: "2026-11-24T10:00:00.000Z",
       sets: [{ workoutExerciseId: FIRST, setNumber: 2, repsDone: 10, loadKg: 12.5, effort: null }],
       readinessCheckinId: null,
+      substitutions: [],
     });
   });
 
@@ -232,5 +233,27 @@ describe("perceived effort per set (step 3B.3)", () => {
     const withEffort = updateSetEntry(checked, SECOND, 0, { effort: "easy" });
     expect(restoreDraft(JSON.parse(JSON.stringify(withEffort)), WORKOUT, TODAY).entries[SECOND][0].effort).toBe("easy");
     expect(restoreDraft({ ...withEffort, entries: { [SECOND]: [{ repsDone: "8", load: "", isDone: true, effort: "hard" }] } }, WORKOUT, TODAY).entries[SECOND][0].effort).toBeUndefined();
+  });
+});
+
+describe("substitutions of today (step 3B.4)", () => {
+  const PUSH_UP = { exercise: { id: "e-push", slug: "push-up", name: "Flexão", coverMedia: null, media: [] }, reason: "equipment_busy" as const };
+
+  it("records a swap, clears the typed sets of that exercise and sends it when finishing", async () => {
+    const { buildFinishPayload, setSubstitution } = await import("./set-log-draft");
+    const typed = updateSetEntry(createEmptyDraft(WORKOUT, TODAY, { [FIRST]: [20, 20] }), FIRST, 0, { repsDone: "9" });
+    const swapped = setSubstitution(typed, FIRST, PUSH_UP);
+    expect(swapped.substitutions).toEqual({ [FIRST]: PUSH_UP });
+    expect(swapped.entries[FIRST]).toEqual([{ repsDone: "", load: "", isDone: false }, { repsDone: "", load: "", isDone: false }]);
+    expect(buildFinishPayload(swapped, "2026-11-24T12:00:00.000Z").substitutions).toEqual([{ workoutExerciseId: FIRST, exerciseSlug: "push-up", reason: "equipment_busy" }]);
+  });
+
+  it("undoes a swap and keeps swaps across restoring and new suggestions", async () => {
+    const { refreshUntouchedDraft, setSubstitution } = await import("./set-log-draft");
+    const swapped = setSubstitution(createEmptyDraft(WORKOUT, TODAY), FIRST, PUSH_UP);
+    expect(setSubstitution(swapped, FIRST, null).substitutions).toEqual({});
+    expect(restoreDraft(JSON.parse(JSON.stringify(swapped)), WORKOUT, TODAY).substitutions).toEqual({ [FIRST]: PUSH_UP });
+    expect(refreshUntouchedDraft(swapped, WORKOUT, {}).substitutions).toEqual({ [FIRST]: PUSH_UP });
+    expect(createEmptyDraft(WORKOUT, TODAY).substitutions).toEqual({});
   });
 });
