@@ -49,7 +49,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 
 | # | Etapa | Esforço | Status |
 |---|---|---|---|
-| 2.1 | Spec do treino + repositórios de plano, treino e exercícios do treino | `medium` | [ ] |
+| 2.1 | Spec do treino + repositórios de plano, treino e exercícios do treino | `medium` | [x] |
 | 2.2 | Tela de treino: abas A/B/C, validade, barra de progresso, cards por categoria | `high` | [ ] |
 | 2.3 | Player de mídia com fallback (vídeo → GIF → YouTube) | `medium` | [ ] |
 | 2.4 | Registro de séries, repetições e carga + check de concluído | `high` | [ ] |
