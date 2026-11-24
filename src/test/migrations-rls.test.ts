@@ -103,3 +103,23 @@ describe("latest_set_loads", () => {
     expect(sql).toContain("grant execute on function public.latest_set_loads(uuid[]) to authenticated");
   });
 });
+
+describe("assessments (step 3.1)", () => {
+  const SAVE_SIGNATURE = "public.save_assessment(text, text, integer, integer, text, text, text[])";
+
+  it("stores the split preference with the domain values", () => {
+    const sql = readAllMigrations();
+    expect(sql).toMatch(/add column split_preference text not null default 'ai_decides'\s+check \(split_preference in \('ai_decides', 'full_body', 'split'\)\)/);
+  });
+
+  it("saves through a security invoker function executable only by authenticated users", () => {
+    const sql = readAllMigrations();
+    expect(sql.slice(sql.indexOf("create or replace function public.save_assessment"))).toContain("security invoker");
+    expect(sql).toContain(`revoke all on function ${SAVE_SIGNATURE} from public, anon`);
+    expect(sql).toContain(`grant execute on function ${SAVE_SIGNATURE} to authenticated`);
+  });
+
+  it("lets authenticated users read and insert their assessments (RLS filters rows)", () => {
+    expect(readAllMigrations()).toContain("grant select, insert on public.assessments, public.assessment_equipment to authenticated");
+  });
+});

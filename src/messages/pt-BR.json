@@ -39,7 +39,7 @@
     "home": {
       "title": "Início",
       "emptyTitle": "Nenhum plano de treino ainda",
-      "emptyDescription": "Em breve a IA vai montar seu plano a partir de uma anamnese rápida."
+      "emptyDescription": "Responda a anamnese para a IA montar seu plano de treino."
     },
     "workout": {
       "title": "Treino",
@@ -55,6 +55,9 @@
       "title": "Perfil",
       "emptyTitle": "Seus dados",
       "emptyDescription": "Objetivo, nível e preferências vão ficar aqui."
+    },
+    "assessment": {
+      "title": "Anamnese"
     }
   },
   "errors": {
@@ -202,5 +205,57 @@
     "setsColumn": "Séries",
     "noLoad": "Sem carga",
     "backToWorkout": "Voltar para o treino"
+  },
+  "assessment": {
+    "startLink": "Fazer anamnese",
+    "editLink": "Atualizar anamnese",
+    "intro": "Conte um pouco sobre você para a IA montar seu plano.",
+    "goalLegend": "Objetivo",
+    "goals": {
+      "hypertrophy": "Hipertrofia (ganhar massa)",
+      "weight_loss": "Emagrecimento",
+      "strength": "Força",
+      "conditioning": "Condicionamento"
+    },
+    "levelLegend": "Nível de experiência",
+    "levels": {
+      "beginner": "Iniciante",
+      "intermediate": "Intermediário",
+      "advanced": "Avançado"
+    },
+    "daysLabel": "Dias de treino por semana",
+    "daysOption": "{count} por semana",
+    "minutesLabel": "Tempo por treino (minutos)",
+    "minutesHint": "De {min} a {max} minutos.",
+    "splitLegend": "Divisão do treino",
+    "splits": {
+      "ai_decides": "Deixar a IA decidir",
+      "full_body": "Full body (corpo todo em cada treino)",
+      "split": "Dividido (A/B/C…)"
+    },
+    "splitHint": "Quem treina poucas vezes na semana costuma render melhor com full body.",
+    "equipmentLegend": "Equipamentos disponíveis",
+    "equipmentHint": "Marque tudo o que você tem. Sem equipamento? Marque \"Peso corporal\".",
+    "limitationsLabel": "Lesões ou limitações (opcional)",
+    "limitationsHint": "Até {max} caracteres. Ex.: dor no joelho, cirurgia no ombro.",
+    "submitButton": "Salvar anamnese",
+    "submitting": "Salvando...",
+    "saved": "Anamnese salva. A geração do plano pela IA chega na próxima etapa.",
+    "failed": "Não foi possível salvar a anamnese. Seus dados continuam no formulário; tente novamente.",
+    "fixErrors": "Confira os campos destacados.",
+    "unknownEquipment": "Algum equipamento escolhido não existe no catálogo. Recarregue a página e tente novamente.",
+    "loading": "Carregando anamnese...",
+    "loadError": "Não foi possível carregar a anamnese.",
+    "noEquipmentTitle": "Catálogo de equipamentos vazio",
+    "noEquipmentDescription": "Não há equipamentos cadastrados para escolher. Tente mais tarde.",
+    "fieldErrors": {
+      "goal": "Escolha um objetivo.",
+      "experienceLevel": "Escolha seu nível.",
+      "daysPerWeek": "Escolha de 1 a 7 dias por semana.",
+      "sessionMinutes": "Informe um número inteiro de {min} a {max} minutos.",
+      "splitPreference": "Escolha uma divisão.",
+      "equipmentSlugs": "Marque ao menos um equipamento.",
+      "limitations": "Use no máximo {max} caracteres."
+    }
   }
 }

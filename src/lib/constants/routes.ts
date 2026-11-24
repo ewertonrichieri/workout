@@ -5,6 +5,7 @@ export const APP_ROUTES = {
   profile: "/profile",
   exercises: "/exercises",
   progress: "/progress",
+  assessment: "/assessment",
 } as const;
 
 /** Query param of paginated lists (catalog, history). */
