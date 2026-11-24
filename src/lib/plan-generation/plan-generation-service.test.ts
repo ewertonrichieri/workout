@@ -44,7 +44,7 @@ describe("plan generation service", () => {
     const { service, dependencies, generate } = setup();
     await expect(service.generatePlan("user-1", { replaceActivePlan: false })).resolves.toEqual({ planId: "plan-1" });
     expect(dependencies.generationRepository.listCandidates).toHaveBeenCalledWith(["dumbbell"]);
-    expect(generate).toHaveBeenCalledWith(expect.objectContaining({ operation: "plan.generate", effort: "medium", cacheSystem: true }));
+    expect(generate).toHaveBeenCalledWith(expect.objectContaining({ operation: "plan.generate", model: "claude-haiku-5-5", effort: "medium", cacheSystem: true }));
     expect(dependencies.generationRepository.createGeneratedPlan).toHaveBeenCalledWith({
       assessmentId: ASSESSMENT.id,
       goal: "hypertrophy",

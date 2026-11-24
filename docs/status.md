@@ -12,12 +12,12 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 4. **ASM-001** — testar o envio da anamnese no navegador (migration aplicada; criar conta antes) → `specs/011-geracao-treino-ia.md`
-5. **PLN-001** — medir uma chamada real à Claude API (precisa de sessão nova com `ANTHROPIC_API_KEY`) → `specs/011-geracao-treino-ia.md`
 
 ---
 
 ## Concluído recentemente
 
+- **3.3 Geração do plano pela IA** — chamada real medida (PLN-001): Haiku 5.5, esforço `medium`, 1.068 candidatos, ~16–19 s e ~US$ 0,002–0,005 por plano, plano válido e limitação respeitada; a geração passa a usar `claude-haiku-5-5` (decisão do usuário) → `specs/011-geracao-treino-ia.md`
 - **3.4 Revisão e edição manual** — aviso de revisão depois da geração; `/workout/edit` edita séries, repetições, descanso, categoria e observação, reordena, remove, troca e adiciona exercícios do catálogo (rascunho com descartar); `PUT /api/workouts/:id/exercises` grava numa transação preservando o histórico; migration aplicada → `specs/011-geracao-treino-ia.md`
 - **3.2 Wrapper da Claude API** — `generate()` com saída estruturada validada por zod, streaming, fallback de recusa (`fallbacks: "default"`), retry 3× com backoff (só 429/5xx/conexão; `Retry-After` respeitado), teto de 120 s para IA (exceção no `AGENTS.md`), erros pt-BR (429/502) e logs sem conteúdo → `specs/011-geracao-treino-ia.md`
 - **3.1 Anamnese** — `/assessment` (objetivo, nível, dias, tempo, divisão, equipamentos, limitações) com erros por campo e preenchida com a última anamnese; `POST /api/assessments` grava anamnese + equipamentos numa transação (`save_assessment`); link no Início e no Perfil. Migration aplicada no Supabase e função testada lá (bloco desfeito no fim); teste no navegador: ASM-001 → `specs/011-geracao-treino-ia.md`
@@ -50,7 +50,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
-- **3.3 Geração do plano pela IA** — código na `main` e migration aplicada; etapa pendente até a chamada real (PLN-001), critério de aceite → `specs/011-geracao-treino-ia.md`
 - **0.7 Autenticação** — código na `main`; etapa pendente até AUTH-001/AUTH-002 (configuração do Google e teste manual) → `specs/007-autenticacao.md`
 
 ---
@@ -59,7 +58,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **PLN-001** — chamada real medida (migration já aplicada) (tempo, tokens, custo; ajustar esforço) → `specs/011-geracao-treino-ia.md`
 - **ASM-001** — testar o envio da anamnese no navegador (migration já aplicada) → `specs/011-geracao-treino-ia.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
