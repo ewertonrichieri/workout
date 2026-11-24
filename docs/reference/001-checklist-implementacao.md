@@ -62,7 +62,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 
 | # | Etapa | Esforço | Status |
 |---|---|---|---|
-| 3.1 | Anamnese: formulário + schema + gravação (inclui preferência de divisão: IA decide / full body / dividido) — migration a aplicar: ASM-001 | `medium` | [x] |
+| 3.1 | Anamnese: formulário + schema + gravação (inclui preferência de divisão: IA decide / full body / dividido) — teste no navegador: ASM-001 | `medium` | [x] |
 | 3.2 | Wrapper da Claude API (servidor, retry, timeout, validação da saída) | `high` | [ ] |
 | 3.3 | Geração do plano: prompt + catálogo filtrado + só exercícios com mídia + divisão full body ou A/B/C conforme dias/semana e preferência | `xhigh` | [ ] |
 | 3.4 | Revisão e edição manual do plano | `high` | [ ] |

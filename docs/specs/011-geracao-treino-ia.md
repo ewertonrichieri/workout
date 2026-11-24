@@ -69,12 +69,13 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 - [x] API `POST /api/assessments` (201, 400, 401, 422)
 - [x] Formulário com erros por campo, carregamento, erro e sucesso; preenchido com a anamnese mais recente
 - [x] Acessível (rótulos, `fieldset`/`legend`, foco visível, toque ≥ 44px)
-- [ ] Migration aplicada no Supabase (ver ASM-001)
+- [x] Migration aplicada no Supabase (2026-11-24) e `save_assessment` testada lá num bloco desfeito no fim (gravação, equipamento desconhecido, RLS)
+- [ ] Envio testado no navegador (ver ASM-001)
 
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| ASM-001 | Aplicar a migration `20261126000000_assessments.sql` no Supabase e testar o envio no navegador | `supabase/migrations/` | Alta (antes da 3.3) |
+| ASM-001 | Testar o envio da anamnese no navegador (migration já aplicada; o Supabase está sem contas de usuário no momento) | `/assessment` | Alta (antes da 3.3) |
 
 ## Fim da spec
