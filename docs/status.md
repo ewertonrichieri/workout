@@ -8,15 +8,16 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
+1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar o cadastro por e-mail (o login por e-mail já foi testado de ponta a ponta) (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-3. **TRN-001** — séries, repetições e descanso do plano atual (usuário) → `specs/010-treino.md`
+3. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 4. **3.1** — Anamnese: formulário + schema + gravação (esforço `medium`) — criar spec da Fase 3
 
 ---
 
 ## Concluído recentemente
 
+- **Teste de ponta a ponta (Fases 0–2)** — login por e-mail, treino, finalizar, carga sugerida, Agenda e evolução testados no navegador contra o Supabase real; corrigidos `Date.now()` na pré-renderização e miniatura quebrada → `specs/010-treino.md`
 - **2.8 Histórico e gráfico** — Agenda com treinos finalizados (paginada); `/progress/[slug]` com gráfico da maior carga por sessão (tooltip por toque/mouse/setas) e tabela acessível; link "Ver evolução" no card e no detalhe do exercício → `specs/010-treino.md`
 - **2.7 Salvar carga para progredir** — interruptor por exercício (`PATCH /api/workout-exercises/:id`); carga da última sessão preenchida em rascunho ainda não editado (`latest_set_loads`, aplicada no Supabase) → `specs/010-treino.md`
 - **2.6 Finalizar treino** — `POST /api/workout-sessions` revalida no servidor e grava sessão + séries com check numa transação (`finish_workout_session`); confirmação com séries sem check; rascunho apagado ao salvar. Corrigido bug de permissões das tabelas (spec 006). Migrations aplicadas no Supabase → `specs/010-treino.md`
@@ -53,9 +54,9 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **TRN-001** — importar o plano atual (faltam séries, repetições e descanso) → `specs/010-treino.md`
+- **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
-- **AUTH-002** — teste manual de cadastro/login por e-mail → `specs/007-autenticacao.md`
+- **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`
 - **CAT-003** — licença dos GIFs da Exercise Library a confirmar → `specs/009-catalogo-exercicios.md`
 - **CAT-005** — traduzir nomes dos 951 exercícios só com GIF → `specs/009-catalogo-exercicios.md`
@@ -98,3 +99,4 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 - Ambiente: Windows 11, PowerShell, Node 20.19 e npm 8.18 (antigo). O npm 8 falha ao instalar pacotes (`edgesOut`); usar `npx -y npm@10 install ...` até atualizar o Node/npm.
 - Segredos: `.env` local (ignorado pelo Git). Em sessões na nuvem, as variáveis ficam nas configurações do ambiente de nuvem do Claude Code, nunca no repositório. Nomes das variáveis em `.env.example` (etapa 0.5).
 - Vitest fixado na v4 porque a v5 exige Node 22+.
+- Nuvem do Claude Code: o host `tkhderkfpudcscvgnnfs.supabase.co` está liberado no ambiente `workout`; para rodar o app aqui, usar `NODE_USE_ENV_PROXY=1`.

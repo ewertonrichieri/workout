@@ -33,4 +33,14 @@ Conectar o app ao projeto Supabase já criado pelo usuário, com clientes para s
 - [x] `.env.example` sem valores
 - [x] Testes passando, typecheck, lint e build limpos
 
+## Bugs (histórico)
+
+Somente registro informativo de correções já feitas. Não é backlog.
+
+### 2026-11-25 — `Date.now()` durante a pré-renderização
+
+- **Sintoma:** no teste de ponta a ponta, todas as telas com dados do usuário (`/workout`, `/schedule`, `/progress`, `/exercises`) registravam "encountered the unstable value `Date.now()` while prerendering"
+- **Causa:** com Cache Components + Partial Prefetching, o Next pré-renderiza com os cookies disponíveis, e o supabase-js lê a hora atual ao validar a sessão
+- **Correção:** `createServerSupabaseClient` chama `await connection()` antes de ler os cookies (dados do usuário são sempre da requisição)
+
 ## Fim da spec

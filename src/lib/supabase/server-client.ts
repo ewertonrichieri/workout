@@ -1,10 +1,14 @@
 import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { connection } from "next/server";
 import { getPublicConfig } from "@/lib/config/public-config";
 
 /** Server client bound to the current user's session cookies (RLS applies). */
 export async function createServerSupabaseClient() {
+  // User data is always request-time: supabase-js reads the current time (session expiry), which
+  // Cache Components forbid while prerendering (runtime prefetch included).
+  await connection();
   const cookieStore = await cookies();
   const { supabaseUrl, supabasePublishableKey } = getPublicConfig();
 

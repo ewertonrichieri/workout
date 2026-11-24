@@ -6,7 +6,9 @@ const cookieStore = { getAll: vi.fn(() => [{ name: "a", value: "1" }]), set: vi.
 
 vi.mock("server-only", () => ({}));
 vi.mock("@supabase/ssr", () => ({ createServerClient, createBrowserClient }));
+const connection = vi.fn(async () => undefined);
 vi.mock("next/headers", () => ({ cookies: vi.fn(async () => cookieStore) }));
+vi.mock("next/server", () => ({ connection }));
 vi.mock("@/lib/config/public-config", () => ({
   getPublicConfig: () => ({
     supabaseUrl: "https://example.supabase.co",
@@ -37,6 +39,8 @@ describe("Supabase clients", () => {
       { cookies: CookieAdapter },
     ];
     expect([url, key]).toEqual(["https://example.supabase.co", "sb_publishable_test"]);
+    // Request-time only: never prerendered (supabase-js reads the current time).
+    expect(connection).toHaveBeenCalled();
     expect(options.cookies.getAll()).toEqual([{ name: "a", value: "1" }]);
     options.cookies.setAll([{ name: "b", value: "2", options: {} }]);
     expect(cookieStore.set).toHaveBeenCalledWith("b", "2", {});

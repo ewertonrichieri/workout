@@ -188,3 +188,14 @@ O banco guarda apenas a `url` em `exercise_media`; trocar a hospedagem depois é
 | CAT-006 | Traduzir as instruções para pt-BR (`instructions_pt`); hoje só existem em inglês (`instructionStepsEn` no `catalog.json`) | `seed-data/catalog/` | Média (antes da tela de treino, Fase 2) |
 | CAT-007 | Revisar os 65 candidatos a duplicata em `seed-data/catalog/review/duplicate-candidates.json` (hoje mantidos separados) | `seed-data/catalog/curation/duplicate-decisions.json` | Baixa |
 | CAT-002 | Fork de Workout Free Videos e Exercise Library na conta do usuário (seguro contra remoção da mídia) | GitHub | Alta (antes da 1.2) |
+
+## Bugs (histórico)
+
+Somente registro informativo de correções já feitas. Não é backlog.
+
+### 2026-11-25 — Miniatura quebrada quando o GIF não carrega
+
+- **Sintoma:** no card do treino, a miniatura da Prancha frontal aparecia como imagem quebrada
+- **Causa:** a URL do GIF no jsDelivr depende dos forks (CAT-002) e responde 404; `ExerciseCover` não tinha fallback
+- **Correção:** `ExerciseCover` (cliente) troca para o ícone quando a imagem falha
+

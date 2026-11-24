@@ -72,3 +72,16 @@ describe("ExerciseDetailView", () => {
     expect(screen.getByText("Mídia indisponível para este exercício.")).toBeInTheDocument();
   });
 });
+
+describe("ExerciseCover", () => {
+  it("falls back to the icon when the thumbnail fails to load", async () => {
+    const { fireEvent } = await import("@testing-library/react");
+    const { ExerciseCover } = await import("./exercise-cover");
+    const { container } = render(<ExerciseCover media={{ mediaType: "gif", url: "https://cdn.example.test/missing.gif", thumbnailUrl: null, source: "exercise-library", license: "unverified" }} />);
+    const image = container.querySelector("img");
+    if (!image) throw new Error("thumbnail not rendered");
+    fireEvent.error(image);
+    expect(container.querySelector("img")).toBeNull();
+    expect(container.querySelector("svg")).not.toBeNull();
+  });
+});
