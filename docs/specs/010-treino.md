@@ -53,6 +53,18 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - Mapeamento de mídia compartilhado com o catálogo (`mapEnabledMedia` em `exercise-row-mapping.ts`)
 - O `userId` vem só da sessão (`getAuthenticatedUserId`) na camada que chama o serviço
 
+## Tela de treino (2.2)
+
+- **Rota:** `/workout` (Server Component); o `userId` vem de `getAuthenticatedUserId`; dados via `getActivePlanOverview`
+- **Sem plano ativo:** estado vazio + link para o catálogo
+- **Treino selecionado:** parâmetro `?workout=<label>` na URL; label ausente ou desconhecido → primeiro treino pela `position`. Abas são links (`aria-current="page"` na ativa), só com mais de um treino; com um treino só, o rótulo aparece como título
+- **Validade:** "Válido até DD/MM/AAAA · N dias restantes" (1 dia → singular); vencido → "Plano vencido em DD/MM/AAAA"; barra `role="progressbar"` com o percentual decorrido (arredondado)
+- **Cards:** miniatura (`ExerciseCover`), nome com link para `/exercises/<slug>`, "N séries · R repetições", descanso ("60 s", "1 min", "1 min 30 s") só quando houver, observações quando houver
+- **Treino sem exercícios:** estado vazio dentro da aba
+- **Estados:** skeleton no carregamento (Suspense) e `error.tsx` com "Tentar novamente"
+- **Fora da 2.2:** player (2.3), carga/check (2.4), finalizar (2.6)
+- **Arquivos:** `src/lib/training/workout-display.ts` (`selectWorkout`, `groupExercisesByCategory`); `src/components/workout/` (`workout-labels.ts`, `workout-plan-view.tsx`, `workout-tabs.tsx`, `plan-validity-summary.tsx`, `workout-exercise-groups.tsx`, `workout-exercise-card.tsx`, `workout-skeleton.tsx`); `src/app/(app)/workout/` (`page.tsx`, `error.tsx`); textos em `training.*` no `pt-BR.json`; `WORKOUT_QUERY_PARAM` em `constants/training.ts`
+
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
@@ -64,7 +76,7 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 ## Checklist de aceite
 
 - [x] 2.1 — Spec + leitura do plano ativo e validade, com testes
-- [ ] 2.2 — Tela de treino
+- [x] 2.2 — Tela de treino, com testes (teste manual com dados reais depende do TRN-001)
 - [ ] 2.3 — Player com fallback
 - [ ] 2.4 — Registro de séries
 - [ ] 2.6 — Finalizar treino

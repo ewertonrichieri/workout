@@ -110,5 +110,31 @@
       "cc0": "CC0 (domínio público)",
       "unverified": "a confirmar"
     }
+  },
+  "training": {
+    "tabsLabel": "Treinos do plano",
+    "tabLabel": "Treino {label}",
+    "validUntil": "Válido até {date}",
+    "remainingDaysOne": "{count} dia restante",
+    "remainingDaysOther": "{count} dias restantes",
+    "lastDay": "último dia",
+    "expired": "Plano vencido em {date}",
+    "validityProgressLabel": "Validade do plano",
+    "validityProgressValue": "{percent}% do período decorrido",
+    "setsOne": "{count} série",
+    "setsOther": "{count} séries",
+    "repsOne": "{count} repetição",
+    "repsOther": "{count} repetições",
+    "repsRange": "{min} a {max} repetições",
+    "rest": "Descanso: {duration}",
+    "durationSeconds": "{seconds} s",
+    "durationMinutes": "{minutes} min",
+    "durationMinutesSeconds": "{minutes} min {seconds} s",
+    "exercisesLabel": "Exercícios do treino",
+    "emptyWorkoutTitle": "Treino sem exercícios",
+    "emptyWorkoutDescription": "Este treino ainda não tem exercícios cadastrados.",
+    "loading": "Carregando treino...",
+    "loadError": "Não foi possível carregar o treino.",
+    "retryButton": "Tentar novamente"
   }
 }
