@@ -32,6 +32,8 @@ const CANDIDATES = [
   profile("lever-pec-deck", [], ["machine"]),
   profile("fake-exercise-2", ["triceps"], ["dumbbell"]),
   profile("dumbbell-fly", [], ["dumbbell", "bench"]),
+  profile("weighted-floor-press", [], ["dumbbell"]),
+  profile("wide-push-up", [], ["bodyweight"]),
 ];
 const info = (slug: string) => ({ id: `id-${slug}`, slug, name: `Nome ${slug}`, coverMedia: null, media: [] });
 
@@ -96,6 +98,18 @@ describe("substitution service", () => {
       ],
     });
     expect(dependencies.logger.warn).toHaveBeenCalled();
+  });
+
+  it("skips the AI when the filter leaves 3 options or fewer (its choice would only reorder them)", async () => {
+    const { service, generate } = setup({ candidates: [profile("push-up", [], ["bodyweight"]), profile("dumbbell-fly", [], ["dumbbell", "bench"]), profile("lever-pec-deck", [], ["machine"])] });
+    await expect(service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "equipment_busy" })).resolves.toEqual({
+      isAutomatic: true,
+      suggestions: [
+        { exercise: info("dumbbell-fly"), reason: null },
+        { exercise: info("push-up"), reason: null },
+      ],
+    });
+    expect(generate).not.toHaveBeenCalled();
   });
 
   it("uses the plan's equipment plus bodyweight without an assessment", async () => {

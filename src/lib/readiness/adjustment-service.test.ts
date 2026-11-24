@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type { SavedAssessment } from "@/lib/assessment/assessment-schema";
-import { ExternalServiceError, InvalidInputError, NotFoundError, UnprocessableError } from "@/lib/errors/app-errors";
+import { ExternalServiceError, InvalidInputError, NotFoundError, RateLimitExceededError, RepositoryError, UnprocessableError } from "@/lib/errors/app-errors";
 import type { StructuredOutputClient } from "@/lib/integrations/claude/structured-output-client";
 import type { Logger } from "@/lib/logger/logger";
 import { buildPlanOverview, buildWorkout, buildWorkoutExercise } from "@/test/training-fixtures";
-import type { StoredCheckin } from "./adjustment-repository";
+import type { StoredAdjustmentProposal, StoredCheckin } from "./adjustment-repository";
 import type { AiDailyAdjustment } from "./adjustment-schema";
 import { createAdjustmentService, type AdjustmentServiceDependencies } from "./adjustment-service";
 
@@ -61,10 +61,21 @@ const AI_OUTPUT: AiDailyAdjustment = {
   ],
 };
 
+const RESOLVED_CHANGES = [
+  { workoutExerciseId: FIRST_ID, changeType: "replaced" as const, replacementSlug: "goblet-squat", sets: 3, repsMin: 8, repsMax: 10, reason: "Poupa o joelho" },
+  { workoutExerciseId: SECOND_ID, changeType: "reduced" as const, replacementSlug: null, sets: 2, repsMin: 10, repsMax: 10, reason: "Dormiu mal" },
+];
+
+/** Saved in an order different from the workout's, as the database may return it. */
+const STORED_PROPOSAL: StoredAdjustmentProposal = { summary: "Guardado antes.", estimatedMinutes: 35, changes: [RESOLVED_CHANGES[1], RESOLVED_CHANGES[0]] };
+
 interface SetupOptions {
   checkin?: StoredCheckin | null;
   assessment?: SavedAssessment | null;
   output?: AiDailyAdjustment;
+  storedProposal?: StoredAdjustmentProposal;
+  isLimitReached?: boolean;
+  isProposalSaveFailing?: boolean;
 }
 
 function setup(options: SetupOptions = {}) {
@@ -75,11 +86,20 @@ function setup(options: SetupOptions = {}) {
       listExerciseProfiles: vi.fn(async () => PROFILES),
       findExercisesBySlugs: vi.fn(async () => [GOBLET]),
       saveAdjustments: vi.fn(async () => undefined),
+      findProposal: vi.fn(async () => options.storedProposal ?? null),
+      saveProposal: vi.fn(async () => {
+        if (options.isProposalSaveFailing) throw new RepositoryError("erro", "adjustments.saveProposal");
+      }),
     },
     planRepository: { findActivePlan: vi.fn(async () => PLAN) },
     assessmentRepository: { findLatestAssessment: vi.fn(async () => (options.assessment === undefined ? ASSESSMENT : options.assessment)) },
     candidateSource: { listCandidates: vi.fn(async () => CANDIDATES) },
     structuredOutputClient: { generate } as unknown as StructuredOutputClient,
+    aiUsageGuard: {
+      reserve: vi.fn(async () => {
+        if (options.isLimitReached) throw new RateLimitExceededError("limite");
+      }),
+    },
     logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } satisfies Logger,
     now: () => new Date("2026-11-24T20:00:00Z"),
   };
@@ -110,6 +130,40 @@ describe("adjustment service: proposeAdjustment", () => {
     expect(request[0].prompt).not.toContain(CHECKIN_ID);
   });
 
+  it("saves the paid proposal for the check-in, after counting the request against the limit", async () => {
+    const { service, dependencies } = setup();
+    await service.proposeAdjustment("user-1", CHECKIN_ID);
+    expect(dependencies.aiUsageGuard.reserve).toHaveBeenCalledWith("readiness.adjust");
+    expect(dependencies.adjustmentRepository.findProposal).toHaveBeenCalledWith(CHECKIN_ID);
+    expect(dependencies.adjustmentRepository.saveProposal).toHaveBeenCalledWith(CHECKIN_ID, { summary: AI_OUTPUT.summary, estimatedMinutes: 40, changes: RESOLVED_CHANGES });
+  });
+
+  it("returns the saved proposal of the check-in without calling the AI again", async () => {
+    const { service, generate, dependencies } = setup({ storedProposal: STORED_PROPOSAL });
+    await expect(service.proposeAdjustment("user-1", CHECKIN_ID)).resolves.toEqual({
+      checkinId: CHECKIN_ID,
+      summary: "Guardado antes.",
+      estimatedMinutes: 35,
+      changes: [{ ...RESOLVED_CHANGES[0], replacement: GOBLET }, { ...RESOLVED_CHANGES[1], replacement: null }],
+    });
+    expect(generate).not.toHaveBeenCalled();
+    expect(dependencies.aiUsageGuard.reserve).not.toHaveBeenCalled();
+    expect(dependencies.adjustmentRepository.saveProposal).not.toHaveBeenCalled();
+  });
+
+  it("does not call the AI once the user's limit is reached", async () => {
+    const { service, generate, dependencies } = setup({ isLimitReached: true });
+    await expect(service.proposeAdjustment("user-1", CHECKIN_ID)).rejects.toBeInstanceOf(RateLimitExceededError);
+    expect(generate).not.toHaveBeenCalled();
+    expect(dependencies.adjustmentRepository.saveProposal).not.toHaveBeenCalled();
+  });
+
+  it("still returns the paid proposal when saving it fails", async () => {
+    const { service, dependencies } = setup({ isProposalSaveFailing: true });
+    await expect(service.proposeAdjustment("user-1", CHECKIN_ID)).resolves.toMatchObject({ summary: AI_OUTPUT.summary });
+    expect(dependencies.logger.warn).toHaveBeenCalledWith("daily adjustment proposal not saved", expect.objectContaining({ operation: "readiness.adjust" }));
+  });
+
   it("accepts an answer without changes", async () => {
     const { service } = setup({ output: { summary: "Nada a mudar.", estimatedMinutes: 45, changes: [] } });
     await expect(service.proposeAdjustment("user-1", CHECKIN_ID)).resolves.toMatchObject({ changes: [] });
@@ -123,9 +177,10 @@ describe("adjustment service: proposeAdjustment", () => {
   });
 
   it("does not call the AI when the check-in does not ask for an adjustment", async () => {
-    const { service, generate } = setup({ checkin: { ...CHECKIN, sleepQuality: "good", pains: [], availableMinutes: 60 } });
+    const { service, generate, dependencies } = setup({ checkin: { ...CHECKIN, sleepQuality: "good", pains: [], availableMinutes: 60 } });
     await expect(service.proposeAdjustment("user-1", CHECKIN_ID)).rejects.toBeInstanceOf(UnprocessableError);
     expect(generate).not.toHaveBeenCalled();
+    expect(dependencies.aiUsageGuard.reserve).not.toHaveBeenCalled();
   });
 
   it("without an assessment, offers no swap options", async () => {

@@ -298,7 +298,8 @@
     "timeout": "A IA demorou demais para responder. Seus dados foram mantidos; tente novamente.",
     "rateLimited": "A IA recebeu muitos pedidos agora. Aguarde um pouco e tente de novo.",
     "refused": "A IA não conseguiu atender a este pedido. Revise as informações e tente novamente.",
-    "invalidOutput": "A IA respondeu em um formato inesperado. Seus dados foram mantidos; tente novamente."
+    "invalidOutput": "A IA respondeu em um formato inesperado. Seus dados foram mantidos; tente novamente.",
+    "usageLimitReached": "Você chegou ao limite de {maxRequests} pedidos à IA para isto nas últimas 24 horas. Seus dados foram mantidos; tente de novo mais tarde."
   },
   "planGeneration": {
     "generateButton": "Gerar plano com IA",

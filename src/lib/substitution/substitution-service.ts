@@ -89,8 +89,12 @@ function isAiFailure(error: unknown): error is ExternalServiceError | RateLimitE
   return error instanceof ExternalServiceError || error instanceof RateLimitExceededError;
 }
 
-/** The AI picks among the best-ranked options; any failure or invalid answer returns null (automatic order). */
+/**
+ * The AI picks among the best-ranked options; any failure or invalid answer returns null (automatic order).
+ * With 3 options or fewer there is nothing to choose (it would only reorder them): no AI call (cost control).
+ */
 async function chooseWithAi(dependencies: SubstitutionServiceDependencies, context: SubstitutionContext): Promise<Choice[] | null> {
+  if (context.ranked.length <= MAX_SUBSTITUTION_SUGGESTIONS) return null;
   const candidates = context.ranked.slice(0, MAX_SUBSTITUTION_CANDIDATES_FOR_AI);
   try {
     const output = await dependencies.structuredOutputClient.generate({

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { AiUsageGuard } from "@/lib/ai-usage/ai-usage-guard";
 import type { AssessmentRepository } from "@/lib/assessment/assessment-repository";
 import type { SavedAssessment } from "@/lib/assessment/assessment-schema";
 import { PLAN_GENERATION_EFFORT, PLAN_GENERATION_OPERATION } from "@/lib/constants/plan-generation";
@@ -27,6 +28,7 @@ export interface PlanGenerationDependencies {
   planRepository: PlanRepository;
   generationRepository: PlanGenerationRepository;
   structuredOutputClient: StructuredOutputClient;
+  aiUsageGuard: AiUsageGuard;
   logger: Logger;
   now: () => Date;
 }
@@ -107,6 +109,7 @@ export function createPlanGenerationService(dependencies: PlanGenerationDependen
       const { replaceActivePlan } = parseInput(rawInput);
       const context = await loadGenerationContext(dependencies, userId, replaceActivePlan);
       const { assessment } = context;
+      await dependencies.aiUsageGuard.reserve(PLAN_GENERATION_OPERATION);
       const plan = await requestValidPlan(dependencies, context);
       const dates = computeGeneratedPlanDates(dependencies.now());
       const planId = await dependencies.generationRepository.createGeneratedPlan({

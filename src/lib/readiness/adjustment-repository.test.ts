@@ -108,3 +108,48 @@ describe("adjustment repository: saveAdjustments", () => {
     await expect(createSupabaseAdjustmentRepository(createQueryClient({ data: null, error: { code: "22023" } }).client).saveAdjustments(CHECKIN_ID, [])).rejects.toBeInstanceOf(RepositoryError);
   });
 });
+
+describe("adjustment repository: saved proposal of a check-in", () => {
+  const CHANGE = { workoutExerciseId: WORKOUT_ID, changeType: "replaced" as const, replacementSlug: "goblet-squat", sets: 3, repsMin: 8, repsMax: 10, reason: "Poupa o joelho" };
+  const PROPOSAL_ROW = {
+    summary: "Treino mais leve.",
+    estimated_minutes: 30,
+    adjustment_proposal_changes: [
+      { workout_exercise_id: WORKOUT_ID, change_type: "replaced", sets: 3, reps_min: 8, reps_max: 10, reason: "Poupa o joelho", replacement: { slug: "goblet-squat" } },
+      { workout_exercise_id: CHECKIN_ID, change_type: "removed", sets: null, reps_min: null, reps_max: null, reason: "Sem tempo", replacement: null },
+    ],
+  };
+
+  it("reads the proposal with its changes and replacement slugs", async () => {
+    const { client, query } = createQueryClient({ data: PROPOSAL_ROW, error: null });
+    await expect(createSupabaseAdjustmentRepository(client).findProposal(CHECKIN_ID)).resolves.toEqual({
+      summary: "Treino mais leve.",
+      estimatedMinutes: 30,
+      changes: [CHANGE, { workoutExerciseId: CHECKIN_ID, changeType: "removed", replacementSlug: null, sets: null, repsMin: null, repsMax: null, reason: "Sem tempo" }],
+    });
+    expect(client.from).toHaveBeenCalledWith("adjustment_proposals");
+    expect(query.eq).toHaveBeenCalledWith("checkin_id", CHECKIN_ID);
+  });
+
+  it("returns null without a saved proposal and fails on errors or unexpected rows", async () => {
+    await expect(createSupabaseAdjustmentRepository(createQueryClient({ data: null, error: null }).client).findProposal(CHECKIN_ID)).resolves.toBeNull();
+    await expect(createSupabaseAdjustmentRepository(createQueryClient({ data: null, error: { message: "x" } }).client).findProposal(CHECKIN_ID)).rejects.toBeInstanceOf(RepositoryError);
+    await expect(createSupabaseAdjustmentRepository(createQueryClient({ data: { summary: 1 }, error: null }).client).findProposal(CHECKIN_ID)).rejects.toBeInstanceOf(RepositoryError);
+  });
+
+  it("saves the proposal through the transactional function", async () => {
+    const { client } = createQueryClient({ data: true, error: null });
+    await createSupabaseAdjustmentRepository(client).saveProposal(CHECKIN_ID, { summary: "Treino mais leve.", estimatedMinutes: 30, changes: [CHANGE] });
+    expect(client.rpc).toHaveBeenCalledWith("save_adjustment_proposal", {
+      p_checkin_id: CHECKIN_ID,
+      p_summary: "Treino mais leve.",
+      p_estimated_minutes: 30,
+      p_changes: [{ workout_exercise_id: WORKOUT_ID, change_type: "replaced", replacement_slug: "goblet-squat", sets: 3, reps_min: 8, reps_max: 10, reason: "Poupa o joelho" }],
+    });
+  });
+
+  it("fails when the proposal cannot be saved", async () => {
+    const { client } = createQueryClient({ data: null, error: { code: "22023" } });
+    await expect(createSupabaseAdjustmentRepository(client).saveProposal(CHECKIN_ID, { summary: "x", estimatedMinutes: 30, changes: [] })).rejects.toBeInstanceOf(RepositoryError);
+  });
+});

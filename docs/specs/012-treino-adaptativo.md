@@ -269,6 +269,27 @@ Observações (não são defeitos): para a puxada frontal a IA pôs remadas ante
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
+| SUB-001 | **Voltar a conversar com o usuário** sobre o custo da troca na hora: hoje ela não tem limite de pedidos (decisão de 2026-11-24). Ideia do usuário: já trazer as trocas prontas em cache (calculadas antes, por exemplo ao gerar o plano ou uma vez por exercício e equipamento) e mostrar sem consultar a API toda vez. Decidir a abordagem com ele antes de implementar | `src/lib/substitution/substitution-service.ts` | média |
+
+## Atualizações
+
+### 2026-11-24 — Ajuste do dia guardado no servidor e limite de pedidos
+
+- **Pedido:** análise de custo da IA (itens 1 e 2): não pagar duas vezes pelo mesmo ajuste e limitar os pedidos de ajuste por usuário.
+- **Mudança:** a proposta da IA fica guardada por check-in (`adjustment_proposals` + `adjustment_proposal_changes`, gravadas numa transação por `save_adjustment_proposal`); pedir de novo o ajuste do mesmo check-in (recarregar no meio, outro aparelho, chamada direta à API) devolve a proposta guardada sem chamar a IA. Pedidos que vão à IA passam pelo limite da spec 011 (`readiness.adjust`: 5 em 24 horas → HTTP 429).
+- **Pendências:** PLN-002 (aplicar a migration no Supabase, spec 011)
+
+#### Regras
+
+- Guardada só a proposta já validada (`findAiAdjustmentIssues`); aceitar continua revalidando no servidor (`saveAdjustment`)
+- Se a gravação da proposta falhar, a proposta paga ainda é devolvida ao usuário (registro de aviso no log); só o próximo pedido volta a chamar a IA
+- "Tentar de novo" depois de uma falha da IA chama a IA de novo e conta no limite
+
+### 2026-11-24 — Troca na hora sem IA quando sobram até 3 opções
+
+- **Pedido:** análise de custo da IA (item 3).
+- **Mudança:** quando o pré-filtro deixa 3 candidatos ou menos (`MAX_SUBSTITUTION_SUGGESTIONS`), a IA não é chamada: a escolha dela só reordenaria as mesmas opções. As sugestões vêm na ordem automática, com o aviso de "Sugestões automáticas" que já existe.
+- **Pendências:** SUB-001 (voltar a conversar sobre o custo da troca)
 
 ## Checklist de aceite
 

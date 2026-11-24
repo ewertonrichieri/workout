@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { SavedAssessment } from "@/lib/assessment/assessment-schema";
-import { ExternalServiceError, InvalidInputError, UnprocessableError } from "@/lib/errors/app-errors";
+import { ExternalServiceError, InvalidInputError, RateLimitExceededError, UnprocessableError } from "@/lib/errors/app-errors";
 import type { StructuredOutputClient } from "@/lib/integrations/claude/structured-output-client";
 import type { Logger } from "@/lib/logger/logger";
 import { buildPlanOverview } from "@/test/training-fixtures";
@@ -27,7 +27,7 @@ const FULL_BODY: GeneratedPlan = {
   workouts: [{ label: "Full body", exercises: [{ exerciseSlug: "goblet-squat", category: null, sets: 3, repsMin: 10, repsMax: 12, restSeconds: 60, notes: null }] }],
 };
 
-function setup(overrides: { latest?: SavedAssessment | null; hasActivePlan?: boolean; candidates?: typeof CANDIDATES; output?: GeneratedPlan } = {}) {
+function setup(overrides: { latest?: SavedAssessment | null; hasActivePlan?: boolean; candidates?: typeof CANDIDATES; output?: GeneratedPlan; isLimitReached?: boolean } = {}) {
   const activePlan = overrides.hasActivePlan ? buildPlanOverview([]).plan : null;
   const generate = vi.fn(async () => overrides.output ?? FULL_BODY);
   const dependencies: PlanGenerationDependencies = {
@@ -39,6 +39,11 @@ function setup(overrides: { latest?: SavedAssessment | null; hasActivePlan?: boo
       summarizePlanHistory: vi.fn(async () => HISTORY),
     },
     structuredOutputClient: { generate } as unknown as StructuredOutputClient,
+    aiUsageGuard: {
+      reserve: vi.fn(async () => {
+        if (overrides.isLimitReached) throw new RateLimitExceededError("limite");
+      }),
+    },
     logger: { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() } satisfies Logger,
     now: () => new Date("2026-11-24T15:00:00Z"),
   };
@@ -59,6 +64,27 @@ describe("plan generation service", () => {
       replaceActivePlan: false,
       plan: FULL_BODY,
     });
+  });
+
+  it("counts the request against the user's AI limit before calling the AI", async () => {
+    const { service, dependencies, generate } = setup();
+    await service.generatePlan("user-1", { replaceActivePlan: false });
+    expect(dependencies.aiUsageGuard.reserve).toHaveBeenCalledWith("plan.generate");
+    const reserveOrder = vi.mocked(dependencies.aiUsageGuard.reserve).mock.invocationCallOrder[0];
+    expect(reserveOrder).toBeLessThan(generate.mock.invocationCallOrder[0]);
+  });
+
+  it("does not call the AI once the user's limit is reached", async () => {
+    const { service, dependencies, generate } = setup({ isLimitReached: true });
+    await expect(service.generatePlan("user-1", { replaceActivePlan: false })).rejects.toBeInstanceOf(RateLimitExceededError);
+    expect(generate).not.toHaveBeenCalled();
+    expect(dependencies.generationRepository.createGeneratedPlan).not.toHaveBeenCalled();
+  });
+
+  it("does not count cheap rejections against the limit", async () => {
+    const { service, dependencies } = setup({ latest: null });
+    await expect(service.generatePlan("user-1", { replaceActivePlan: false })).rejects.toBeInstanceOf(UnprocessableError);
+    expect(dependencies.aiUsageGuard.reserve).not.toHaveBeenCalled();
   });
 
   it("rejects a body outside the schema", async () => {
