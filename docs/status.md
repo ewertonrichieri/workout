@@ -12,7 +12,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 4. **ASM-001** — testar o envio da anamnese no navegador (migration aplicada; criar conta antes) → `specs/011-geracao-treino-ia.md`
-5. **PLN-001** — aplicar a migration da geração do plano no Supabase e fazer uma chamada real à Claude API (nova sessão, com `ANTHROPIC_API_KEY`) → `specs/011-geracao-treino-ia.md`
+5. **PLN-001** — (migration já aplicada) fazer uma chamada real à Claude API (nova sessão, com `ANTHROPIC_API_KEY`) → `specs/011-geracao-treino-ia.md`
 
 ---
 
@@ -58,7 +58,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **PLN-001** — migration `20261126010000_generated_plans.sql` no Supabase + chamada real medida (tempo, tokens, custo; ajustar esforço) → `specs/011-geracao-treino-ia.md`
+- **PLN-001** — chamada real medida (migration já aplicada) (tempo, tokens, custo; ajustar esforço) → `specs/011-geracao-treino-ia.md`
 - **ASM-001** — testar o envio da anamnese no navegador (migration já aplicada) → `specs/011-geracao-treino-ia.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-001** — configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento → `specs/007-autenticacao.md`
