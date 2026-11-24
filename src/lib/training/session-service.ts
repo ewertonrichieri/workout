@@ -3,7 +3,7 @@ import { translate } from "@/lib/i18n/translate";
 import type { PlanRepository } from "./plan-repository";
 import type { Workout } from "./plan-types";
 import type { SessionRepository } from "./session-repository";
-import { finishWorkoutInputSchema, type FinishedSet, type FinishWorkoutInput } from "./session-schema";
+import { finishWorkoutInputSchema, type FinishedSet, type FinishedSubstitution, type FinishWorkoutInput } from "./session-schema";
 
 export interface SessionService {
   finishWorkout(userId: string, rawInput: unknown): Promise<{ sessionId: string }>;
@@ -28,6 +28,16 @@ function assertSetsMatchWorkout(workout: Workout, sets: readonly FinishedSet[]):
   if (!isValid) throw new UnprocessableError(translate("training.finish.setsMismatch"));
 }
 
+/** Each swap is of an exercise of this workout, once, and to a different exercise each (step 3B.4). */
+function assertSubstitutionsMatchWorkout(workout: Workout, substitutions: readonly FinishedSubstitution[]): void {
+  const ids = substitutions.map((item) => item.workoutExerciseId);
+  const slugs = substitutions.map((item) => item.exerciseSlug);
+  const isKnown = ids.every((id) => workout.exercises.some((exercise) => exercise.id === id));
+  if (!isKnown || new Set(ids).size !== ids.length || new Set(slugs).size !== slugs.length) {
+    throw new UnprocessableError(translate("training.substitution.substitutionsMismatch"));
+  }
+}
+
 export function createSessionService(planRepository: PlanRepository, sessionRepository: SessionRepository): SessionService {
   return {
     async finishWorkout(userId, rawInput) {
@@ -36,6 +46,7 @@ export function createSessionService(planRepository: PlanRepository, sessionRepo
       const workout = plan?.workouts.find((candidate) => candidate.id === input.workoutId);
       if (!workout) throw new NotFoundError(translate("errors.notFound", { resource: translate("training.workoutResource") }));
       assertSetsMatchWorkout(workout, input.sets);
+      assertSubstitutionsMatchWorkout(workout, input.substitutions ?? []);
       return { sessionId: await sessionRepository.finishSession(input) };
     },
   };

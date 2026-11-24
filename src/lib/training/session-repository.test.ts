@@ -22,6 +22,7 @@ describe("session repository", () => {
       p_started_at: INPUT.startedAt,
       p_sets: [{ workout_exercise_id: "22222222-2222-4222-8222-222222222222", set_number: 1, reps_done: 10, load_kg: 12.5, effort: null }],
       p_readiness_checkin_id: null,
+      p_substitutions: [],
     });
   });
 
@@ -30,6 +31,15 @@ describe("session repository", () => {
     const checkinId = "44444444-4444-4444-8444-444444444444";
     await createSupabaseSessionRepository(client).finishSession({ ...INPUT, readinessCheckinId: checkinId });
     expect(client.rpc).toHaveBeenCalledWith("finish_workout_session", expect.objectContaining({ p_readiness_checkin_id: checkinId }));
+  });
+
+  it("sends today's substitutions (step 3B.4)", async () => {
+    const client = createClient({ data: "33333333-3333-4333-8333-333333333333", error: null });
+    const substitutions = [{ workoutExerciseId: INPUT.sets[0].workoutExerciseId, exerciseSlug: "push-up", reason: "equipment_busy" as const }];
+    await createSupabaseSessionRepository(client).finishSession({ ...INPUT, substitutions });
+    expect(client.rpc).toHaveBeenCalledWith("finish_workout_session", expect.objectContaining({
+      p_substitutions: [{ workout_exercise_id: INPUT.sets[0].workoutExerciseId, exercise_slug: "push-up", reason: "equipment_busy" }],
+    }));
   });
 
   it("fails on database errors or an unexpected result", async () => {

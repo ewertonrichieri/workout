@@ -4,7 +4,7 @@ import type { WorkoutDraft } from "@/lib/training/set-log-draft";
 import type { LoadAdjustments } from "@/lib/training/load-adjustments";
 import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 import { groupExercisesByCategory, type WorkoutExerciseGroup } from "@/lib/training/workout-display";
-import type { SetChangeHandler } from "./use-workout-draft";
+import type { SetChangeHandler, SubstitutionChangeHandler } from "./use-workout-draft";
 import { WorkoutExerciseCard } from "./workout-exercise-card";
 
 interface DraftProps {
@@ -12,11 +12,16 @@ interface DraftProps {
   suggestedLoads: SuggestedLoads;
   loadAdjustments: LoadAdjustments;
   onSetChange: SetChangeHandler;
+  /** Swap on the spot (step 3B.4); the exercises shown today are left out of the options. */
+  excludeSlugs?: readonly string[];
+  onSubstitutionChange?: SubstitutionChangeHandler;
 }
 
 const NO_SETS: never[] = [];
 
-function ExerciseCardList({ exercises, draft, suggestedLoads, loadAdjustments, onSetChange }: DraftProps & { exercises: readonly WorkoutExercise[] }) {
+const NO_SLUGS: readonly string[] = [];
+
+function ExerciseCardList({ exercises, draft, suggestedLoads, loadAdjustments, onSetChange, excludeSlugs = NO_SLUGS, onSubstitutionChange }: DraftProps & { exercises: readonly WorkoutExercise[] }) {
   return (
     <ul className="flex flex-col gap-3">
       {exercises.map((workoutExercise) => (
@@ -27,6 +32,7 @@ function ExerciseCardList({ exercises, draft, suggestedLoads, loadAdjustments, o
             hasSuggestedLoad={suggestedLoads[workoutExercise.id] !== undefined}
             loadAdjustment={loadAdjustments[workoutExercise.id]}
             onSetChange={(setIndex, patch) => onSetChange(workoutExercise.id, setIndex, patch)}
+            substitution={onSubstitutionChange && { excludeSlugs, onChange: (substitution) => onSubstitutionChange(workoutExercise.id, substitution) }}
           />
         </li>
       ))}
@@ -52,7 +58,7 @@ export function WorkoutExerciseGroups({ exercises, ...draftProps }: DraftProps &
   return (
     <div className="flex flex-col gap-6">
       {groupExercisesByCategory(exercises).map((group) => (
-        <CategorySection key={group.category ?? ""} group={group} {...draftProps} />
+        <CategorySection key={group.category ?? ""} group={group} excludeSlugs={exercises.map((item) => item.exercise.slug)} {...draftProps} />
       ))}
     </div>
   );

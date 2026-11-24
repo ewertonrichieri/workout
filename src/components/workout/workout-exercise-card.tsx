@@ -6,6 +6,8 @@ import { translate } from "@/lib/i18n/translate";
 import type { LoadAdjustment } from "@/lib/training/load-adjustments";
 import type { DailyChange, WorkoutExercise } from "@/lib/training/plan-types";
 import { formatLoadInput, isExerciseCompleted, type SetEntry } from "@/lib/training/set-log-draft";
+import { SubstitutionControl } from "@/components/substitution/substitution-control";
+import type { DraftSubstitution } from "@/lib/substitution/substitution-schema";
 import { ExerciseDemoDisclosure } from "./exercise-demo-disclosure";
 import { SetLogList } from "./set-log-list";
 import { TrackProgressionSwitch } from "./track-progression-switch";
@@ -19,6 +21,8 @@ interface WorkoutExerciseCardProps {
   /** Earned increase (step 3.5): the fields hold the new load and the card says why. */
   loadAdjustment?: LoadAdjustment;
   onSetChange: (setIndex: number, patch: Partial<SetEntry>) => void;
+  /** Swap on the spot (step 3B.4); omitted where swapping is not offered. */
+  substitution?: { excludeSlugs: readonly string[]; onChange: (substitution: DraftSubstitution | null) => void };
 }
 
 const PROGRESS_LINK_CLASS =
@@ -56,20 +60,25 @@ function SuggestionNotice({ hasSuggestedLoad, loadAdjustment }: { hasSuggestedLo
   return hasSuggestedLoad ? <p className="text-sm text-muted">{translate("training.progression.suggestedNotice")}</p> : null;
 }
 
-/** Today-only change accepted from the daily adjustment (step 3B.2). */
-function DailyChangeNotice({ change }: { change: DailyChange }) {
-  const text =
-    change.changeType === "replaced" && change.originalName
-      ? translate("readiness.adjustment.cardReplaced", { original: change.originalName, reason: change.reason })
-      : translate("readiness.adjustment.cardReduced", { reason: change.reason });
-  return <p className="text-sm font-medium text-accent-strong">{text}</p>;
+/** Today-only change: AI adjustment (3B.2) or swap on the spot (3B.4). */
+function describeDailyChange(change: DailyChange): string {
+  if (change.changeType === "substituted" && change.originalName) return translate("training.substitution.cardNotice", { original: change.originalName });
+  const reason = change.reason ?? "";
+  if (change.changeType === "replaced" && change.originalName) return translate("readiness.adjustment.cardReplaced", { original: change.originalName, reason });
+  return translate("readiness.adjustment.cardReduced", { reason });
 }
 
-export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, loadAdjustment, onSetChange }: WorkoutExerciseCardProps) {
+function DailyChangeNotice({ change }: { change: DailyChange }) {
+  return <p className="text-sm font-medium text-accent-strong">{describeDailyChange(change)}</p>;
+}
+
+export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, loadAdjustment, onSetChange, substitution }: WorkoutExerciseCardProps) {
   const { exercise, dailyChange } = workoutExercise;
   const isCompleted = isExerciseCompleted(sets);
+  // Swapping (or undoing it) is offered only before any set of this exercise is checked.
+  const canSwap = substitution !== undefined && !sets.some((entry) => entry.isDone);
   // The switch belongs to the planned exercise, so a replacement of today does not show it.
-  const isReplacedToday = dailyChange?.changeType === "replaced";
+  const isReplacedToday = dailyChange?.changeType === "replaced" || dailyChange?.changeType === "substituted";
   return (
     <article className={`flex flex-col gap-3 rounded-2xl border bg-surface p-3 ${isCompleted ? "border-accent-strong" : "border-border"}`}>
       <div className="flex items-center gap-4">
@@ -83,6 +92,7 @@ export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, l
       {!isReplacedToday && (
         <TrackProgressionSwitch workoutExerciseId={workoutExercise.id} exerciseName={exercise.name} isTracked={workoutExercise.trackProgression} />
       )}
+      {canSwap && <SubstitutionControl key={exercise.slug} workoutExercise={workoutExercise} excludeSlugs={substitution.excludeSlugs} onChange={substitution.onChange} />}
       <ExerciseDemoDisclosure exercise={exercise} />
       <Link href={buildProgressHref(exercise.slug)} className={PROGRESS_LINK_CLASS}>
         {translate("history.progressLink")}

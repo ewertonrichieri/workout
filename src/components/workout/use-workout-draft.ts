@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { APP_TIME_ZONE } from "@/lib/constants/training";
 import { adjustWorkoutForDay, omitPrescriptions } from "@/lib/readiness/adjusted-workout";
+import type { DraftSubstitution } from "@/lib/substitution/substitution-schema";
 import { buildDraftStorageKey, readStoredDraft, removeStoredDraft, writeStoredDraft } from "@/lib/training/draft-storage";
 import type { Workout } from "@/lib/training/plan-types";
 import { toDateInTimeZone } from "@/lib/training/plan-validity";
@@ -13,6 +14,7 @@ import {
   refreshUntouchedDraft,
   restoreDraft,
   setReadiness,
+  setSubstitution,
   updateSetEntry,
   type DraftReadiness,
   type SetEntry,
@@ -21,6 +23,8 @@ import {
 import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 
 export type SetChangeHandler = (workoutExerciseId: string, setIndex: number, patch: Partial<SetEntry>) => void;
+
+export type SubstitutionChangeHandler = (workoutExerciseId: string, substitution: DraftSubstitution | null) => void;
 
 const DATE_PENDING = "";
 
@@ -35,6 +39,8 @@ interface WorkoutDraftState {
   changeSet: SetChangeHandler;
   /** Check-in and daily adjustment (steps 3B.1, 3B.2); they do not count as the session start. */
   changeReadiness: (readiness: DraftReadiness) => void;
+  /** Swap on the spot (step 3B.4); null undoes it. */
+  changeSubstitution: SubstitutionChangeHandler;
   /** After "Finalizar treino": removes the stored draft and starts a new empty one. */
   clearDraft: () => void;
 }
@@ -43,8 +49,10 @@ function today(): string {
   return toDateInTimeZone(new Date(), APP_TIME_ZONE);
 }
 
-function prepareDay(planned: Workout, plannedSuggestions: SuggestedLoads, readiness: DraftReadiness | null) {
-  const day = adjustWorkoutForDay(planned, readiness);
+type DayChoices = Pick<WorkoutDraft, "readiness" | "substitutions">;
+
+function prepareDay(planned: Workout, plannedSuggestions: SuggestedLoads, { readiness, substitutions }: DayChoices) {
+  const day = adjustWorkoutForDay(planned, readiness, substitutions);
   return { ...day, suggestedLoads: omitPrescriptions(plannedSuggestions, day.changedIds) };
 }
 
@@ -53,7 +61,7 @@ function loadTodayDraft(planned: Workout, plannedSuggestions: SuggestedLoads): {
   const date = today();
   const key = buildDraftStorageKey(planned.id, date);
   const stored = readStoredDraft(key);
-  const day = prepareDay(planned, plannedSuggestions, restoreDraft(stored, planned, date).readiness);
+  const day = prepareDay(planned, plannedSuggestions, restoreDraft(stored, planned, date));
   return { key, draft: refreshUntouchedDraft(restoreDraft(stored, day.workout, date), day.workout, day.suggestedLoads) };
 }
 
@@ -79,21 +87,32 @@ function useStoredDraft(planned: Workout, plannedSuggestions: SuggestedLoads) {
 /** `suggestedLoads` fill a draft only while it was not edited (step 2.7). */
 export function useWorkoutDraft(planned: Workout, plannedSuggestions: SuggestedLoads): WorkoutDraftState {
   const { draft, setDraft, storageKey } = useStoredDraft(planned, plannedSuggestions);
-  const day = useMemo(() => prepareDay(planned, plannedSuggestions, draft.readiness), [planned, plannedSuggestions, draft.readiness]);
+  const { readiness, substitutions } = draft;
+  const day = useMemo(() => prepareDay(planned, plannedSuggestions, { readiness, substitutions }), [planned, plannedSuggestions, readiness, substitutions]);
 
   const changeSet = useCallback<SetChangeHandler>((workoutExerciseId, setIndex, patch) => {
     setDraft((current) => markStarted(updateSetEntry(current, workoutExerciseId, setIndex, patch), new Date().toISOString()));
   }, [setDraft]);
 
-  const changeReadiness = useCallback((readiness: DraftReadiness) => {
-    const next = prepareDay(planned, plannedSuggestions, readiness);
-    setDraft((current) => realignDraft(setReadiness(current, readiness), next.workout, next.suggestedLoads));
+  /** Applies a change of today's choices and realigns the sets with the resulting workout. */
+  const changeDay = useCallback((update: (current: WorkoutDraft) => WorkoutDraft) => {
+    setDraft((current) => {
+      const next = update(current);
+      const nextDay = prepareDay(planned, plannedSuggestions, next);
+      return realignDraft(next, nextDay.workout, nextDay.suggestedLoads);
+    });
   }, [planned, plannedSuggestions, setDraft]);
+
+  const changeReadiness = useCallback((next: DraftReadiness) => changeDay((current) => setReadiness(current, next)), [changeDay]);
+  const changeSubstitution = useCallback<SubstitutionChangeHandler>(
+    (workoutExerciseId, substitution) => changeDay((current) => setSubstitution(current, workoutExerciseId, substitution)),
+    [changeDay],
+  );
 
   const clearDraft = useCallback(() => {
     if (storageKey) removeStoredDraft(storageKey);
     setDraft(createEmptyDraft(planned, today(), plannedSuggestions));
   }, [storageKey, planned, plannedSuggestions, setDraft]);
 
-  return { draft, workout: day.workout, suggestedLoads: day.suggestedLoads, changedIds: day.changedIds, changeSet, changeReadiness, clearDraft };
+  return { draft, workout: day.workout, suggestedLoads: day.suggestedLoads, changedIds: day.changedIds, changeSet, changeReadiness, changeSubstitution, clearDraft };
 }

@@ -34,7 +34,18 @@ describe("session service: finishWorkout", () => {
       startedAt: STARTED_AT,
       sets: [{ ...VALID_SET, effort: null }, { ...VALID_SET, setNumber: 2, loadKg: null, effort: null }],
       readinessCheckinId: null,
+      substitutions: [],
     });
+  });
+
+  it("accepts substitutions of exercises of the workout and rejects others or repeated ones (step 3B.4)", async () => {
+    const { service, sessionRepository } = setup();
+    const swap = { workoutExerciseId: EXERCISE_ID, exerciseSlug: "push-up", reason: null };
+    await service.finishWorkout("user-1", { ...buildInput([VALID_SET]), substitutions: [swap] });
+    expect(sessionRepository.finishSession).toHaveBeenCalledWith(expect.objectContaining({ substitutions: [swap] }));
+    await expect(service.finishWorkout("user-1", { ...buildInput([VALID_SET]), substitutions: [{ ...swap, workoutExerciseId: OTHER_ID }] })).rejects.toBeInstanceOf(UnprocessableError);
+    await expect(service.finishWorkout("user-1", { ...buildInput([VALID_SET]), substitutions: [swap, swap] })).rejects.toBeInstanceOf(UnprocessableError);
+    await expect(service.finishWorkout("user-1", { ...buildInput([VALID_SET]), substitutions: [{ ...swap, exerciseSlug: "Not A Slug" }] })).rejects.toBeInstanceOf(InvalidInputError);
   });
 
   it("accepts an optional effort per set and rejects unknown values (step 3B.3)", async () => {

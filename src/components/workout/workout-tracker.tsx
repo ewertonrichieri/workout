@@ -35,25 +35,30 @@ function TrackerSummary({ completed, total, hasFinished }: { completed: number; 
   );
 }
 
-export function WorkoutTracker({ workout: planned, suggestedLoads, loadAdjustments = NO_ADJUSTMENTS, sessionMinutes = null }: WorkoutTrackerProps) {
+/** "Treino finalizado e salvo." until the next edit; new suggested loads (2.7) come from the session just saved. */
+function useFinishFeedback(clearDraft: () => void) {
   const router = useRouter();
+  const [hasFinished, setHasFinished] = useState(false);
+  const finish = () => {
+    clearDraft();
+    setHasFinished(true);
+    router.refresh();
+  };
+  return { hasFinished, finish, clearFeedback: () => setHasFinished(false) };
+}
+
+export function WorkoutTracker({ workout: planned, suggestedLoads, loadAdjustments = NO_ADJUSTMENTS, sessionMinutes = null }: WorkoutTrackerProps) {
   const day = useWorkoutDraft(planned, suggestedLoads);
   const { draft, workout, changeSet } = day;
   const todayAdjustments = useMemo(() => omitPrescriptions(loadAdjustments, day.changedIds), [loadAdjustments, day.changedIds]);
-  const [hasFinished, setHasFinished] = useState(false);
-  const finish = () => {
-    day.clearDraft();
-    setHasFinished(true);
-    // New suggested loads (step 2.7) come from the session just saved.
-    router.refresh();
-  };
+  const feedback = useFinishFeedback(day.clearDraft);
   const changeSetAfterFinish: typeof changeSet = (...args) => {
-    setHasFinished(false);
+    feedback.clearFeedback();
     changeSet(...args);
   };
   return (
     <div className="flex flex-col gap-4">
-      <TrackerSummary completed={countCompletedExercises(draft, workout)} total={workout.exercises.length} hasFinished={hasFinished} />
+      <TrackerSummary completed={countCompletedExercises(draft, workout)} total={workout.exercises.length} hasFinished={feedback.hasFinished} />
       <ReadinessCheckinPanel
         planned={planned}
         readiness={draft.readiness}
@@ -62,8 +67,15 @@ export function WorkoutTracker({ workout: planned, suggestedLoads, loadAdjustmen
         sessionMinutes={sessionMinutes}
         onChange={day.changeReadiness}
       />
-      <WorkoutExerciseGroups exercises={workout.exercises} draft={draft} suggestedLoads={day.suggestedLoads} loadAdjustments={todayAdjustments} onSetChange={changeSetAfterFinish} />
-      <FinishWorkoutButton draft={draft} onFinished={finish} />
+      <WorkoutExerciseGroups
+        exercises={workout.exercises}
+        draft={draft}
+        suggestedLoads={day.suggestedLoads}
+        loadAdjustments={todayAdjustments}
+        onSetChange={changeSetAfterFinish}
+        onSubstitutionChange={day.changeSubstitution}
+      />
+      <FinishWorkoutButton draft={draft} onFinished={feedback.finish} />
     </div>
   );
 }

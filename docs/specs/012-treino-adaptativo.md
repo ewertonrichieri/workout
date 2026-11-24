@@ -192,6 +192,41 @@ Treino de exemplo com 6 exercícios (3×10, 60 s de descanso): supino reto com h
 - **Histórico coerente:** a evolução (2.8) e a carga sugerida (2.7/3.5) seguem por `exercise_id`, então as séries do substituto contam para o substituto e o exercício original continua com o histórico dele
 - **Trocar no plano:** fora desta etapa (use "Editar treino", 3.4)
 
+### Regras de implementação (3B.4, 2026-11-24)
+
+- **Quando o botão aparece:** "Trocar exercício" só enquanto o exercício não tem série com check; trocar limpa as séries digitadas dele (o substituto começa sem carga sugerida e sem o interruptor "Salvar carga para progredir", como na 3B.2)
+- **Pré-filtro (função `list_substitution_candidates`):** exercícios com mídia, que dividem ao menos um músculo principal com o exercício planejado e cujos equipamentos estão todos na anamnese mais recente. **Sem anamnese:** vale o conjunto de equipamentos dos exercícios do plano ativo mais "peso corporal"
+- **Fora da lista:** exercícios do treino planejado e os que o aparelho já mostra hoje (trocados no ajuste ou em outra troca; o cliente informa só para filtrar, e o servidor revalida ao finalizar)
+- **Aparelho ocupado ou quebrado:** saem os candidatos que usam algum equipamento do exercício original, exceto "peso corporal". "Outro" ou sem motivo: sem esse corte
+- **Ordem automática:** mais músculos principais em comum, depois mais secundários em comum, depois o slug (estável). A IA recebe no máximo os 40 primeiros (`MAX_SUBSTITUTION_CANDIDATES_FOR_AI`) e devolve de 1 a 3 slugs da lista, sem repetir, cada um com motivo em pt-BR; fora disso, ou se a IA falhar, valem os 3 primeiros da ordem automática com o aviso "Sugestões automáticas"
+- **Sem candidatos:** 422 "Nenhum exercício equivalente com o seu equipamento"
+- **Junto com o ajuste da 3B.2:** a troca vale por cima do ajuste (inclusive de um exercício já trocado pela IA); exercício removido pelo ajuste não aparece, então não pode ser trocado
+- **Rascunho:** as trocas ficam no rascunho do dia (por prescrição), junto com o check-in
+- **Finalizar:** `finish_workout_session(…, p_substitutions)` grava `exercise_substitutions` (prescrição do treino, exercício com mídia, motivo) e usa o substituto em `set_logs.exercise_id`; recusa substituto repetido ou que já está no treino
+
+### Implementação (3B.4)
+
+- Migration `supabase/migrations/20261127030000_exercise_substitutions.sql`: tabela `exercise_substitutions` (RLS pelo dono da sessão; `select, insert`), `list_substitution_candidates(original, equipamentos)` (original + candidatos com músculos principais, secundários e equipamentos), `save_exercise_substitutions` (chamada pela finalização; recusa prescrição de outro treino, exercício sem mídia, substituto repetido, já no treino, igual à troca da IA de outro exercício ou de exercício removido no ajuste) e `finish_workout_session` com o 5º parâmetro `p_substitutions` (`set_logs.exercise_id` = troca na hora, senão troca do ajuste, senão o planejado)
+- `src/lib/constants/substitution.ts` — motivos, limites, operação e esforço (`low`)
+- `src/lib/substitution/` — `substitution-schema.ts` (pedido, saída da IA, resultado, troca no rascunho), `substitution-rules.ts` (`filterCandidates`, `rankCandidates`, `findSuggestionIssues`), `substitution-prompt.ts`, `substitution-repository.ts`, `substitution-service.ts` (IA com até 40 candidatos; falha, 429 ou resposta fora da lista → ordem automática), `server-substitution-service.ts`; rota `POST /api/workout-exercises/[id]/substitutions` (`maxDuration = 130`)
+- Rascunho: `substitutions` por prescrição e `setSubstitution` (limpa as séries digitadas daquele exercício); `buildFinishPayload` envia as trocas; `session-schema.ts`/`session-service.ts` revalidam (prescrição do treino, sem repetir)
+- Treino de hoje: `adjustWorkoutForDay(plano, check-in, trocas)` aplica o ajuste e depois as trocas (`dailyChange.changeType = "substituted"`); carga sugerida e ajuste de carga não valem para o substituto
+- Tela: `src/components/substitution/` — `SubstitutionControl` ("Trocar exercício" / "Desfazer troca"), painel com motivo opcional, busca, erro e cancelar; `SubstitutionSuggestions` (miniatura, nome, motivo, "Usar {nome}", aviso de sugestões automáticas); aviso "No lugar de {original} hoje" no card
+- Script `scripts/measure-substitution.ts` (chamada real com o filtro, a ordem, o prompt e a validação do app; nada é gravado)
+- Validação: Postgres 16 local e Supabase real num bloco desfeito no fim (candidatos, troca gravada com motivo, séries com o substituto, recusas, junto com o ajuste da 3B.2, RLS)
+
+#### Medição (2026-11-24)
+
+Remada sentada na máquina (`lever-seated-row`) com o aparelho ocupado; equipamentos: halteres, banco, polia, máquina, peso corporal e corda → 58 candidatos, 53 depois de tirar os de máquina, 40 enviados. Haiku 5.5, esforço `low`.
+
+| Chamada | Tempo | Entrada | Saída | Custo |
+|---|---|---|---|---|
+| 1ª | 3,4 s | 2.128 | 211 | ~US$ 0,0003 |
+| 2ª | 1,7 s | 2.128 | 230 | ~US$ 0,0003 |
+
+- As duas respostas passaram na validação, com as mesmas 3 escolhas (ordem diferente): remada sentada no cabo, remada baixa no cabo e remada unilateral com halter, com motivos em pt-BR
+- Rápido o bastante para a academia: esforço `low` mantido
+
 ## Regras gerais
 
 - Tudo que chama a IA roda no servidor, pelo wrapper da 3.2 (retry, 120 s, erros pt-BR, logs sem conteúdo)
@@ -222,7 +257,7 @@ Treino de exemplo com 6 exercícios (3×10, 60 s de descanso): supino reto com h
 - [x] 3B.1: migration (`readiness_checkins`, `readiness_checkin_pains`, `workout_sessions.readiness_checkin_id`) aplicada no Supabase (2026-11-24); schema, regra `needsAdjustment`, serviço, repositório e API com testes; tela com pular, erro e carregamento, com testes (a conferência visual no navegador fica para o teste de ponta a ponta, 3B.5)
 - [x] 3B.2: validação do ajuste (nunca aumenta, candidatos só da lista, sobra ≥ 1 exercício) com testes; revisão antes/depois com aceitar, manter e desfazer; fallback da IA; chamada real medida (2026-11-24); migration aplicada e testada no Supabase (a conferência visual no navegador fica para a 3B.5)
 - [x] 3B.3: `set_logs.effort` e `finish_workout_session` atualizada (migration aplicada no Supabase em 2026-11-24); regra de autorregulação com testes (sobe, desce, mantém, sem esforço, interruptor desligado); motivo no card
-- [ ] 3B.4: pré-filtro e fallback com testes; troca e desfazer na tela; gravação da troca com histórico coerente
+- [x] 3B.4: pré-filtro e fallback com testes; troca e desfazer na tela; gravação da troca com histórico coerente (migration aplicada e testada no Supabase; chamada real medida em 2026-11-24)
 - [ ] Teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
 
 ## Fim da spec

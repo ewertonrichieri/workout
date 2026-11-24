@@ -10,7 +10,8 @@ interface ReadinessOptionGroupProps<Value extends string | number> {
   legend: string;
   name: string;
   options: readonly ReadinessOption<Value>[];
-  selected: Value;
+  /** null = nothing chosen yet (optional questions). */
+  selected: Value | null;
   onSelect: (value: Value) => void;
 }
 
