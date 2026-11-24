@@ -56,7 +56,7 @@ describe("structured output client", () => {
     await expect(service.generate({ ...REQUEST, effort: "xhigh" })).resolves.toEqual({ title: "Plano A", days: 3 });
     const [body, options] = stream.mock.calls[0];
     expect(body).toMatchObject({
-      model: "claude-opus-5-5",
+      model: "claude-haiku-5-5",
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
       system: REQUEST.system,
@@ -70,8 +70,8 @@ describe("structured output client", () => {
 
   it("sends the model chosen by the caller", async () => {
     const { service, stream } = setup([textMessage('{"title":"Plano","days":3}')]);
-    await service.generate({ ...REQUEST, model: "claude-haiku-5-5" });
-    expect(stream.mock.calls[0][0]).toMatchObject({ model: "claude-haiku-5-5" });
+    await service.generate({ ...REQUEST, model: "claude-sonnet-5-5" });
+    expect(stream.mock.calls[0][0]).toMatchObject({ model: "claude-sonnet-5-5" });
   });
 
   it("caches the system prompt when asked", async () => {
@@ -86,7 +86,7 @@ describe("structured output client", () => {
       usage: {},
       content: [
         { type: "text", text: '{"tit' },
-        { type: "fallback", from: { model: "claude-opus-5-5" }, to: { model: "claude-opus-5" } },
+        { type: "fallback", from: { model: "claude-haiku-5-5" }, to: { model: "claude-opus-5" } },
         { type: "text", text: '{"title":"Plano B","days":2}' },
       ],
     };

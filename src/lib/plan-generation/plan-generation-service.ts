@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { AssessmentRepository } from "@/lib/assessment/assessment-repository";
 import type { SavedAssessment } from "@/lib/assessment/assessment-schema";
-import { PLAN_GENERATION_EFFORT, PLAN_GENERATION_MODEL, PLAN_GENERATION_OPERATION } from "@/lib/constants/plan-generation";
+import { PLAN_GENERATION_EFFORT, PLAN_GENERATION_OPERATION } from "@/lib/constants/plan-generation";
 import { ExternalServiceError, InvalidInputError, UnprocessableError } from "@/lib/errors/app-errors";
 import { translate } from "@/lib/i18n/translate";
 import type { StructuredOutputClient } from "@/lib/integrations/claude/structured-output-client";
@@ -63,7 +63,6 @@ async function requestValidPlan(dependencies: PlanGenerationDependencies, assess
     system: buildPlanSystemPrompt(candidates),
     prompt: buildPlanRequestPrompt(assessment, workoutCountRange),
     schema: generatedPlanSchema,
-    model: PLAN_GENERATION_MODEL,
     effort: PLAN_GENERATION_EFFORT,
     cacheSystem: true,
   });

@@ -89,7 +89,7 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 #### Regras da 3.2
 
 - **Somente servidor:** `ANTHROPIC_API_KEY` lida e validada só no servidor (`server-only`); nunca vai ao cliente nem aos logs
-- **Modelo:** `claude-opus-5-5` (constante `CLAUDE_MODEL`); esforço por chamada (`low` a `max`, padrão `high`); pensamento adaptativo (padrão do modelo)
+- **Modelo:** `claude-haiku-5-5` (constante `CLAUDE_MODEL`; era `claude-opus-5-5` até a PLN-001); esforço por chamada (`low` a `max`, padrão `high`); pensamento adaptativo (padrão do modelo)
 - **Saída estruturada:** o schema zod vira JSON Schema (`betaZodOutputFormat`) e a API é obrigada a segui-lo; o servidor revalida com o mesmo schema. JSON inválido ou fora do schema = falha (sem retry), mensagem amigável
 - **Parada:** `refusal` (mesmo depois do fallback) e `max_tokens` (resposta cortada) = falha, sem retry
 - **Fallback de recusa:** `fallbacks: "default"` (beta `server-side-fallback-2026-07-01`): a própria API refaz a chamada noutro modelo quando o primeiro recusa por política; vale o texto depois do último bloco `fallback`
@@ -195,7 +195,7 @@ A IA atua como personal trainer: a partir de uma anamnese, monta um plano usando
 ### 2026-11-24 — PLN-001 chamada real medida; geração com Haiku 5.5
 
 - **Pedido:** fazer a chamada real da PLN-001; o usuário pediu o modelo mais barato, Haiku 5.5, e confirmou que o app passa a gerar o plano com ele.
-- **Mudança:** `PLAN_GENERATION_MODEL = "claude-haiku-5-5"` (`src/lib/constants/plan-generation.ts`); `generate()` aceita `model` por chamada (padrão `CLAUDE_MODEL`, que segue `claude-opus-5-5` para outras chamadas); script `scripts/measure-plan-generation.ts` faz uma chamada real com a lógica do app (prompt, schema, validação) e imprime tempo, tokens e custo, sem gravar nada. 3.3 concluída.
+- **Mudança:** `generate()` aceita `model` por chamada (padrão `CLAUDE_MODEL`); script `scripts/measure-plan-generation.ts` faz uma chamada real com a lógica do app (prompt, schema, validação) e imprime tempo, tokens e custo, sem gravar nada. 3.3 concluída.
 - **Pendências:** nenhuma (PLN-001 fechada)
 
 #### Medição (2026-11-24)
@@ -213,5 +213,11 @@ Catálogo real do Supabase (`list_plan_candidates` com barra, banco, peso corpor
 - O cache de prompt funciona entre chamadas com o mesmo equipamento (leitura de 26 mil tokens a 0,1×)
 - Preços usados: Haiku 5.5 US$ 0,10 / 0,50 por milhão (entrada / saída, prompts até 100 mil tokens), escrita de cache 1,25× e leitura 0,1× da entrada
 - O fallback de recusa (`fallbacks: "default"`) foi aceito pela API com o Haiku; não houve recusa nas chamadas
+
+### 2026-11-24 — Haiku 5.5 como modelo padrão do app
+
+- **Pedido:** o usuário pediu que o app use Haiku 5.5, não Opus.
+- **Mudança:** `CLAUDE_MODEL = "claude-haiku-5-5"` (`src/lib/constants/ai.ts`), padrão de todas as chamadas à IA; a constante `PLAN_GENERATION_MODEL` saiu (a geração usa o padrão). O script de medição também usa o padrão.
+- **Pendências:** nenhuma
 
 ## Fim da spec
