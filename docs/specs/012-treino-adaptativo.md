@@ -2,7 +2,7 @@
 
 **Etapas:** 3B.1 a 3B.4 (checklist `docs/reference/001-checklist-implementacao.md`). Esta spec foi promovida de `docs/planning/001-planejamento-inicial.md` (Fase 3B).
 
-**Status:** rascunho. As decisões marcadas com dependem do usuário e precisam ser confirmadas antes de implementar a etapa correspondente (ver "Decisões a confirmar").
+**Status:** aprovada. Decisões D1 a D7 confirmadas pelo usuário em 2026-11-24.
 
 **Pré-requisito:** V1 concluída. Falta fechar a AUTH-002 (spec 007) antes de começar a 3B.1 (`AGENTS.md`, seção 12).
 
@@ -73,7 +73,7 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
   - Tempo disponível: opções rápidas (ex.: 20, 30, 45, 60, 90 min). O padrão é o `session_minutes` da anamnese mais recente
   - Dor ou cansaço: "Nenhuma" (padrão) ou uma ou mais regiões, cada uma com intensidade leve / moderada / forte
 - **API:** `POST /api/readiness-checkins` `{ workoutId, sleepQuality, energyLevel, availableMinutes, pains: [{ bodyRegion, intensity }] }` → `201 { success, data: { checkinId, needsAdjustment } }`. O servidor revalida tudo com o mesmo schema zod; o treino precisa ser do plano ativo do usuário (senão 404); regiões repetidas → 400; `userId` só da sessão
-- **Precisa de ajuste?** (`needsAdjustment`, regra pura e testada) **(a confirmar):** sim se o sono for ruim, ou a energia baixa, ou houver alguma dor, ou o tempo disponível for menor que o `session_minutes` da anamnese. Se não, o treino segue como está e **não há chamada à IA** (economiza custo e tempo)
+- **Precisa de ajuste?** (`needsAdjustment`, regra pura e testada): sim se o sono for ruim, ou a energia baixa, ou houver alguma dor, ou o tempo disponível for menor que o `session_minutes` da anamnese. Se não, o treino segue como está e **não há chamada à IA** (economiza custo e tempo)
 - **Severidade forte:** além do ajuste, aparece o reforço do aviso de saúde (3.7): com dor forte, considere não treinar essa região e procure orientação
 - **Rascunho:** o check-in fica ligado ao rascunho do dia (spec 010, 2.4); ao finalizar, a sessão grava o `readiness_checkin_id`
 - **Falha ao salvar:** mensagem em pt-BR, os campos continuam preenchidos e o botão "Treinar sem check-in" continua disponível
