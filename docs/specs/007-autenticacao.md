@@ -44,13 +44,21 @@ Permitir entrar no app com o botão do Google ou com e-mail e senha, usando o Su
 - [x] Serviço de autenticação com mensagens de erro em pt-BR testado com cliente falso
 - [x] `/` sem sessão redireciona para `/login`; `/api/*` sem sessão retorna 401
 - [ ] Login com Google funcionando de ponta a ponta — depende da configuração manual (AUTH-001)
-- [ ] Cadastro/login com e-mail testado de ponta a ponta pelo usuário (AUTH-002)
+- [ ] Cadastro/login com e-mail testado de ponta a ponta pelo usuário (AUTH-002) — **login** com e-mail/senha já testado de ponta a ponta em 2026-11-25 (usuário temporário confirmado pela API, apagado depois); falta só o **cadastro** com recebimento do e-mail de confirmação
 
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
 | AUTH-001 | Configurar Google OAuth (Google Cloud + Supabase) e URLs de redirecionamento | Painéis Google Cloud / Supabase | Alta |
-| AUTH-002 | Teste manual de cadastro/login por e-mail (recebimento do e-mail de confirmação) | `/login` | Alta |
+| AUTH-002 | Teste manual de **cadastro** por e-mail com recebimento do e-mail de confirmação (o login já foi testado de ponta a ponta em 2026-11-25). O SMTP padrão do Supabase só entrega para e-mails da equipe do projeto, por isso o teste é com o e-mail do usuário | `/login` | Alta |
+
+## Atualizações
+
+### 2026-11-25 — Teste de ponta a ponta do login por e-mail
+
+- **Pedido:** testar AUTH-001/002 no navegador.
+- **Mudança:** login por e-mail/senha, senha errada (mensagem em pt-BR), redirecionamento de página protegida e API sem sessão (401) testados no navegador contra o Supabase real; host do projeto liberado na rede do ambiente de nuvem. Google (AUTH-001) depende da configuração no Google Cloud pelo usuário.
+- **Pendências:** AUTH-001, AUTH-002 (só o cadastro)
 
 ## Fim da spec

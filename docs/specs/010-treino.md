@@ -116,18 +116,22 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - **Dados:** leitura pela sessão do usuário (RLS) com filtro explícito por `user_id`; agregação por sessão em função pura testada
 - **Arquivos:** `src/lib/training/history-repository.ts`, `history-service.ts`, `load-history.ts`, `server-history-service.ts`; `src/components/history/` (lista, gráfico, tabela, escala); `src/components/layout/pagination-nav.tsx` (paginação genérica, reaproveitada pelo catálogo); `src/app/(app)/schedule/page.tsx`, `src/app/(app)/progress/[slug]/page.tsx`; `src/components/layout/route-error.tsx` e `list-skeleton.tsx` (estados de erro/carregamento compartilhados com catálogo e treino)
 
+## Teste de ponta a ponta (2026-11-25)
+
+Usuário temporário confirmado pela API + plano fictício (2 exercícios do plano real, 3×10, sem descanso) no Supabase real; navegador sem tela em 375px. Passaram: redirecionamento para o login, senha errada, login, tela do treino (sem rótulo de descanso), registro e "Finalizar treino", carga sugerida (20 | 22,5 | 22,5), interruptor "Salvar carga para progredir" (gravado no banco), Agenda, evolução (gráfico + tabela), busca e detalhe do catálogo, API sem sessão → 401. Achados corrigidos: `Date.now()` na pré-renderização (spec 005) e miniatura quebrada (spec 009). Usuário e dados apagados ao final. Para rodar o app nesta nuvem: `NODE_USE_ENV_PROXY=1` (o `fetch` do Node só usa o proxy com essa variável).
+
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| TRN-001 | Importar o plano atual do usuário (decidido: treino único "Full body", 12 exercícios já escolhidos no catálogo — ver abaixo). Falta o usuário informar séries, repetições e descanso | `plans`, `workouts`, `workout_exercises` | Alta (antes de testar a 2.2 com dados reais) |
+| TRN-001 | Importar o plano atual do usuário (decidido: treino único "Full body", 12 exercícios já escolhidos no catálogo — ver abaixo). Prescrição informada em 2026-11-25: **3 séries de 10 repetições** em todos, **sem descanso** (`rest_seconds` vazio: o usuário treina full body intercalando músculos, sem pausa). Falta só a conta do usuário existir (AUTH) para gravar o plano nela | `plans`, `workouts`, `workout_exercises` | Média (o usuário pediu para não priorizar) |
 
 **Plano atual do usuário (TRN-001), exercícios escolhidos no catálogo:** Supino reto com halteres (`dumbbell-bench-press`); Abdominal em V (`v-up`, no lugar do "abdominal remador"); Remada sentada na máquina (`lever-seated-row`); Prancha frontal (`front-plank`); Crucifixo reto com halteres (`dumbbell-fly`); Avanço com halteres (`dumbbell-lunge`); Elevação frontal com halteres (`dumbbell-front-raise`); Agachamento com halteres (`dumbbell-squat`); Elevação lateral com halteres (`dumbbell-lateral-raise`); Rosca direta com halteres (`dumbbell-biceps-curl`); Tríceps corda na polia (`cable-rope-triceps-pushdown`); Panturrilha em pé com halteres (`dumbbell-standing-calf-raise`).
 
 ## Checklist de aceite
 
 - [x] 2.1 — Spec + leitura do plano ativo e validade, com testes
-- [x] 2.2 — Tela de treino, com testes (teste manual com dados reais depende do TRN-001)
+- [x] 2.2 — Tela de treino, com testes (testada de ponta a ponta em 2026-11-25 com plano fictício no Supabase real)
 - [x] 2.3 — Player com fallback, com testes
 - [x] 2.4 — Registro de séries, com testes (rascunho no aparelho; gravação no banco na 2.6)
 - [x] 2.6 — Finalizar treino, com testes (função validada no Supabase com rollback)
