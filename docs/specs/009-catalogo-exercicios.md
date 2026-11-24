@@ -126,7 +126,7 @@ Resultado sobre os dados reais (2026-11-23):
 - `name_pt`: nome curado; sem tradução, usa o nome em inglês (CAT-005). `instructions_pt`: `null` até a tradução (CAT-006)
 - Teste garante que o `supabase/seed.sql` commitado é igual ao gerado
 - Validação manual (2026-11-24) em Postgres 16 local: migrations + seed aplicados duas vezes sem erro → 1.298 exercícios, 1.482 mídias, 3.787 músculos, 1.311 equipamentos, 1.486 referências de origem, 0 exercício sem mídia
-- **Aplicar no Supabase** (credencial administrativa, fora do app): `npx supabase db push --include-seed` (CAT-004)
+- **Aplicado no Supabase** em 2026-11-24 pela API de gerenciamento (token pessoal guardado como segredo de rede do ambiente `workout`): migrations registradas em `supabase_migrations.schema_migrations`; conferido 1.298 exercícios, 1.482 mídias, 0 sem mídia. Para reaplicar: `npx supabase db push --include-seed`
 
 ## Repositório e API (1.6)
 
@@ -160,9 +160,9 @@ Resultado sobre os dados reais (2026-11-23):
 - [x] 1.2 — Parsers das três fontes com schema e testes
 - [x] 1.3 — Normalização, dedup e tradução (limitações: CAT-005, CAT-006, CAT-007)
 - [x] 1.4 — URLs das mídias com `source`/`license`/`priority` (depende de CAT-002 para as URLs do jsDelivr)
-- [x] 1.5 — Seed versionado gerado e validado (aplicar no Supabase: CAT-004)
-- [x] 1.6 — Repositório + API (aplicar migration no Supabase: CAT-004)
-- [x] 1.7 — Tela de busca/visualização (uso real depende de CAT-002 e CAT-004)
+- [x] 1.5 — Seed versionado gerado, validado e aplicado no Supabase
+- [x] 1.6 — Repositório + API
+- [x] 1.7 — Tela de busca/visualização (mídias do jsDelivr dependem de CAT-002)
 
 ## Decisões
 
@@ -184,7 +184,6 @@ O banco guarda apenas a `url` em `exercise_media`; trocar a hospedagem depois é
 |---|---|---|---|
 | CAT-001 | Copiar vídeos do Free Exercise DB para um Cloudflare R2 próprio (hoje dependemos do R2 do autor) e reapontar as URLs — fase futura (etapa 6.5) | `exercise_media.url` | Média (antes da abertura) |
 | CAT-003 | Licença dos GIFs da Exercise Library: README diz MIT, mas não há LICENSE e a origem é o ExerciseDB (comercial). Confirmar ou desligar a fonte antes da abertura (6.1) | `exercise_media.license` | Alta (antes da abertura) |
-| CAT-004 | Aplicar as migrations `20261124000000_exercise_source_refs.sql` e `20261124010000_search_exercises.sql` e o seed no Supabase (sem credencial do banco nesta sessão): `npx supabase db push --include-seed` | `supabase/` | Alta (antes de usar a tela de exercícios) |
 | CAT-005 | Traduzir os nomes dos 951 exercícios só com GIF (Exercise Library), listados em `seed-data/catalog/review/untranslated-names.json`; até lá a tela usa o nome em inglês | `seed-data/catalog/translations/exercise-names.pt-BR.json` | Média |
 | CAT-006 | Traduzir as instruções para pt-BR (`instructions_pt`); hoje só existem em inglês (`instructionStepsEn` no `catalog.json`) | `seed-data/catalog/` | Média (antes da tela de treino, Fase 2) |
 | CAT-007 | Revisar os 65 candidatos a duplicata em `seed-data/catalog/review/duplicate-candidates.json` (hoje mantidos separados) | `seed-data/catalog/curation/duplicate-decisions.json` | Baixa |
