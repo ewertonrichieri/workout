@@ -10,13 +10,14 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-3. **CAT-004** — aplicar migration `exercise_source_refs` e seed no Supabase (usuário: `npx supabase db push --include-seed`) → `specs/009-catalogo-exercicios.md`
-4. **1.6** — Repositório + API de exercícios (esforço `medium`) → `specs/009-catalogo-exercicios.md`
+3. **CAT-004** — aplicar migrations (`exercise_source_refs`, `search_exercises`) e seed no Supabase (usuário: `npx supabase db push --include-seed`) → `specs/009-catalogo-exercicios.md`
+4. **1.7** — Tela de busca/visualização de exercícios (esforço `medium`) → `specs/009-catalogo-exercicios.md`
 
 ---
 
 ## Concluído recentemente
 
+- **1.6 API de exercícios** — função `search_exercises` (sem acento, filtros, só com mídia), repositório, serviço e rotas `/api/exercises`, `/api/exercises/:slug`, `/api/exercise-filters` → `specs/009-catalogo-exercicios.md`
 - **1.5 Seed do catálogo** — `supabase/seed.sql` gerado (`npm run catalog:seed`), idempotente, validado em Postgres local (1.298 exercícios, 0 sem mídia); aplicar no Supabase: CAT-004 → `specs/009-catalogo-exercicios.md`
 - **1.4 URLs das mídias** — `media-hosting.json` (fork + commit fixo, licença e prioridade por fonte) e resolução das URLs; jsDelivr depende dos forks (CAT-002) → `specs/009-catalogo-exercicios.md`
 - **1.3 Normalização do catálogo** — vocabulários curados (30 músculos, 30 equipamentos), dedup com revisão, 1.298 exercícios, 347 nomes pt-BR (todos com vídeo), script `catalog:build` → `specs/009-catalogo-exercicios.md`
@@ -47,7 +48,7 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 - **AUTH-002** — teste manual de cadastro/login por e-mail → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`
 - **CAT-003** — licença dos GIFs da Exercise Library a confirmar → `specs/009-catalogo-exercicios.md`
-- **CAT-004** — aplicar migration `exercise_source_refs` e seed no Supabase → `specs/009-catalogo-exercicios.md`
+- **CAT-004** — aplicar migrations (`exercise_source_refs`, `search_exercises`) e seed no Supabase → `specs/009-catalogo-exercicios.md`
 - **CAT-005** — traduzir nomes dos 951 exercícios só com GIF → `specs/009-catalogo-exercicios.md`
 - **CAT-006** — traduzir instruções para pt-BR → `specs/009-catalogo-exercicios.md`
 - **CAT-007** — revisar 65 candidatos a duplicata → `specs/009-catalogo-exercicios.md`

@@ -42,7 +42,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 1.3 | Normalização, deduplicação e tradução pt-BR de exercícios, equipamentos e músculos (pendências CAT-005/006/007) | `xhigh` | [x] |
 | 1.4 | Mapear URLs das mídias (fork + jsDelivr / origem), com `source` e `license` (CAT-002) | `medium` | [x] |
 | 1.5 | Seed versionado do catálogo no banco (aplicar: CAT-004) | `medium` | [x] |
-| 1.6 | Repositório + API de exercícios (busca, filtros, paginação) | `medium` | [ ] |
+| 1.6 | Repositório + API de exercícios (busca, filtros, paginação) | `medium` | [x] |
 | 1.7 | Tela de busca/visualização de exercícios | `medium` | [ ] |
 
 ### Fase 2 — Treino
