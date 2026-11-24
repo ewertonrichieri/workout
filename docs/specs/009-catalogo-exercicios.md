@@ -143,6 +143,17 @@ Resultado sobre os dados reais (2026-11-23):
 - Erros: parâmetro inválido → 400; slug inexistente ou malformado → 404 ("Exercício não encontrado."); sem sessão → 401 (proxy central); falha do banco → 500 sem detalhes internos, com log de rota e operação
 - Validação manual (2026-11-24): função testada no Postgres local com o seed (`elevacao lateral` → 6; `supino` + peito + halteres → 7; `100%` → 0); `next build` ok; com `next start`, API sem sessão → 401 e página → redirect para login
 
+## Tela de busca e visualização (1.7)
+
+- Rotas (dentro do layout com navegação): `/exercises` (lista) e `/exercises/[slug]` (detalhe); entrada pelo link "Ver catálogo de exercícios" na tela de Treino
+- Lista: formulário GET (busca, músculo, equipamento — funciona sem JavaScript e mantém os filtros na URL), contador de resultados, cards com miniatura (capa do vídeo ou GIF; ícone quando não há imagem), paginação "Anterior/Próxima" mantendo os filtros
+- Detalhe: nome pt-BR (e o inglês, quando diferente), dificuldade, mídia principal (vídeo com controles ou GIF) com crédito de fonte e licença, músculos principais/auxiliares, equipamentos; instruções exibem aviso honesto até a tradução (CAT-006)
+- Estados: carregamento (esqueleto via `Suspense`), vazio, filtros inválidos, exercício inexistente (404) e erro de carregamento com "Tentar novamente" (`error.tsx`, prop `retry` do Next 16)
+- Dados lidos no servidor pelo serviço do catálogo (o cliente não acessa o banco); componentes de apresentação em `src/components/exercises/`
+- Navegação inferior: com `cacheComponents`, rotas com parâmetro dinâmico só conhecem o caminho na requisição; a barra agora tem fallback em `Suspense` (links sem destaque até resolver)
+- Acessibilidade: rótulos em todos os campos, `role="search"`, foco visível, alvos ≥ 44px, paginação com `aria-label`, mídia com rótulo "Demonstração de …"
+- Fallback entre mídias (vídeo → GIF → YouTube) fica para a etapa 2.3
+
 ## Checklist de aceite
 
 - [x] 1.1 — Fontes analisadas (formato, campos, mídia, licença) e decisões registradas nesta spec
@@ -151,7 +162,7 @@ Resultado sobre os dados reais (2026-11-23):
 - [x] 1.4 — URLs das mídias com `source`/`license`/`priority` (depende de CAT-002 para as URLs do jsDelivr)
 - [x] 1.5 — Seed versionado gerado e validado (aplicar no Supabase: CAT-004)
 - [x] 1.6 — Repositório + API (aplicar migration no Supabase: CAT-004)
-- [ ] 1.7 — Tela de busca/visualização
+- [x] 1.7 — Tela de busca/visualização (uso real depende de CAT-002 e CAT-004)
 
 ## Decisões
 
