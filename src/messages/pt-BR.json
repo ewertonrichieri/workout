@@ -257,5 +257,12 @@
       "equipmentSlugs": "Marque ao menos um equipamento.",
       "limitations": "Use no máximo {max} caracteres."
     }
+  },
+  "ai": {
+    "unavailable": "A IA está indisponível no momento. Seus dados foram mantidos; tente novamente em instantes.",
+    "timeout": "A IA demorou demais para responder. Seus dados foram mantidos; tente novamente.",
+    "rateLimited": "A IA recebeu muitos pedidos agora. Aguarde um pouco e tente de novo.",
+    "refused": "A IA não conseguiu atender a este pedido. Revise as informações e tente novamente.",
+    "invalidOutput": "A IA respondeu em um formato inesperado. Seus dados foram mantidos; tente novamente."
   }
 }
