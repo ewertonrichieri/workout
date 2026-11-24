@@ -11,12 +11,13 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 1. **AUTH-001 / AUTH-002** — configurar Google OAuth e testar login por e-mail (usuário) → `specs/007-autenticacao.md`
 2. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 3. **TRN-001** — séries, repetições e descanso do plano atual (usuário) → `specs/010-treino.md`
-4. **2.3** — Player de mídia com fallback (esforço `medium`) → `specs/010-treino.md`
+4. **2.4** — Registro de séries, repetições e carga + check (esforço `high`) → `specs/010-treino.md`
 
 ---
 
 ## Concluído recentemente
 
+- **2.3 Player com fallback** — mídias por prioridade (vídeo → GIF → YouTube via embed `youtube-nocookie`), troca automática quando uma falha, crédito da mídia exibida; no detalhe do exercício e em "Ver demonstração" no card do treino → `specs/010-treino.md`
 - **2.2 Tela de treino** — `/workout` com plano ativo: abas só quando há mais de um treino (`?workout=`), validade com barra de progresso, cards agrupados por categoria (séries, repetições, descanso informativo), estados vazio/carregamento/erro; teste com dados reais depende do TRN-001 → `specs/010-treino.md`
 - **2.1 Spec do treino + leitura do plano** — `specs/010-treino.md`; repositório/serviço do plano ativo (treinos, exercícios, mídias) e cálculo de validade → `specs/010-treino.md`
 - **CAT-004 Banco do catálogo** — migrations `exercise_source_refs` e `search_exercises` + seed aplicados no Supabase (1.298 exercícios, 0 sem mídia) → `specs/009-catalogo-exercicios.md`

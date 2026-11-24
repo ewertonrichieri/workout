@@ -135,6 +135,7 @@
     "emptyWorkoutDescription": "Este treino ainda não tem exercícios cadastrados.",
     "loading": "Carregando treino...",
     "loadError": "Não foi possível carregar o treino.",
-    "retryButton": "Tentar novamente"
+    "retryButton": "Tentar novamente",
+    "showDemo": "Ver demonstração"
   }
 }

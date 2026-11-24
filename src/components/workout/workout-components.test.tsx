@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { buildPlanOverview, buildWorkout, buildWorkoutExercise } from "@/test/training-fixtures";
 import { WorkoutPlanView } from "./workout-plan-view";
@@ -47,5 +47,20 @@ describe("WorkoutPlanView", () => {
   it("shows an empty state for a workout without exercises", () => {
     render(<WorkoutPlanView overview={buildPlanOverview([buildWorkout("A", 1)])} />);
     expect(screen.getByRole("heading", { name: "Treino sem exercícios" })).toBeInTheDocument();
+  });
+});
+
+describe("exercise demonstration", () => {
+  it("mounts the media player only after the card disclosure is opened", () => {
+    const media = [{ mediaType: "gif" as const, url: "https://cdn.example.test/a.gif", thumbnailUrl: null, source: "exercise-library", license: "unverified" }];
+    const workout = buildWorkout("A", 1, [buildWorkoutExercise(1, { exercise: { ...buildWorkoutExercise(1).exercise, media } })]);
+    render(<WorkoutPlanView overview={buildPlanOverview([workout])} />);
+    const label = "Demonstração de Exercício falso 1";
+    expect(screen.queryByRole("img", { name: label })).not.toBeInTheDocument();
+    const details = screen.getByText("Ver demonstração").closest("details");
+    if (!details) throw new Error("disclosure not rendered");
+    details.open = true;
+    fireEvent(details, new Event("toggle"));
+    expect(screen.getByRole("img", { name: label })).toHaveAttribute("src", "https://cdn.example.test/a.gif");
   });
 });

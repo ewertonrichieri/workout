@@ -65,6 +65,17 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - **Fora da 2.2:** player (2.3), carga/check (2.4), finalizar (2.6)
 - **Arquivos:** `src/lib/training/workout-display.ts` (`selectWorkout`, `groupExercisesByCategory`); `src/components/workout/` (`workout-labels.ts`, `workout-plan-view.tsx`, `workout-tabs.tsx`, `plan-validity-summary.tsx`, `workout-exercise-groups.tsx`, `workout-exercise-card.tsx`, `workout-skeleton.tsx`); `src/app/(app)/workout/` (`page.tsx`, `error.tsx`); textos em `training.*` no `pt-BR.json`; `WORKOUT_QUERY_PARAM` em `constants/training.ts`
 
+## Player de mídia (2.3)
+
+- **Ordem:** mídias ativas pela prioridade (menor primeiro): vídeo CC0 (10) → vídeo Free Exercise DB (20) → GIFs (30+) → YouTube (40)
+- **Fallback:** erro de carregamento da mídia atual → passa para a próxima automaticamente; URL do YouTube que não dá para converter em embed é pulada
+- **YouTube:** embed oficial em `https://www.youtube-nocookie.com/embed/<id>` (aceita `watch?v=`, `youtu.be/`, `embed/`, `shorts/`), com `title` acessível
+- **Sem mídia ou todas falharam:** "Mídia indisponível para este exercício." (nunca área quebrada)
+- **Crédito:** fonte e licença da mídia exibida no momento
+- **Onde:** detalhe do exercício (`/exercises/[slug]`) e card do treino ("Ver demonstração", expansível; a mídia só é montada ao abrir)
+- **Arquivos:** `src/lib/catalog/media/media-fallback.ts` (lógica pura); `src/components/exercises/exercise-media-player.tsx` (cliente); `src/components/workout/exercise-demo-disclosure.tsx`
+- **Fora da 2.3:** vídeos no R2 próprio (CAT-001), cadastro de vídeos do YouTube
+
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
@@ -77,7 +88,7 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 
 - [x] 2.1 — Spec + leitura do plano ativo e validade, com testes
 - [x] 2.2 — Tela de treino, com testes (teste manual com dados reais depende do TRN-001)
-- [ ] 2.3 — Player com fallback
+- [x] 2.3 — Player com fallback, com testes
 - [ ] 2.4 — Registro de séries
 - [ ] 2.6 — Finalizar treino
 - [ ] 2.7 — Salvar carga para progredir

@@ -51,7 +51,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 |---|---|---|---|
 | 2.1 | Spec do treino + repositórios de plano, treino e exercícios do treino | `medium` | [x] |
 | 2.2 | Tela de treino: abas A/B/C, validade, barra de progresso, cards por categoria (teste com dados reais: TRN-001) | `high` | [x] |
-| 2.3 | Player de mídia com fallback (vídeo → GIF → YouTube) | `medium` | [ ] |
+| 2.3 | Player de mídia com fallback (vídeo → GIF → YouTube) | `medium` | [x] |
 | 2.4 | Registro de séries, repetições e carga + check de concluído | `high` | [ ] |
 | 2.5 | ~~Timer de descanso~~ — removida a pedido do usuário (PRD, 2026-11-24) | — | — |
 | 2.6 | "Finalizar treino": salvar sessão e cargas em transação | `medium` | [ ] |

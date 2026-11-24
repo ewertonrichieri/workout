@@ -24,7 +24,7 @@ export function ExerciseDetailView({ exercise }: { exercise: ExerciseDetail }) {
         {showEnglishName && <p lang="en" className="text-muted">{exercise.nameEn}</p>}
         {exercise.difficulty && <p className="text-sm text-accent-strong">{describeDifficulty(exercise.difficulty)}</p>}
       </header>
-      <ExerciseMediaPlayer media={exercise.coverMedia} exerciseName={exercise.name} />
+      <ExerciseMediaPlayer key={exercise.slug} media={exercise.media} exerciseName={exercise.name} />
       <TermSection titleKey="catalog.primaryMuscles" terms={exercise.primaryMuscles} />
       <TermSection titleKey="catalog.secondaryMuscles" terms={exercise.secondaryMuscles} />
       <TermSection titleKey="catalog.equipment" terms={exercise.equipment} />

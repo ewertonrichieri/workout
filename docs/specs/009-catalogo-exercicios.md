@@ -152,7 +152,7 @@ Resultado sobre os dados reais (2026-11-23):
 - Dados lidos no servidor pelo serviço do catálogo (o cliente não acessa o banco); componentes de apresentação em `src/components/exercises/`
 - Navegação inferior: com `cacheComponents`, rotas com parâmetro dinâmico só conhecem o caminho na requisição; a barra agora tem fallback em `Suspense` (links sem destaque até resolver)
 - Acessibilidade: rótulos em todos os campos, `role="search"`, foco visível, alvos ≥ 44px, paginação com `aria-label`, mídia com rótulo "Demonstração de …"
-- Fallback entre mídias (vídeo → GIF → YouTube) fica para a etapa 2.3
+- Fallback entre mídias (vídeo → GIF → YouTube): entregue na etapa 2.3 (`specs/010-treino.md`, "Player de mídia")
 
 ## Checklist de aceite
 
