@@ -101,3 +101,24 @@ describe("restoreDraft", () => {
     expect(restored.entries["workout-exercise-3"]).toHaveLength(1);
   });
 });
+
+describe("finish payload", () => {
+  it("keeps only checked sets with parsed numbers and set numbers", async () => {
+    const { buildFinishPayload, markStarted } = await import("./set-log-draft");
+    let draft = markStarted(createEmptyDraft(WORKOUT, TODAY), "2026-11-24T10:00:00.000Z");
+    draft = updateSetEntry(draft, FIRST, 1, { repsDone: "10", load: "12,5" });
+    draft = updateSetEntry(draft, FIRST, 1, { isDone: true });
+    draft = updateSetEntry(draft, SECOND, 0, { repsDone: "8" });
+    expect(buildFinishPayload(draft, "2026-11-24T12:00:00.000Z")).toEqual({
+      workoutId: "workout-A",
+      startedAt: "2026-11-24T10:00:00.000Z",
+      sets: [{ workoutExerciseId: FIRST, setNumber: 2, repsDone: 10, loadKg: 12.5 }],
+    });
+  });
+
+  it("keeps the first start time", async () => {
+    const { markStarted } = await import("./set-log-draft");
+    const started = markStarted(createEmptyDraft(WORKOUT, TODAY), "2026-11-24T10:00:00.000Z");
+    expect(markStarted(started, "2026-11-24T11:00:00.000Z").startedAt).toBe("2026-11-24T10:00:00.000Z");
+  });
+});

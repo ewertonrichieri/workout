@@ -19,3 +19,6 @@ export const LOAD_DECIMAL_PLACES = 2;
 
 /** Device-only draft of the sets typed before "Finalizar treino" (step 2.6). */
 export const WORKOUT_DRAFT_STORAGE_PREFIX = "workout-draft";
+
+/** Upper bound of sets accepted when finishing a workout (guards the request size). */
+export const MAX_SETS_PER_SESSION = 200;

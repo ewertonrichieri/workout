@@ -34,3 +34,10 @@ describe("respondWithJson", () => {
     expect(logger.error).toHaveBeenCalledWith("api request failed", expect.objectContaining({ route: "/api/test" }));
   });
 });
+
+describe("respondWithJson success status", () => {
+  it("uses the given success status (e.g. 201 for creations)", async () => {
+    const response = await respondWithJson({ route: "/api/test", logger: createFakeLogger(), successStatus: 201 }, async () => ({ id: "1" }));
+    expect(response.status).toBe(201);
+  });
+});

@@ -2,26 +2,37 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { APP_TIME_ZONE } from "@/lib/constants/training";
-import { buildDraftStorageKey, readStoredDraft, writeStoredDraft } from "@/lib/training/draft-storage";
+import { buildDraftStorageKey, readStoredDraft, removeStoredDraft, writeStoredDraft } from "@/lib/training/draft-storage";
 import type { Workout } from "@/lib/training/plan-types";
 import { toDateInTimeZone } from "@/lib/training/plan-validity";
-import { createEmptyDraft, restoreDraft, updateSetEntry, type SetEntry, type WorkoutDraft } from "@/lib/training/set-log-draft";
+import { createEmptyDraft, markStarted, restoreDraft, updateSetEntry, type SetEntry, type WorkoutDraft } from "@/lib/training/set-log-draft";
 
 export type SetChangeHandler = (workoutExerciseId: string, setIndex: number, patch: Partial<SetEntry>) => void;
 
 const DATE_PENDING = "";
 
 /** Draft of the sets typed for a workout, kept on the device until "Finalizar treino" (step 2.6). */
-export function useWorkoutDraft(workout: Workout): { draft: WorkoutDraft; changeSet: SetChangeHandler } {
+interface WorkoutDraftState {
+  draft: WorkoutDraft;
+  changeSet: SetChangeHandler;
+  /** After "Finalizar treino": removes the stored draft and starts a new empty one. */
+  clearDraft: () => void;
+}
+
+function today(): string {
+  return toDateInTimeZone(new Date(), APP_TIME_ZONE);
+}
+
+export function useWorkoutDraft(workout: Workout): WorkoutDraftState {
   const [draft, setDraft] = useState(() => createEmptyDraft(workout, DATE_PENDING));
   const [storageKey, setStorageKey] = useState<string | null>(null);
 
   useEffect(() => {
-    const today = toDateInTimeZone(new Date(), APP_TIME_ZONE);
-    const key = buildDraftStorageKey(workout.id, today);
+    const date = today();
+    const key = buildDraftStorageKey(workout.id, date);
     // Device storage only exists after hydration, so the draft is restored here.
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setDraft(restoreDraft(readStoredDraft(key), workout, today));
+    setDraft(restoreDraft(readStoredDraft(key), workout, date));
     setStorageKey(key);
   }, [workout]);
 
@@ -30,8 +41,13 @@ export function useWorkoutDraft(workout: Workout): { draft: WorkoutDraft; change
   }, [draft, storageKey]);
 
   const changeSet = useCallback<SetChangeHandler>((workoutExerciseId, setIndex, patch) => {
-    setDraft((current) => updateSetEntry(current, workoutExerciseId, setIndex, patch));
+    setDraft((current) => markStarted(updateSetEntry(current, workoutExerciseId, setIndex, patch), new Date().toISOString()));
   }, []);
 
-  return { draft, changeSet };
+  const clearDraft = useCallback(() => {
+    if (storageKey) removeStoredDraft(storageKey);
+    setDraft(createEmptyDraft(workout, today()));
+  }, [storageKey, workout]);
+
+  return { draft, changeSet, clearDraft };
 }

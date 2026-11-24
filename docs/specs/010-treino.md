@@ -88,6 +88,16 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - **Arquivos:** `src/lib/training/set-log-draft.ts` (schema, parse, regras), `src/lib/training/draft-storage.ts` (leitura/gravação segura), `src/components/workout/use-workout-draft.ts`, `workout-tracker.tsx`, `set-log-row.tsx`
 - **Fora da 2.4:** gravar no banco/finalizar (2.6), carga sugerida (2.7)
 
+## Finalizar treino (2.6)
+
+- **Botão** "Finalizar treino" no fim da tela; envia só as séries com check
+- **API:** `POST /api/workout-sessions` com `{ workoutId, startedAt, sets: [{ workoutExerciseId, setNumber, repsDone, loadKg }] }` → `201 { success, data: { sessionId } }`
+- **Servidor revalida:** schema zod (mesmos limites da 2.4); treino precisa ser do plano ativo do usuário (senão 404); cada série precisa ser de um exercício desse treino e `setNumber` ≤ séries prescritas, sem repetição (senão 422); pelo menos 1 série (senão 422); `exercise_id` vem do banco, nunca do cliente; `userId` só da sessão
+- **Transação:** função `public.finish_workout_session(p_workout_id, p_started_at, p_sets jsonb)` (`security invoker`, RLS vale) grava `workout_sessions` (início = primeira edição do rascunho, limitado a agora; fim = agora) e `set_logs` juntos; se alguma série não bater com o treino, levanta erro e nada é gravado
+- **Confirmação:** sem nenhuma série com check → aviso e nada é enviado; com séries sem check → pede confirmação ("Finalizar mesmo assim")
+- **Depois:** sucesso → rascunho apagado do aparelho e "Treino finalizado e salvo."; falha → mensagem em pt-BR, rascunho mantido
+- **Arquivos:** migrations `20261125000000_table_privileges.sql` (grants, ver bug na spec 006) e `20261125000100_finish_workout_session.sql`, aplicadas no Supabase em 2026-11-25 (testadas antes com rollback); `src/lib/training/session-schema.ts`, `session-repository.ts`, `session-service.ts`, `server-session-service.ts`; `src/app/api/workout-sessions/route.ts`; `src/components/workout/finish-workout-button.tsx`
+
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
@@ -102,7 +112,7 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 - [x] 2.2 — Tela de treino, com testes (teste manual com dados reais depende do TRN-001)
 - [x] 2.3 — Player com fallback, com testes
 - [x] 2.4 — Registro de séries, com testes (rascunho no aparelho; gravação no banco na 2.6)
-- [ ] 2.6 — Finalizar treino
+- [x] 2.6 — Finalizar treino, com testes (função validada no Supabase com rollback)
 - [ ] 2.7 — Salvar carga para progredir
 - [ ] 2.8 — Histórico e gráfico
 

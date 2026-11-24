@@ -38,4 +38,14 @@ Criar, por migrations versionadas, as tabelas do MVP (PRD `001-prd.md`) com cont
 - [x] Migration aplicada no Supabase do projeto
 - [x] Inspeção confirma RLS ligado e policies em todas as tabelas
 
+## Bugs (histórico)
+
+Somente registro informativo de correções já feitas. Não é backlog.
+
+### 2026-11-25 — `authenticated` sem permissão nas tabelas
+
+- **Sintoma:** como `authenticated`, qualquer leitura falhava com `permission denied for table exercises` (catálogo, plano), mesmo com as políticas de RLS
+- **Causa:** projetos novos do Supabase não concedem mais privilégios de tabela aos papéis da Data API por padrão; as migrations só criavam políticas
+- **Correção:** migration `20261125000000_table_privileges.sql` com privilégios mínimos (leitura do catálogo e dos dados de treino, `update (track_progression)`, `select, insert` em sessões e séries; nada para `anon`; anamnese fica para a 3.1)
+
 ## Fim da spec

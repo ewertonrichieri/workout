@@ -72,3 +72,25 @@ describe("database migrations", () => {
     expect(sql).toContain("grant update (display_name) on public.profiles to authenticated");
   });
 });
+
+describe("finish_workout_session", () => {
+  it("is a security invoker function executable only by authenticated users", () => {
+    const sql = readAllMigrations();
+    const definition = sql.slice(sql.indexOf("create or replace function public.finish_workout_session"));
+    expect(definition).toContain("security invoker");
+    expect(sql).toContain("revoke all on function public.finish_workout_session(uuid, timestamptz, jsonb) from public, anon");
+    expect(sql).toContain("grant execute on function public.finish_workout_session(uuid, timestamptz, jsonb) to authenticated");
+  });
+});
+
+describe("table privileges", () => {
+  it("lets authenticated users read the catalog and their training data (RLS filters rows)", () => {
+    const sql = readAllMigrations();
+    for (const table of ["exercises", "exercise_media", "plans", "workouts", "workout_exercises", "profiles"]) {
+      expect(sql).toMatch(new RegExp(`grant select on[^;]*public\\.${table}[,\\s][^;]*to authenticated`));
+    }
+    expect(sql).toContain("grant select, insert on public.workout_sessions, public.set_logs to authenticated");
+    expect(sql).toContain("grant update (track_progression) on public.workout_exercises to authenticated");
+    expect(sql).not.toMatch(/grant [^;]* to anon/);
+  });
+});
