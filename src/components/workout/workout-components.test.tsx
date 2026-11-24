@@ -19,6 +19,14 @@ describe("WorkoutPlanView", () => {
     expect(screen.queryByRole("link", { name: "Exercício falso 1" })).not.toBeInTheDocument();
   });
 
+  it("links to the editor of the selected workout and shows the review notice only after a generation", () => {
+    const { rerender } = render(<WorkoutPlanView overview={buildPlanOverview([WORKOUT_A, WORKOUT_B])} requestedLabel="B" />);
+    expect(screen.getByRole("link", { name: "Editar treino B" })).toHaveAttribute("href", "/workout/edit?workout=B");
+    expect(screen.queryByText(/revise e ajuste/)).not.toBeInTheDocument();
+    rerender(<WorkoutPlanView overview={buildPlanOverview([WORKOUT_A, WORKOUT_B])} requestedLabel="B" showReviewNotice />);
+    expect(screen.getByText("Plano gerado pela IA — revise e ajuste o que quiser.")).toBeInTheDocument();
+  });
+
   it("uses the label as title for a single workout plan", () => {
     render(<WorkoutPlanView overview={buildPlanOverview([buildWorkout("Full body", 1, [buildWorkoutExercise(1)])])} />);
     expect(screen.queryByRole("navigation", { name: "Treinos do plano" })).not.toBeInTheDocument();

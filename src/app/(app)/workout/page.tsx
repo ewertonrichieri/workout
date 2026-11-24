@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/layout/page-header";
 import { WorkoutPlanView } from "@/components/workout/workout-plan-view";
 import { WorkoutSkeleton } from "@/components/workout/workout-skeleton";
 import { getAuthenticatedUserId } from "@/lib/auth/server-auth";
-import { APP_ROUTES } from "@/lib/constants/routes";
+import { APP_ROUTES, REVIEW_QUERY_PARAM, REVIEW_QUERY_VALUE } from "@/lib/constants/routes";
 import { WORKOUT_QUERY_PARAM } from "@/lib/constants/training";
 import { translate } from "@/lib/i18n/translate";
 import { createServerPlanService } from "@/lib/training/server-plan-service";
@@ -13,13 +13,20 @@ import { createServerPlanService } from "@/lib/training/server-plan-service";
 type WorkoutSearchParams = PageProps<"/workout">["searchParams"];
 
 async function WorkoutContent({ searchParams }: { searchParams: WorkoutSearchParams }) {
-  const requested = (await searchParams)[WORKOUT_QUERY_PARAM];
+  const params = await searchParams;
+  const requested = params[WORKOUT_QUERY_PARAM];
   const userId = await getAuthenticatedUserId();
   const overview = await (await createServerPlanService()).getActivePlanOverview(userId);
   if (!overview) {
     return <EmptyState title={translate("pages.workout.emptyTitle")} description={translate("pages.workout.emptyDescription")} />;
   }
-  return <WorkoutPlanView overview={overview} requestedLabel={typeof requested === "string" ? requested : undefined} />;
+  return (
+    <WorkoutPlanView
+      overview={overview}
+      requestedLabel={typeof requested === "string" ? requested : undefined}
+      showReviewNotice={params[REVIEW_QUERY_PARAM] === REVIEW_QUERY_VALUE}
+    />
+  );
 }
 
 export default function WorkoutPage({ searchParams }: PageProps<"/workout">) {

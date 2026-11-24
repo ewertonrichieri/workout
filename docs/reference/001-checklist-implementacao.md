@@ -64,8 +64,8 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 |---|---|---|---|
 | 3.1 | Anamnese: formulário + schema + gravação (inclui preferência de divisão: IA decide / full body / dividido) — teste no navegador: ASM-001 | `medium` | [x] |
 | 3.2 | Wrapper da Claude API (servidor, retry, timeout, validação da saída) | `high` | [x] |
-| 3.3 | Geração do plano: prompt + catálogo filtrado + só exercícios com mídia + divisão full body ou A/B/C conforme dias/semana e preferência — código pronto; aguarda PLN-001 (chamada real; migration aplicada) | `xhigh` | [ ] |
-| 3.4 | Revisão e edição manual do plano | `high` | [ ] |
+| 3.3 | Geração do plano: prompt + catálogo filtrado + só exercícios com mídia + divisão full body ou A/B/C conforme dias/semana e preferência — medição da chamada real pendente: PLN-001 | `xhigh` | [x] |
+| 3.4 | Revisão e edição manual do plano — migration a aplicar: WED-001 | `high` | [x] |
 | 3.5 | Sugestão de progressão de carga pelo histórico | `medium` | [ ] |
 | 3.6 | Sugestão de renovação ao fim da validade (6 semanas) | `medium` | [ ] |
 | 3.7 | Aviso de saúde na anamnese e no plano | `low` | [ ] |

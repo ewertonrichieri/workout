@@ -29,7 +29,7 @@ describe("GeneratePlanButton", () => {
     fireEvent.click(screen.getByRole("button", { name: "Gerar plano com IA" }));
     expect(screen.getByRole("status")).toHaveTextContent("pode levar até 2 minutos");
     expect(screen.getByRole("button", { name: "Gerando plano..." })).toBeDisabled();
-    await waitFor(() => expect(push).toHaveBeenCalledWith("/workout"));
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/workout?review=1"));
     expect(fetchMock.mock.calls[0][0]).toBe("/api/plans");
     expect(sentBody(fetchMock)).toEqual({ replaceActivePlan: false });
   });
@@ -43,7 +43,7 @@ describe("GeneratePlanButton", () => {
     expect(fetchMock).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole("button", { name: "Gerar plano com IA" }));
     fireEvent.click(screen.getByRole("button", { name: "Substituir plano" }));
-    await waitFor(() => expect(push).toHaveBeenCalledWith("/workout"));
+    await waitFor(() => expect(push).toHaveBeenCalledWith("/workout?review=1"));
     expect(sentBody(fetchMock)).toEqual({ replaceActivePlan: true });
   });
 

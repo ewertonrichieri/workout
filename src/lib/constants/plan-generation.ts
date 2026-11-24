@@ -24,3 +24,7 @@ export const MAX_EXERCISE_NOTES_LENGTH = 300;
 
 /** Last valid day = start + 6 weeks - 1 day (42 calendar days, both ends included). */
 export const PLAN_VALIDITY_LAST_DAY_OFFSET = 1;
+
+/** Starting prescription of an exercise added by hand (step 3.4); the user edits it before saving. */
+export const NEW_EXERCISE_DEFAULT_SETS = 3;
+export const NEW_EXERCISE_DEFAULT_REPS = 10;

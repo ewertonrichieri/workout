@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { APP_ROUTES } from "@/lib/constants/routes";
+import { APP_ROUTES, REVIEW_QUERY_PARAM, REVIEW_QUERY_VALUE } from "@/lib/constants/routes";
 import { sendJsonRequest } from "@/lib/http/send-json-request";
 import { translate } from "@/lib/i18n/translate";
 
@@ -34,7 +34,7 @@ function useGeneratePlan() {
   const generate = async (replaceActivePlan: boolean) => {
     setStep({ name: "generating" });
     const result = await sendJsonRequest(PLANS_ENDPOINT, "POST", { replaceActivePlan }, translate("planGeneration.failed"));
-    if (result.ok) router.push(APP_ROUTES.workout);
+    if (result.ok) router.push(`${APP_ROUTES.workout}?${new URLSearchParams({ [REVIEW_QUERY_PARAM]: REVIEW_QUERY_VALUE })}`);
     else setStep({ name: "error", message: result.message });
   };
   return { step, setStep, generate };
