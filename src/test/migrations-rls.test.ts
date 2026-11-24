@@ -27,6 +27,9 @@ const USER_TABLES = [
   "readiness_checkin_pains",
   "session_adjustments",
   "exercise_substitutions",
+  "ai_requests",
+  "adjustment_proposals",
+  "adjustment_proposal_changes",
 ];
 
 function readAllMigrations(): string {
@@ -159,6 +162,32 @@ describe("exercise substitution (step 3B.4)", () => {
     expect(finish).toContain("coalesce(es.replacement_exercise_id, a.replacement_exercise_id, we.exercise_id)");
     expect(finish).toContain("s.effort");
     expect(finish).toContain("security invoker");
+  });
+});
+
+describe("AI cost control (2026-11-24)", () => {
+  const sql = readAllMigrations();
+
+  it.each(["register_ai_request(text, integer, integer)", "save_adjustment_proposal(uuid, text, integer, jsonb)"])("%s is executable only by authenticated users", (signature) => {
+    const name = signature.slice(0, signature.indexOf("("));
+    expect(latestDefinition(sql, name)).toContain("security invoker");
+    expect(sql).toContain(`revoke all on function public.${signature} from public, anon`);
+    expect(sql).toContain(`grant execute on function public.${signature} to authenticated`);
+  });
+
+  it("never lets users update or delete their AI request records (the limit cannot be reset)", () => {
+    expect(sql).toContain("grant select, insert on public.ai_requests to authenticated");
+    expect(sql).not.toMatch(/grant [^;]*(update|delete)[^;]* on public\.ai_requests/);
+  });
+
+  it("counts and registers a request under a per-user lock", () => {
+    const register = latestDefinition(sql, "register_ai_request");
+    expect(register).toContain("pg_advisory_xact_lock");
+    expect(register).toContain("(select auth.uid())");
+  });
+
+  it("keeps the saved proposal read-only for the owner", () => {
+    expect(sql).toContain("grant select, insert on public.adjustment_proposals, public.adjustment_proposal_changes to authenticated");
   });
 });
 

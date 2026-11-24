@@ -268,4 +268,18 @@ Catálogo real do Supabase (`list_plan_candidates` com barra, banco, peso corpor
 - Sem service worker: o PRD pede só "instalável" e o app depende do servidor; offline (ex.: Serwist) fica fora do MVP
 - `/manifest.webmanifest`, `/icon/*` e `/apple-icon` são públicos (o navegador os busca sem sessão)
 
+### 2026-11-24 — Limite de pedidos à IA por usuário (controle de custo)
+
+- **Pedido:** análise de custo da IA (item 1): limitar por usuário as chamadas que gastam dinheiro, para que cliques repetidos, laço de tela ou abuso não gerem uma conta alta. A troca na hora (3B.4) fica **sem limite**, por decisão do usuário (ver SUB-001 na spec 012).
+- **Mudança:** tabela `ai_requests` (usuário, operação, data) e função `register_ai_request` (conta e registra numa transação, com trava por usuário e operação); guarda `AiUsageGuard` chamada **depois** das verificações baratas e **antes** da IA; ao passar do limite → HTTP 429 com mensagem em português, sem chamar a IA. Limites em `src/lib/constants/ai-usage.ts`.
+- **Validação:** testes automatizados (guarda, repositório, serviço, migration) e o roteiro no Supabase real num bloco desfeito no fim (2026-11-24).
+- **Pendências:** nenhuma (PLN-002 fechada: migration aplicada no Supabase em 2026-11-24)
+
+#### Regras do limite
+
+- Janela móvel de 24 horas, por usuário e por operação
+- `plan.generate` (gerar ou renovar o plano): **3** pedidos; `readiness.adjust` (ajuste do dia, spec 012): **5** pedidos
+- Conta toda chamada que vai à IA, inclusive as que falham (elas também custam); recusas baratas (sem anamnese, plano ativo sem confirmação, sem candidatos) não contam
+- O usuário só lê e insere os próprios registros (RLS); não pode apagar para zerar o contador
+
 ## Fim da spec

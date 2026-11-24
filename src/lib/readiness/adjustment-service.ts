@@ -3,7 +3,8 @@ import type { AssessmentRepository } from "@/lib/assessment/assessment-repositor
 import type { SavedAssessment } from "@/lib/assessment/assessment-schema";
 import { ADJUSTMENT_EFFORT, ADJUSTMENT_OPERATION } from "@/lib/constants/readiness";
 import { APP_TIME_ZONE } from "@/lib/constants/training";
-import { ExternalServiceError, InvalidInputError, NotFoundError, UnprocessableError } from "@/lib/errors/app-errors";
+import type { AiUsageGuard } from "@/lib/ai-usage/ai-usage-guard";
+import { ExternalServiceError, InvalidInputError, NotFoundError, RepositoryError, UnprocessableError } from "@/lib/errors/app-errors";
 import { translate } from "@/lib/i18n/translate";
 import type { StructuredOutputClient } from "@/lib/integrations/claude/structured-output-client";
 import type { Logger } from "@/lib/logger/logger";
@@ -13,7 +14,7 @@ import type { PlanRepository } from "@/lib/training/plan-repository";
 import type { Workout } from "@/lib/training/plan-types";
 import { toDateInTimeZone } from "@/lib/training/plan-validity";
 import { buildAdjustmentRequestPrompt, buildAdjustmentSystemPrompt } from "./adjustment-prompt";
-import type { AdjustmentRepository, StoredCheckin } from "./adjustment-repository";
+import type { AdjustmentRepository, StoredAdjustmentProposal, StoredCheckin } from "./adjustment-repository";
 import { findAiAdjustmentIssues, findChangeIssues, resolveAiChanges, selectReplacementCandidates } from "./adjustment-rules";
 import { aiDailyAdjustmentSchema, saveAdjustmentInputSchema, type AdjustmentChange, type AdjustmentProposal, type AiDailyAdjustment } from "./adjustment-schema";
 import { needsAdjustment } from "./readiness-rules";
@@ -24,12 +25,13 @@ export interface AdjustmentServiceDependencies {
   assessmentRepository: Pick<AssessmentRepository, "findLatestAssessment">;
   candidateSource: Pick<PlanGenerationRepository, "listCandidates">;
   structuredOutputClient: StructuredOutputClient;
+  aiUsageGuard: AiUsageGuard;
   logger: Logger;
   now: () => Date;
 }
 
 export interface AdjustmentService {
-  /** Asks the AI for today's adjustment (step 3B.2); nothing is saved until the user accepts. */
+  /** Today's adjustment (step 3B.2): saved per check-in, so the AI is paid once; nothing changes until the user accepts. */
   proposeAdjustment(userId: string, checkinId: string): Promise<AdjustmentProposal>;
   /** Saves the accepted changes (revalidated); an empty list restores the original workout. */
   saveAdjustment(userId: string, checkinId: string, rawInput: unknown): Promise<{ changes: number }>;
@@ -93,6 +95,33 @@ async function requestValidAdjustment(dependencies: AdjustmentServiceDependencie
   throw new ExternalServiceError(translate("ai.invalidOutput"));
 }
 
+/** The order of today's workout, as the review screen lists them (the database keeps no order). */
+function sortByWorkout(changes: readonly AdjustmentChange[], workout: Workout): AdjustmentChange[] {
+  const positionOf = (change: AdjustmentChange) => workout.exercises.findIndex((item) => item.id === change.workoutExerciseId);
+  return [...changes].sort((first, second) => positionOf(first) - positionOf(second));
+}
+
+/** The AI was already paid: a failed save is only logged, and the next request calls the AI again. */
+async function saveProposalSafely(dependencies: AdjustmentServiceDependencies, checkinId: string, proposal: StoredAdjustmentProposal) {
+  try {
+    await dependencies.adjustmentRepository.saveProposal(checkinId, proposal);
+  } catch (error) {
+    if (!(error instanceof RepositoryError)) throw error;
+    dependencies.logger.warn("daily adjustment proposal not saved", { operation: ADJUSTMENT_OPERATION, checkinId });
+  }
+}
+
+/** The check-in's saved proposal, or a new one from the AI (counted against the user's limit, then saved). */
+async function findOrRequestProposal(dependencies: AdjustmentServiceDependencies, context: AdjustmentContext): Promise<StoredAdjustmentProposal> {
+  const stored = await dependencies.adjustmentRepository.findProposal(context.checkin.id);
+  if (stored) return { ...stored, changes: sortByWorkout(stored.changes, context.workout) };
+  await dependencies.aiUsageGuard.reserve(ADJUSTMENT_OPERATION);
+  const adjustment = await requestValidAdjustment(dependencies, context);
+  const proposal = { summary: adjustment.summary, estimatedMinutes: adjustment.estimatedMinutes, changes: resolveAiChanges(adjustment, context.workout).changes };
+  await saveProposalSafely(dependencies, context.checkin.id, proposal);
+  return proposal;
+}
+
 /** Adds the replacement's name and media, so the review screen and the workout cards can show it. */
 async function attachReplacements(dependencies: AdjustmentServiceDependencies, changes: readonly AdjustmentChange[]) {
   const slugs = changes.flatMap((change) => (change.replacementSlug ? [change.replacementSlug] : []));
@@ -118,9 +147,9 @@ export function createAdjustmentService(dependencies: AdjustmentServiceDependenc
       if (!needsAdjustment({ ...context.checkin, workoutId: context.workout.id }, sessionMinutes)) {
         throw new UnprocessableError(translate("readiness.adjustment.notNeeded"));
       }
-      const adjustment = await requestValidAdjustment(dependencies, context);
-      const changes = await attachReplacements(dependencies, resolveAiChanges(adjustment, context.workout).changes);
-      return { checkinId: context.checkin.id, summary: adjustment.summary, estimatedMinutes: adjustment.estimatedMinutes, changes };
+      const proposal = await findOrRequestProposal(dependencies, context);
+      const changes = await attachReplacements(dependencies, proposal.changes);
+      return { checkinId: context.checkin.id, summary: proposal.summary, estimatedMinutes: proposal.estimatedMinutes, changes };
     },
     async saveAdjustment(userId, checkinId, rawInput) {
       const changes = parseSaveInput(rawInput);
