@@ -38,6 +38,7 @@ Todas com RLS por dono (`auth.uid()`); o repositório também filtra pelo `user_
 ## Regras
 
 - **Plano ativo:** no máximo um por usuário; sem plano ativo a tela mostra estado vazio (nunca dados inventados)
+- **Divisão:** o plano pode ter um único treino (ex.: "Full body") ou vários ("A", "B", "C"); a tela mostra abas só quando há mais de um treino (regra do PRD, "Divisão do treino")
 - **Ordem:** treinos e exercícios pela `position`
 - **Validade:** padrão de 6 semanas (PRD; `DEFAULT_PLAN_VALIDITY_WEEKS`). Progresso = dias decorridos ÷ dias totais, limitado a 0–100%; vencido só depois do último dia (`valid_until` ainda é válido). Datas são de calendário (`YYYY-MM-DD`) no fuso `America/Sao_Paulo` (`APP_TIME_ZONE`)
 - **Ao vencer:** o app sugere renovação (3.6), nunca renova sozinho
