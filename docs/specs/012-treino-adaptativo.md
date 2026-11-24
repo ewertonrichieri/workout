@@ -2,7 +2,7 @@
 
 **Etapas:** 3B.1 a 3B.4 (checklist `docs/reference/001-checklist-implementacao.md`). Esta spec foi promovida de `docs/planning/001-planejamento-inicial.md` (Fase 3B).
 
-**Status:** rascunho. As decisões marcadas com **(a confirmar)** dependem do usuário e precisam ser confirmadas antes de implementar a etapa correspondente (ver "Decisões a confirmar").
+**Status:** rascunho. As decisões marcadas com dependem do usuário e precisam ser confirmadas antes de implementar a etapa correspondente (ver "Decisões a confirmar").
 
 **Pré-requisito:** V1 concluída. Falta fechar a AUTH-002 (spec 007) antes de começar a 3B.1 (`AGENTS.md`, seção 12).
 
@@ -46,7 +46,7 @@ Em todos os casos o **plano não muda**: os ajustes e as trocas valem só para a
 | Substituição na hora | `exercise_substitution` |
 | Motivo da troca: aparelho ocupado / aparelho quebrado / outro | `reason`: `equipment_busy` / `equipment_broken` / `other` |
 
-**Regiões do corpo (`body_region`) (a confirmar):** `neck` (pescoço), `shoulders` (ombros), `upper_back` (costas, parte de cima), `lower_back` (lombar), `chest` (peito), `elbows` (cotovelos), `wrists` (punhos), `hips` (quadril), `knees` (joelhos), `ankles` (tornozelos). São articulações e regiões, não músculos do catálogo, porque dor costuma ser na articulação. Quem relaciona região e exercício é a IA (3B.2).
+**Regiões do corpo (`body_region`):** `neck` (pescoço), `shoulders` (ombros), `upper_back` (costas, parte de cima), `lower_back` (lombar), `chest` (peito), `elbows` (cotovelos), `wrists` (punhos), `hips` (quadril), `knees` (joelhos), `ankles` (tornozelos). São articulações e regiões, não músculos do catálogo, porque dor costuma ser na articulação. Quem relaciona região e exercício é a IA (3B.2).
 
 ## Modelo de dados (proposta)
 
@@ -70,7 +70,7 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 - **Campos** (meta de uns 10 segundos, tudo com toque, sem digitar):
   - Sono: ruim / ok / bom
   - Energia: baixa / normal / alta
-  - Tempo disponível: opções rápidas (ex.: 20, 30, 45, 60, 90 min). O padrão é o `session_minutes` da anamnese mais recente **(a confirmar)**
+  - Tempo disponível: opções rápidas (ex.: 20, 30, 45, 60, 90 min). O padrão é o `session_minutes` da anamnese mais recente
   - Dor ou cansaço: "Nenhuma" (padrão) ou uma ou mais regiões, cada uma com intensidade leve / moderada / forte
 - **API:** `POST /api/readiness-checkins` `{ workoutId, sleepQuality, energyLevel, availableMinutes, pains: [{ bodyRegion, intensity }] }` → `201 { success, data: { checkinId, needsAdjustment } }`. O servidor revalida tudo com o mesmo schema zod; o treino precisa ser do plano ativo do usuário (senão 404); regiões repetidas → 400; `userId` só da sessão
 - **Precisa de ajuste?** (`needsAdjustment`, regra pura e testada) **(a confirmar):** sim se o sono for ruim, ou a energia baixa, ou houver alguma dor, ou o tempo disponível for menor que o `session_minutes` da anamnese. Se não, o treino segue como está e **não há chamada à IA** (economiza custo e tempo)
@@ -113,7 +113,7 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 
 - **Botão "Trocar"** no card do exercício na tela de treino (antes ou durante o registro)
 - **Motivo:** aparelho ocupado / aparelho quebrado / outro (opcional, um toque)
-- **Sugestões (a confirmar):** até 3 exercícios
+- **Sugestões:** até 3 exercícios
   1. O servidor pré-filtra os candidatos: com mídia, equipamentos todos na anamnese, pelo menos um músculo principal em comum, fora do treino de hoje e sem o equipamento do exercício original quando o motivo for "aparelho quebrado" ou "ocupado" (se o original usa máquina ou polia, por exemplo)
   2. A IA escolhe os 3 mais equivalentes no padrão de movimento, com motivo curto em pt-BR (o catálogo não tem `movement_pattern` preenchido, por isso a IA cobre essa parte)
   3. **Se a IA falhar**, aparecem os 3 primeiros do pré-filtro ordenados por músculos principais e secundários em comum, com o aviso "sugestões automáticas" (nunca apresentadas como equivalentes certos)
@@ -131,7 +131,7 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 - Estados de carregamento, vazio e erro em todas as telas novas; acessibilidade (teclado, foco, `aria-label`, toque ≥ 44 px)
 - O `user_id` vem só da sessão
 
-## Decisões a confirmar
+## Decisões (confirmadas em 2026-11-24)
 
 | # | Decisão | Proposta |
 |---|---|---|
@@ -147,7 +147,6 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| ADP-001 | Confirmar as decisões D1 a D4, D6 e D7 (D5 confirmada) | Esta spec | Alta (bloqueia a 3B.1) |
 
 ## Checklist de aceite
 
