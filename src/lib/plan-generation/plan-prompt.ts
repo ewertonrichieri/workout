@@ -33,7 +33,8 @@ const SPLIT_DESCRIPTIONS: Record<SplitPreference, string> = {
   split: "split into different workouts",
 };
 
-function formatCandidate(candidate: PlanCandidate): string {
+/** Compact catalog line: slug | primary muscles | equipment (also used by the daily adjustment, 3B.2). */
+export function formatCandidate(candidate: PlanCandidate): string {
   return `${candidate.slug} | ${candidate.primaryMuscles.join(", ")} | ${candidate.equipment.join(", ")}`;
 }
 
@@ -43,7 +44,7 @@ export function buildPlanSystemPrompt(candidates: readonly PlanCandidate[]): str
 }
 
 /** User text goes inside tags; angle brackets are escaped so it cannot close them. */
-function formatLimitations(limitations: string | null): string {
+export function formatLimitations(limitations: string | null): string {
   if (!limitations) return "No injuries or limitations reported.";
   const escaped = limitations.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
   return `Injuries or limitations, as written by the person:\n<user_limitations>\n${escaped}\n</user_limitations>`;

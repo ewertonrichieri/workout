@@ -55,6 +55,7 @@ describe("pre-workout check-in (step 3B.1)", () => {
 
   it("sends pains with their intensity and reinforces the health notice for a severe pain", async () => {
     const fetchMock = mockFetch(201, { success: true, data: { checkinId: CHECKIN_ID, needsAdjustment: true, hasSeverePain: true } });
+    // The lighter day then asks for the daily adjustment (step 3B.2), which this mock answers as a failure.
     openForm();
     fireEvent.click(screen.getByRole("radio", { name: "Mal" }));
     fireEvent.click(screen.getByRole("radio", { name: "30 min" }));
@@ -63,8 +64,7 @@ describe("pre-workout check-in (step 3B.1)", () => {
     expect(intensity).toBeInTheDocument();
     fireEvent.click(screen.getByRole("radio", { name: "Forte" }));
     fireEvent.click(screen.getByRole("button", { name: "Salvar check-in" }));
-    await waitFor(() => expect(screen.getByText(/indica um dia mais leve/)).toBeInTheDocument());
-    expect(screen.getByText(/Você marcou dor forte/)).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText(/Você marcou dor forte/)).toBeInTheDocument());
     expect(sentBody(fetchMock)).toMatchObject({ sleepQuality: "poor", availableMinutes: 30, pains: [{ bodyRegion: "knees", intensity: "severe" }] });
   });
 

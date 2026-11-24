@@ -4,7 +4,7 @@ import { buildProgressHref } from "@/components/history/history-labels";
 import { buildExerciseDetailHref } from "@/components/exercises/exercise-search-href";
 import { translate } from "@/lib/i18n/translate";
 import type { LoadIncrease } from "@/lib/training/load-increases";
-import type { WorkoutExercise } from "@/lib/training/plan-types";
+import type { DailyChange, WorkoutExercise } from "@/lib/training/plan-types";
 import { formatLoadInput, isExerciseCompleted, type SetEntry } from "@/lib/training/set-log-draft";
 import { ExerciseDemoDisclosure } from "./exercise-demo-disclosure";
 import { SetLogList } from "./set-log-list";
@@ -51,19 +51,33 @@ function SuggestionNotice({ hasSuggestedLoad, loadIncrease }: { hasSuggestedLoad
   return hasSuggestedLoad ? <p className="text-sm text-muted">{translate("training.progression.suggestedNotice")}</p> : null;
 }
 
+/** Today-only change accepted from the daily adjustment (step 3B.2). */
+function DailyChangeNotice({ change }: { change: DailyChange }) {
+  const text =
+    change.changeType === "replaced" && change.originalName
+      ? translate("readiness.adjustment.cardReplaced", { original: change.originalName, reason: change.reason })
+      : translate("readiness.adjustment.cardReduced", { reason: change.reason });
+  return <p className="text-sm font-medium text-accent-strong">{text}</p>;
+}
+
 export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, loadIncrease, onSetChange }: WorkoutExerciseCardProps) {
-  const { exercise } = workoutExercise;
+  const { exercise, dailyChange } = workoutExercise;
   const isCompleted = isExerciseCompleted(sets);
+  // The switch belongs to the planned exercise, so a replacement of today does not show it.
+  const isReplacedToday = dailyChange?.changeType === "replaced";
   return (
     <article className={`flex flex-col gap-3 rounded-2xl border bg-surface p-3 ${isCompleted ? "border-accent-strong" : "border-border"}`}>
       <div className="flex items-center gap-4">
         <ExerciseCover media={exercise.coverMedia} />
         <PrescriptionSummary workoutExercise={workoutExercise} />
       </div>
+      {dailyChange && <DailyChangeNotice change={dailyChange} />}
       {isCompleted && <p className="text-sm font-semibold text-accent-strong">{translate("training.exerciseCompleted")}</p>}
       <SuggestionNotice hasSuggestedLoad={hasSuggestedLoad} loadIncrease={loadIncrease} />
       <SetLogList exerciseName={exercise.name} repsTarget={describeRepsTarget(workoutExercise)} sets={sets} onSetChange={onSetChange} />
-      <TrackProgressionSwitch workoutExerciseId={workoutExercise.id} exerciseName={exercise.name} isTracked={workoutExercise.trackProgression} />
+      {!isReplacedToday && (
+        <TrackProgressionSwitch workoutExerciseId={workoutExercise.id} exerciseName={exercise.name} isTracked={workoutExercise.trackProgression} />
+      )}
       <ExerciseDemoDisclosure exercise={exercise} />
       <Link href={buildProgressHref(exercise.slug)} className={PROGRESS_LINK_CLASS}>
         {translate("history.progressLink")}
