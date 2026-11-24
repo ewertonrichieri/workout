@@ -56,7 +56,7 @@ Normalizado (3FN), RLS por dono em todas as tabelas, migrations versionadas, gra
 |---|---|---|
 | `readiness_checkins` | `id`, `user_id`, `workout_id` (FK, `on delete set null`), `sleep_quality`, `energy_level`, `available_minutes`, `created_at` | Um por início de treino; índice `(user_id, created_at desc)` |
 | `readiness_checkin_pains` | `checkin_id` (FK, `on delete cascade`), `body_region`, `intensity` | PK `(checkin_id, body_region)`; sem dor = nenhuma linha |
-| `session_adjustments` | `id`, `checkin_id` (FK, `cascade`), `workout_exercise_id` (FK, `set null`), `change_type`, `replacement_exercise_id` (FK `exercises`, só em `replaced`), `sets`, `reps_min`, `reps_max`, `reason` (pt-BR, até 300 caracteres) | O que a IA mudou e por quê. Gravado **só se o usuário aceitar** |
+| `session_adjustments` | `id`, `checkin_id` (FK, `cascade`), `workout_exercise_id` (FK, `cascade`), `change_type`, `replacement_exercise_id` (FK `exercises`, só em `replaced`), `sets`, `reps_min`, `reps_max` (nulos em `removed`), `reason` (pt-BR, até 300 caracteres) | O que a IA mudou e por quê; único por `(checkin_id, workout_exercise_id)`. Gravado **só se o usuário aceitar** |
 | `workout_sessions.readiness_checkin_id` | FK nova, nula, `on delete set null` | Liga a sessão finalizada ao check-in do dia |
 | `set_logs.effort` | coluna nova, nula, `check (effort in ('easy','ok','max'))` | Opcional por série |
 | `exercise_substitutions` | `session_id` (FK, `cascade`), `workout_exercise_id` (FK, `set null`), `replacement_exercise_id` (FK `exercises`), `reason` | PK `(session_id, workout_exercise_id)`; gravada ao finalizar |
@@ -88,7 +88,7 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 - Rascunho do dia (`set-log-draft.ts`): campo `readiness` (feito ou pulado), mantido ao restaurar e quando a carga sugerida muda; "Finalizar treino" envia o `readinessCheckinId`
 - `sendJsonRequestForData` (`src/lib/http/send-json-request.ts`): chamada do cliente que também valida o `data` da resposta
 - `GenerationStatus.sessionMinutes`: tempo da anamnese, usado como resposta padrão do tempo disponível
-- **Comportamento na 3B.1:** com `needsAdjustment`, o resumo diz "Seu check-in indica um dia mais leve. Ajuste séries e cargas como achar melhor…" (sem IA). A 3B.2 troca isso pela proposta de ajuste da IA
+- **Comportamento na 3B.1:** com `needsAdjustment`, o resumo dizia "Seu check-in indica um dia mais leve…" (sem IA). Desde a 3B.2, aparece a proposta de ajuste da IA no lugar
 - Validação: Postgres 16 local (gravação, ligação com a sessão, chamada antiga com 3 parâmetros, reuso do check-in, região inválida, treino de outro usuário, RLS) e o mesmo roteiro no Supabase real num bloco desfeito no fim (2026-11-24)
 
 ## 3B.2 — Ajuste do treino de hoje pela IA
@@ -108,6 +108,45 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 - **Cargas:** o ajuste não mexe em carga. Um exercício trocado começa sem carga sugerida (igual à troca na 3.4)
 - **Falha da IA** (timeout, 429, saída fora do schema): "Não foi possível ajustar o treino agora. Você pode treinar com o plano normal." O check-in continua gravado
 - **Modelo e esforço:** `CLAUDE_MODEL` (Haiku 5.5), esforço `medium`; medir uma chamada real antes de concluir a etapa (como na PLN-001). Instruções e candidatos com `cache_control`
+
+### Regras de implementação (3B.2, 2026-11-24)
+
+- **Quem pode pedir ajuste** (o servidor confere, nunca confia no cliente): check-in do usuário da sessão, **feito hoje** (`APP_TIME_ZONE`), cujo treino é do plano ativo, ainda sem sessão finalizada, e com `needsAdjustment` verdadeiro (recalculado no servidor). Fora disso → 404 (não é dele / treino fora do plano) ou 422 (outro dia, já finalizado, não precisa de ajuste). Assim nenhuma chamada à IA é gasta à toa
+- **Sem anamnese** (plano manual): sem tempo de referência e sem lista de candidatos; a IA só pode reduzir ou remover
+- **Chave dos exercícios para a IA:** o `slug` do exercício (único no treino); o servidor converte para o id da prescrição. Para cada exercício do treino vão músculos principais e equipamentos (função `list_exercise_profiles`)
+- **Proposta resolvida:** a API devolve, por mudança, o id da prescrição, o tipo, a prescrição final (séries e repetições; nula em `removed`), o motivo e, em `replaced`, o exercício novo com nome e mídia; mais `summary` (pt-BR) e `estimatedMinutes`. Sem mudanças é uma resposta válida ("a IA manteve o treino")
+- **Gravar, desfazer:** `PUT /api/readiness-checkins/:id/adjustment` `{ changes }` → `save_session_adjustments` troca **todas** as mudanças do check-in numa transação (`[]` = voltar ao original). O servidor revalida com as mesmas regras da proposta (exercício do treino, nunca mais que o plano, troca só por candidato, sobra ≥ 1 exercício). Depois de finalizado, não muda mais (422)
+- **Finalizar:** `finish_workout_session` lê os ajustes do check-in: séries de exercício removido são recusadas; o limite de séries é o ajustado; no exercício trocado, `set_logs.exercise_id` é o novo (vindo do banco, nunca do cliente) e `workout_exercise_id` continua o da prescrição. Histórico e carga sugerida seguem por `exercise_id`, então o trocado conta para o exercício novo
+- **No aparelho:** a proposta fica no rascunho do dia (`proposed` → `accepted` ou `declined`), para não chamar a IA de novo ao recarregar a página. O treino mostrado é o ajustado: removidos somem, reduzidos mostram a nova prescrição e o motivo, trocados mostram o exercício novo com "No lugar de {original} hoje", sem carga sugerida e sem o interruptor "Salvar carga para progredir" (ele é da prescrição original)
+- **Desfazer:** "Voltar ao treino original" (grava `[]`) aparece enquanto nenhuma série tiver check
+- **Falha da IA:** botão "Tentar de novo" e o treino normal continua disponível
+
+### Implementação (3B.2)
+
+- Migration `supabase/migrations/20261127010000_session_adjustments.sql`: tabela `session_adjustments` (RLS pelo dono do check-in; `select, insert, delete`; checks: `replaced` ⇔ exercício novo, `removed` sem prescrição, `reps_max ≥ reps_min`), `list_exercise_profiles(slugs)` (músculos principais e equipamentos, mesmo formato de `list_plan_candidates`), `save_session_adjustments(checkin, changes)` (troca tudo numa transação; prescrição precisa ser do treino do check-in; exercício novo precisa ter mídia; erro `WK002` depois de finalizado) e `finish_workout_session` seguindo os ajustes
+- `src/lib/readiness/adjustment-schema.ts` — saída da IA (`aiDailyAdjustmentSchema`), mudança aceita, proposta e o estado no rascunho (`draftAdjustmentSchema`)
+- `src/lib/readiness/adjustment-rules.ts` — `resolveAiChanges`, `findChangeIssues`, `findAiAdjustmentIssues` (códigos de problema só nos logs), `selectReplacementCandidates`
+- `src/lib/readiness/adjustment-prompt.ts` — instruções + lista de trocas no `system` (com cache); check-in, tempo e prescrição de hoje no pedido; limitações marcadas como dado do usuário (reaproveita `formatLimitations` e `formatCandidate` da 3.3)
+- `src/lib/readiness/adjustment-repository.ts`, `adjustment-service.ts`, `server-adjustment-service.ts`; rota `src/app/api/readiness-checkins/[id]/adjustment/route.ts` (`POST` propõe, `maxDuration = 130`; `PUT` grava ou desfaz)
+- `src/lib/readiness/adjusted-workout.ts` — `adjustWorkoutForDay` (treino de hoje a partir do ajuste aceito) e `omitPrescriptions` (tira carga sugerida e aumento de carga dos trocados e removidos)
+- Rascunho: `realignDraft`, `alignDraftToWorkout`, `hasCheckedSets` em `set-log-draft.ts`; `useWorkoutDraft` devolve o treino de hoje
+- Tela: `src/components/readiness/daily-adjustment-panel.tsx` (carregando, falha com "Tentar de novo", revisão antes/depois, aceito com desfazer, recusado), `adjustment-change-item.tsx`, `adjustment-request.ts`; aviso no card (`DailyChangeNotice`) e interruptor escondido no exercício trocado
+- `WorkoutExercise.dailyChange` (opcional): mudança de hoje mostrada no card
+- Script `scripts/measure-daily-adjustment.ts` (chamada real com a lógica do app, nada é gravado); custo e leitura do catálogo compartilhados com o script da PLN-001 em `scripts/lib/claude-usage.ts`
+- Validação: Postgres 16 local e Supabase real num bloco desfeito no fim (salvar, refazer, desfazer, troca registrada com o exercício novo, removido recusado ao finalizar, sem mudança depois de finalizar, RLS entre usuários)
+
+#### Medição (2026-11-24)
+
+Treino de exemplo com 6 exercícios (3×10, 60 s de descanso): supino reto com halteres, remada sentada na máquina, avanço com halteres, agachamento com halteres, elevação lateral e tríceps corda. Check-in: dormiu mal, energia baixa, dor moderada nos joelhos, 30 min (usual 60). Equipamentos: banco, polia, halteres, máquina, peso corporal e corda → 392 candidatos a troca (de 863), ~11 mil tokens no `system`. Haiku 5.5, esforço `medium`.
+
+| Chamada | Tempo | Entrada | Cache (escrita / leitura) | Saída | Custo |
+|---|---|---|---|---|---|
+| 1ª (cache frio) | 9,5 s | 357 | 10.978 / 0 | 1.887 | ~US$ 0,0024 |
+| 2ª (cache quente) | 6,0 s | 357 | 0 / 10.978 | 1.410 | ~US$ 0,0009 |
+
+- As duas respostas passaram em todas as regras (nenhum problema em `findAiAdjustmentIssues`), com duração estimada de 22 e 25 min (dentro dos 30)
+- Joelho respeitado nas duas: avanço removido e agachamento trocado (ponte de glúteo na 1ª, levantamento terra romeno com halteres na 2ª); os demais com 2 séries em vez de 3
+- Bem abaixo do teto de 120 s: esforço `medium` mantido
 
 ## 3B.3 — Percepção de esforço e autorregulação
 
@@ -164,7 +203,7 @@ O PRD previa `workout_sessions.ajustes`. Aqui ele vira a tabela `session_adjustm
 ## Checklist de aceite
 
 - [x] 3B.1: migration (`readiness_checkins`, `readiness_checkin_pains`, `workout_sessions.readiness_checkin_id`) aplicada no Supabase (2026-11-24); schema, regra `needsAdjustment`, serviço, repositório e API com testes; tela com pular, erro e carregamento, com testes (a conferência visual no navegador fica para o teste de ponta a ponta, 3B.5)
-- [ ] 3B.2: validação do ajuste (nunca aumenta, candidatos só da lista, sobra ≥ 1 exercício) com testes; revisão antes/depois com aceitar, manter e desfazer; fallback da IA; chamada real medida
+- [x] 3B.2: validação do ajuste (nunca aumenta, candidatos só da lista, sobra ≥ 1 exercício) com testes; revisão antes/depois com aceitar, manter e desfazer; fallback da IA; chamada real medida (2026-11-24); migration aplicada e testada no Supabase (a conferência visual no navegador fica para a 3B.5)
 - [ ] 3B.3: `set_logs.effort` e `finish_workout_session` atualizada; regra de autorregulação com testes (sobe, desce, mantém, sem esforço); motivo no card
 - [ ] 3B.4: pré-filtro e fallback com testes; troca e desfazer na tela; gravação da troca com histórico coerente
 - [ ] Teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)

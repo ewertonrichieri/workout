@@ -15,6 +15,14 @@ export interface PlannedExerciseInfo {
   media: ExerciseMediaItem[];
 }
 
+/** Today-only change accepted from the daily adjustment (step 3B.2); the plan keeps its prescription. */
+export interface DailyChange {
+  changeType: "reduced" | "replaced";
+  reason: string;
+  /** Name of the planned exercise when it was replaced; null for a reduction. */
+  originalName: string | null;
+}
+
 /** One exercise prescribed inside a workout (A, B, C...). */
 export interface WorkoutExercise {
   id: string;
@@ -28,6 +36,8 @@ export interface WorkoutExercise {
   notes: string | null;
   trackProgression: boolean;
   exercise: PlannedExerciseInfo;
+  /** Present only in today's adjusted workout (step 3B.2). */
+  dailyChange?: DailyChange;
 }
 
 export interface Workout {

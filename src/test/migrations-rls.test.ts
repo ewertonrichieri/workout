@@ -25,6 +25,7 @@ const USER_TABLES = [
   "set_logs",
   "readiness_checkins",
   "readiness_checkin_pains",
+  "session_adjustments",
 ];
 
 function readAllMigrations(): string {
@@ -101,6 +102,24 @@ describe("readiness check-in (step 3B.1)", () => {
     expect(definition).toContain("p_readiness_checkin_id uuid default null");
     expect(definition).toContain("security invoker");
     expect(sql).toContain("grant execute on function public.finish_workout_session(uuid, timestamptz, jsonb, uuid) to authenticated");
+  });
+});
+
+describe("daily adjustment (step 3B.2)", () => {
+  const sql = readAllMigrations();
+
+  it.each(["save_session_adjustments(uuid, jsonb)", "list_exercise_profiles(text[])"])("%s is executable only by authenticated users", (signature) => {
+    const name = signature.slice(0, signature.indexOf("("));
+    expect(sql.slice(sql.indexOf(`create or replace function public.${name}`))).toContain("security invoker");
+    expect(sql).toContain(`revoke all on function public.${signature} from public, anon`);
+    expect(sql).toContain(`grant execute on function public.${signature} to authenticated`);
+  });
+
+  it("lets the owner replace adjustments and makes finishing follow them", () => {
+    expect(sql).toContain("grant select, insert, delete on public.session_adjustments to authenticated");
+    const finish = sql.slice(sql.lastIndexOf("function public.finish_workout_session("));
+    expect(finish).toContain("coalesce(a.replacement_exercise_id, we.exercise_id)");
+    expect(finish).toContain("a.change_type is distinct from 'removed'");
   });
 });
 

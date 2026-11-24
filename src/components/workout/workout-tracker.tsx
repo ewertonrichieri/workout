@@ -2,11 +2,12 @@
 
 import { translate } from "@/lib/i18n/translate";
 import type { Workout } from "@/lib/training/plan-types";
-import { countCompletedExercises } from "@/lib/training/set-log-draft";
+import { countCompletedExercises, hasCheckedSets } from "@/lib/training/set-log-draft";
+import { omitPrescriptions } from "@/lib/readiness/adjusted-workout";
 import type { LoadIncreases } from "@/lib/training/load-increases";
 import type { SuggestedLoads } from "@/lib/training/suggested-loads";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ReadinessCheckinPanel } from "@/components/readiness/readiness-checkin-panel";
 import { FinishWorkoutButton } from "./finish-workout-button";
 import { useWorkoutDraft } from "./use-workout-draft";
@@ -34,12 +35,14 @@ function TrackerSummary({ completed, total, hasFinished }: { completed: number; 
   );
 }
 
-export function WorkoutTracker({ workout, suggestedLoads, loadIncreases = NO_INCREASES, sessionMinutes = null }: WorkoutTrackerProps) {
+export function WorkoutTracker({ workout: planned, suggestedLoads, loadIncreases = NO_INCREASES, sessionMinutes = null }: WorkoutTrackerProps) {
   const router = useRouter();
-  const { draft, changeSet, changeReadiness, clearDraft } = useWorkoutDraft(workout, suggestedLoads);
+  const day = useWorkoutDraft(planned, suggestedLoads);
+  const { draft, workout, changeSet } = day;
+  const todayIncreases = useMemo(() => omitPrescriptions(loadIncreases, day.changedIds), [loadIncreases, day.changedIds]);
   const [hasFinished, setHasFinished] = useState(false);
   const finish = () => {
-    clearDraft();
+    day.clearDraft();
     setHasFinished(true);
     // New suggested loads (step 2.7) come from the session just saved.
     router.refresh();
@@ -48,18 +51,18 @@ export function WorkoutTracker({ workout, suggestedLoads, loadIncreases = NO_INC
     setHasFinished(false);
     changeSet(...args);
   };
-  const completed = countCompletedExercises(draft, workout);
   return (
     <div className="flex flex-col gap-4">
-      <TrackerSummary completed={completed} total={workout.exercises.length} hasFinished={hasFinished} />
+      <TrackerSummary completed={countCompletedExercises(draft, workout)} total={workout.exercises.length} hasFinished={hasFinished} />
       <ReadinessCheckinPanel
-        workoutId={workout.id}
+        planned={planned}
         readiness={draft.readiness}
         hasStarted={draft.startedAt !== null}
+        canUndoAdjustment={!hasCheckedSets(draft)}
         sessionMinutes={sessionMinutes}
-        onChange={changeReadiness}
+        onChange={day.changeReadiness}
       />
-      <WorkoutExerciseGroups exercises={workout.exercises} draft={draft} suggestedLoads={suggestedLoads} loadIncreases={loadIncreases} onSetChange={changeSetAfterFinish} />
+      <WorkoutExerciseGroups exercises={workout.exercises} draft={draft} suggestedLoads={day.suggestedLoads} loadIncreases={todayIncreases} onSetChange={changeSetAfterFinish} />
       <FinishWorkoutButton draft={draft} onFinished={finish} />
     </div>
   );

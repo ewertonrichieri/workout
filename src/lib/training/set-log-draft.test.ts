@@ -142,7 +142,7 @@ describe("suggested loads in the draft", () => {
 });
 
 describe("check-in of the day in the draft (step 3B.1)", () => {
-  const CHECKIN = { status: "done" as const, checkinId: "44444444-4444-4444-8444-444444444444", needsAdjustment: true, hasSeverePain: false };
+  const CHECKIN = { status: "done" as const, checkinId: "44444444-4444-4444-8444-444444444444", needsAdjustment: true, hasSeverePain: false, adjustment: null };
 
   it("starts without a check-in and records a done or skipped one", async () => {
     const { setReadiness } = await import("./set-log-draft");
@@ -170,5 +170,39 @@ describe("check-in of the day in the draft (step 3B.1)", () => {
     const draft = updateSetEntry(updateSetEntry(createEmptyDraft(WORKOUT, TODAY), SECOND, 0, { repsDone: "8" }), SECOND, 0, { isDone: true });
     expect(buildFinishPayload(setReadiness(draft, CHECKIN), "2026-11-24T12:00:00.000Z").readinessCheckinId).toBe(CHECKIN.checkinId);
     expect(buildFinishPayload(setReadiness(draft, { status: "skipped" }), "2026-11-24T12:00:00.000Z").readinessCheckinId).toBeNull();
+  });
+});
+
+describe("today's workout changes (step 3B.2)", () => {
+  const LIGHTER = buildWorkout("A", 1, [buildWorkoutExercise(1, { sets: 1 })]);
+
+  it("realigns an untouched draft with the new suggestions and keeps the check-in", async () => {
+    const { realignDraft, setReadiness } = await import("./set-log-draft");
+    const draft = setReadiness(createEmptyDraft(WORKOUT, TODAY, { [FIRST]: [20, 20] }), { status: "skipped" });
+    const realigned = realignDraft(draft, LIGHTER, {});
+    expect(realigned.entries).toEqual({ [FIRST]: [{ repsDone: "", load: "", isDone: false }] });
+    expect(realigned.readiness).toEqual({ status: "skipped" });
+  });
+
+  it("keeps typed values of an edited draft and drops exercises out of today's workout", async () => {
+    const { markStarted, realignDraft } = await import("./set-log-draft");
+    const edited = markStarted(updateSetEntry(createEmptyDraft(WORKOUT, TODAY), FIRST, 0, { repsDone: "9" }), "2026-11-24T10:00:00.000Z");
+    const realigned = realignDraft(edited, LIGHTER, {});
+    expect(realigned.entries).toEqual({ [FIRST]: [{ repsDone: "9", load: "", isDone: false }] });
+    expect(realigned.startedAt).toBe("2026-11-24T10:00:00.000Z");
+  });
+
+  it("knows when a set was checked", async () => {
+    const { hasCheckedSets } = await import("./set-log-draft");
+    const typed = updateSetEntry(createEmptyDraft(WORKOUT, TODAY), SECOND, 0, { repsDone: "8" });
+    expect(hasCheckedSets(typed)).toBe(false);
+    expect(hasCheckedSets(updateSetEntry(typed, SECOND, 0, { isDone: true }))).toBe(true);
+  });
+
+  it("restores an accepted adjustment kept in the draft", () => {
+    const proposal = { checkinId: "44444444-4444-4444-8444-444444444444", summary: "Mais leve.", estimatedMinutes: 30, changes: [] };
+    const readiness = { status: "done" as const, checkinId: proposal.checkinId, needsAdjustment: true, hasSeverePain: false, adjustment: { status: "accepted" as const, proposal } };
+    const stored = { ...createEmptyDraft(WORKOUT, TODAY), readiness };
+    expect(restoreDraft(JSON.parse(JSON.stringify(stored)), WORKOUT, TODAY).readiness).toEqual(readiness);
   });
 });

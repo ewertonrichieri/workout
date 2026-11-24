@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { LOAD_DECIMAL_PLACES, MAX_LOAD_KG, MAX_REPS_DONE } from "@/lib/constants/training";
+import { draftAdjustmentSchema } from "@/lib/readiness/adjustment-schema";
 import { checkinResultSchema } from "@/lib/readiness/readiness-schema";
 import type { Workout } from "./plan-types";
 import type { FinishedSet, FinishWorkoutInput } from "./session-schema";
@@ -11,7 +12,7 @@ export type SetEntry = z.infer<typeof setEntrySchema>;
 
 /** Check-in of the day (step 3B.1): done (saved on the server) or skipped by the user. */
 export const draftReadinessSchema = z.discriminatedUnion("status", [
-  checkinResultSchema.extend({ status: z.literal("done") }),
+  checkinResultSchema.extend({ status: z.literal("done"), adjustment: draftAdjustmentSchema.nullable().default(null) }),
   z.object({ status: z.literal("skipped") }),
 ]);
 export type DraftReadiness = z.infer<typeof draftReadinessSchema>;
@@ -142,10 +143,24 @@ function alignSets(stored: readonly SetEntry[] | undefined, prescribedSets: numb
   });
 }
 
+/** One entry list per exercise of `workout`, as many sets as prescribed; typed values are kept. */
+export function alignDraftToWorkout(draft: WorkoutDraft, workout: Workout): WorkoutDraft {
+  const entries = Object.fromEntries(workout.exercises.map((exercise) => [exercise.id, alignSets(draft.entries[exercise.id], exercise.sets)]));
+  return { ...draft, entries };
+}
+
+/** After today's workout changes (step 3B.2): an untouched draft takes the new suggestions; an edited one keeps its values. */
+export function realignDraft(draft: WorkoutDraft, workout: Workout, suggestedLoads: SuggestedLoads): WorkoutDraft {
+  return draft.startedAt === null ? refreshUntouchedDraft(draft, workout, suggestedLoads) : alignDraftToWorkout(draft, workout);
+}
+
+export function hasCheckedSets(draft: WorkoutDraft): boolean {
+  return Object.values(draft.entries).some((entries) => entries.some((entry) => entry.isDone));
+}
+
 /** Stored draft (untrusted) for this workout and day, aligned with the current prescription; empty otherwise. */
 export function restoreDraft(stored: unknown, workout: Workout, date: string): WorkoutDraft {
   const parsed = workoutDraftSchema.safeParse(stored);
   if (!parsed.success || parsed.data.workoutId !== workout.id || parsed.data.date !== date) return createEmptyDraft(workout, date);
-  const entries = Object.fromEntries(workout.exercises.map((exercise) => [exercise.id, alignSets(parsed.data.entries[exercise.id], exercise.sets)]));
-  return { workoutId: workout.id, date, startedAt: parsed.data.startedAt, entries, readiness: parsed.data.readiness };
+  return alignDraftToWorkout({ ...parsed.data, workoutId: workout.id }, workout);
 }

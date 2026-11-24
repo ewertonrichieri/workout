@@ -1,3 +1,5 @@
+import type { ClaudeEffort } from "@/lib/constants/ai";
+
 /** Pre-workout check-in domain values and limits (spec 012, step 3B.1). */
 export const SLEEP_QUALITIES = ["poor", "ok", "good"] as const;
 export const ENERGY_LEVELS = ["low", "normal", "high"] as const;
@@ -21,3 +23,14 @@ export const DEFAULT_PAIN_INTENSITY: PainIntensity = "mild";
 
 /** Quick time options (decision D3); the assessment time is added when missing. */
 export const AVAILABLE_MINUTES_OPTIONS = [20, 30, 45, 60, 90] as const;
+
+/** Daily adjustment by AI (step 3B.2). */
+export const ADJUSTMENT_CHANGE_TYPES = ["reduced", "removed", "replaced"] as const;
+export type AdjustmentChangeType = (typeof ADJUSTMENT_CHANGE_TYPES)[number];
+export const ADJUSTMENT_OPERATION = "readiness.adjust";
+export const MAX_ADJUSTMENT_REASON_LENGTH = 300;
+export const MAX_ADJUSTMENT_SUMMARY_LENGTH = 300;
+/** A workout never has more exercises than a generated one (MAX_EXERCISES_PER_WORKOUT). */
+export const MAX_ADJUSTMENT_CHANGES = 12;
+/** Fits well within the 120 s AI budget for a short prompt; reevaluate after the real call. */
+export const ADJUSTMENT_EFFORT: ClaudeEffort = "medium";

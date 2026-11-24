@@ -5,14 +5,22 @@ import {
   mapEnabledMedia,
 } from "@/lib/catalog/exercises/exercise-row-mapping";
 import { PLAN_GOALS, PLAN_ORIGINS } from "@/lib/constants/training";
-import type { ActivePlan, Workout, WorkoutExercise } from "./plan-types";
+import type { ActivePlan, PlannedExerciseInfo, Workout, WorkoutExercise } from "./plan-types";
 
 /** Columns selected for the active plan with its workouts, prescriptions and exercise media. */
 const WORKOUT_EXERCISE_COLUMNS = "id, position, category, sets, reps_min, reps_max, rest_seconds, notes, track_progression";
-const PLANNED_EXERCISE_COLUMNS = `id, slug, name_pt, exercise_media(${EXERCISE_MEDIA_COLUMNS})`;
+export const PLANNED_EXERCISE_COLUMNS = `id, slug, name_pt, exercise_media(${EXERCISE_MEDIA_COLUMNS})`;
 export const ACTIVE_PLAN_COLUMNS =
   `id, goal, origin, starts_on, valid_until, ` +
   `workouts(id, label, position, workout_exercises(${WORKOUT_EXERCISE_COLUMNS}, exercises(${PLANNED_EXERCISE_COLUMNS})))`;
+
+export const plannedExerciseRowSchema = z.object({ id: z.uuid(), slug: z.string(), name_pt: z.string(), exercise_media: z.array(exerciseMediaRowSchema) });
+
+/** Exercise shown in a workout card: enabled media only, best priority first. */
+export function mapPlannedExercise(row: z.infer<typeof plannedExerciseRowSchema>): PlannedExerciseInfo {
+  const media = mapEnabledMedia(row.exercise_media);
+  return { id: row.id, slug: row.slug, name: row.name_pt, media, coverMedia: media[0] ?? null };
+}
 
 const workoutExerciseRowSchema = z.object({
   id: z.uuid(),
@@ -24,7 +32,7 @@ const workoutExerciseRowSchema = z.object({
   rest_seconds: z.number().int().nullable(),
   notes: z.string().nullable(),
   track_progression: z.boolean(),
-  exercises: z.object({ id: z.uuid(), slug: z.string(), name_pt: z.string(), exercise_media: z.array(exerciseMediaRowSchema) }),
+  exercises: plannedExerciseRowSchema,
 });
 
 const planRowSchema = z.object({
@@ -39,7 +47,6 @@ const planRowSchema = z.object({
 const byPosition = (left: { position: number }, right: { position: number }) => left.position - right.position;
 
 function mapWorkoutExercise(row: z.infer<typeof workoutExerciseRowSchema>): WorkoutExercise {
-  const media = mapEnabledMedia(row.exercises.exercise_media);
   return {
     id: row.id,
     position: row.position,
@@ -50,7 +57,7 @@ function mapWorkoutExercise(row: z.infer<typeof workoutExerciseRowSchema>): Work
     restSeconds: row.rest_seconds,
     notes: row.notes,
     trackProgression: row.track_progression,
-    exercise: { id: row.exercises.id, slug: row.exercises.slug, name: row.exercises.name_pt, media, coverMedia: media[0] ?? null },
+    exercise: mapPlannedExercise(row.exercises),
   };
 }
 
