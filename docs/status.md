@@ -8,7 +8,7 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **POS-002** — regras do terra romeno e da remada (decisões + vídeos do usuário; fecha a 5.5) → `specs/014-correcao-postura.md`
+1. **Fase 5B** — previsão de evolução (V3; spec a criar e aprovar) → `planning/001-planejamento-inicial.md`
 2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
 3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
@@ -17,6 +17,8 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Concluído recentemente
 
+- **5.7 Análise por padrão de movimento** — agachar, dobrar o quadril (terra romeno, stiff) e puxar (remadas); regras comparando com a 1ª repetição, validadas com o vídeo do usuário (12/12 e 14 puxadas com os avisos certos); referências da literatura só como "Para conferir"; métricas por padrão na API e no banco (migration testada num bloco desfeito e aplicada); Fase 5 concluída → `specs/014-correcao-postura.md`
+- **5.5 Histórico de técnica** — completa com as regras novas da 5.7 (POS-002 fechada) → `specs/014-correcao-postura.md`
 - **5.6 Teste de ponta a ponta (Fase 5)** — login, 401/400/422, câmera, voz, parada automática, análise real da IA, banco, histórico com desfazer e apagar testados no navegador contra o Supabase real; 3 defeitos de texto da IA corrigidos; dados temporários apagados → `specs/014-correcao-postura.md`
 - **5.4 Análise pela IA + replay** — `POST /api/technique-analyses` só com números, regras reaplicadas no servidor, IA filtrada (correções só do que as regras acusaram), limite de 10 em 24 h, gravação só quando a IA conclui; replay em memória com o esqueleto e as repetições a corrigir em vermelho; chamada real ~5–6 s e ~US$ 0,0008; migration testada num bloco desfeito e aplicada no Supabase → `specs/014-correcao-postura.md`
 - **5.3 Alertas falados ao vivo** — contagem regressiva e repetições faladas em pt-BR, um alerta curto por repetição ("Desça mais", "Peito para cima", "Mais devagar") com intervalo mínimo de 4 s, botão de som lembrado no aparelho, alertas também na tela → `specs/014-correcao-postura.md`
@@ -75,7 +77,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
-- **5.5 Histórico de técnica** — histórico com apagar/desfazer entregue; faltam as regras do terra romeno e da remada (POS-002) → `specs/014-correcao-postura.md`
 - **0.7 Autenticação** — código na `main`; Google configurado (AUTH-001 fechada); falta só a AUTH-002 (teste do cadastro por e-mail) → `specs/007-autenticacao.md`
 
 ---
@@ -84,7 +85,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **POS-002** — regras do terra romeno e da remada curvada (fecha a 5.5) → `specs/014-correcao-postura.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`

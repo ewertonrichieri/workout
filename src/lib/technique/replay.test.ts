@@ -1,14 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { buildReplayMarkers, findFrameAt, findMarkerAt, pickRecorderMimeType, type ReplayFrame } from "./replay";
-import type { SquatRep } from "./squat/squat-rep-tracker";
+import { buildRep } from "./patterns/test-reps";
+import type { TechniqueRep } from "./rep-types";
 
 const FRAMES: ReplayFrame[] = [0, 100, 200, 300].map((offsetMs) => ({ offsetMs, landmarks: [{ x: offsetMs / 1000, y: 0, visibility: 1 }] }));
 
-function rep(repNumber: number, startMs: number, endMs: number): SquatRep {
-  return {
-    repNumber, startMs, bottomMs: startMs + 500, endMs, descentMs: 500, minKneeAngle: 80, minThighAngle: -5, maxTrunkLean: 30,
-    maxKneeTravelRatio: -0.1, maxHeelRiseRatio: 0, frameCount: 30, seenFrameCount: 30, isEvaluated: true,
-  };
+function rep(repNumber: number, startMs: number, endMs: number): TechniqueRep {
+  return buildRep(repNumber, { startMs, bottomMs: startMs + 500, endMs, descentMs: 500 });
 }
 
 describe("replay helpers", () => {

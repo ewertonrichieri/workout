@@ -17,7 +17,7 @@ export interface SideJoints {
 const RIGHT = { shoulder: POSE_LANDMARK.rightShoulder, hip: POSE_LANDMARK.rightHip, knee: POSE_LANDMARK.rightKnee, ankle: POSE_LANDMARK.rightAnkle, heel: POSE_LANDMARK.rightHeel, toe: POSE_LANDMARK.rightFootIndex };
 const LEFT = { shoulder: POSE_LANDMARK.leftShoulder, hip: POSE_LANDMARK.leftHip, knee: POSE_LANDMARK.leftKnee, ankle: POSE_LANDMARK.leftAnkle, heel: POSE_LANDMARK.leftHeel, toe: POSE_LANDMARK.leftFootIndex };
 
-/** Fictional side-view pose: the chosen side seen, the other side hidden (as the camera sees a side view). */
+/** Fictional side-view pose (tests only): the chosen side seen, the other side hidden (as the camera sees a side view). */
 export function buildSidePose(joints: SideJoints, side: "left" | "right" = "right", visibility = SEEN): PoseLandmark[] {
   const landmarks: PoseLandmark[] = Array.from({ length: POSE_LANDMARK_COUNT }, () => ({ x: 0.5, y: 0.5, visibility: HIDDEN }));
   const indexes = side === "right" ? RIGHT : LEFT;

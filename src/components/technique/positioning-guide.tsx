@@ -2,15 +2,15 @@ import { PRIMARY_BUTTON_CLASS } from "@/components/readiness/readiness-styles";
 import type { TechniqueRuleSetId } from "@/lib/constants/technique";
 import { translate, type TranslationKey } from "@/lib/i18n/translate";
 
-/** Guide lines of each supported exercise and camera view (only the squat from the side in 5.1–5.4). */
-const GUIDE_LINES: Readonly<Record<TechniqueRuleSetId, readonly TranslationKey[]>> = {
-  squat: [
-    "technique.guide.squatSide.side",
-    "technique.guide.squatSide.distance",
-    "technique.guide.squatSide.fullBody",
-    "technique.guide.squatSide.light",
-  ],
-};
+const SIDE_VIEW_LINES: readonly TranslationKey[] = [
+  "technique.guide.squatSide.side",
+  "technique.guide.squatSide.distance",
+  "technique.guide.squatSide.fullBody",
+  "technique.guide.squatSide.light",
+];
+
+/** Every supported pattern is filmed from the side, with the same positioning (D13). */
+const GUIDE_LINES: Readonly<Record<TechniqueRuleSetId, readonly TranslationKey[]>> = { squat: SIDE_VIEW_LINES, hinge: SIDE_VIEW_LINES, row: SIDE_VIEW_LINES };
 
 /** Phone lying on the floor, sideways to a standing person (the text carries the same information). */
 function SideViewIllustration() {

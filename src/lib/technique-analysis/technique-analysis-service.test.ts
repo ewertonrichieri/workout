@@ -20,7 +20,7 @@ const AI_OUTPUT: AiTechniqueAnalysis = {
   corrections: [{ issue: "shallow_depth", repNumbers: [2], text: "Desça até a coxa ficar paralela." }],
   mainTip: "Desça um pouco mais.",
 };
-const INPUT = { exerciseSlug: "barbell-back-squat", cameraView: "side", reps: [buildRepMetrics(1), buildRepMetrics(2, { minThighAngle: 20 })] };
+const INPUT = { exerciseSlug: "barbell-back-squat", cameraView: "side", reps: [buildRepMetrics(1), buildRepMetrics(2, {}, { minThighAngle: 20 })] };
 
 interface SetupOptions {
   aiError?: Error;
@@ -75,6 +75,22 @@ describe("technique analysis service (step 5.4)", () => {
     const tampered = { ...INPUT, reps: [buildRepMetrics(1), buildRepMetrics(2)] };
     const result = await service.analyze(USER_ID, tampered);
     expect(result.reps.every((rep) => rep.issues.length === 0)).toBe(true);
+  });
+
+  it("analyzes a hip hinge set with the hinge rules and metrics (D13)", async () => {
+    const { service, generate, saveAnalysis } = setup();
+    const hingeRep = (repNumber: number, minHipAngle: number) => ({ ...buildRepMetrics(repNumber), metrics: { minHipAngle, minKneeAngle: 150, maxTrunkLean: 60 } });
+    const result = await service.analyze(USER_ID, { exerciseSlug: "barbell-romanian-deadlift", cameraView: "side", reps: [hingeRep(1, 75), hingeRep(2, 110)] });
+    expect(result.reps[1]?.issues).toEqual([{ issue: "hinge_short_range", severity: "warning" }]);
+    const [request] = generate.mock.calls[0] as unknown as [{ prompt: string }];
+    expect(request.prompt).toContain("Rep 2: hip 110° at the bottom");
+    expect(saveAnalysis).toHaveBeenCalled();
+  });
+
+  it("rejects metrics that do not belong to the exercise's pattern (400)", async () => {
+    const { service, generate } = setup();
+    await expect(service.analyze(USER_ID, { ...INPUT, exerciseSlug: "barbell-romanian-deadlift" })).rejects.toBeInstanceOf(InvalidInputError);
+    expect(generate).not.toHaveBeenCalled();
   });
 
   it("rejects invalid input and exercises without technique rules (400)", async () => {

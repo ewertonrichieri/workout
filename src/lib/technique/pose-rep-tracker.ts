@@ -1,12 +1,11 @@
-import type { TechniqueRuleSetId } from "@/lib/constants/technique";
+import type { MovementPattern } from "./patterns/pattern-types";
 import type { PoseLandmark } from "./body-framing";
-import { measureSquatFrame } from "./squat/squat-frame";
-import { createSquatRepTracker, type SquatRep } from "./squat/squat-rep-tracker";
+import { createRepTracker } from "./rep-tracker";
+import type { TechniqueRep } from "./rep-types";
 
-/** Reps of any supported exercise; only the squat in steps 5.2–5.4 (deadlift and row join in 5.5). */
-export type TechniqueRep = SquatRep;
+export type { TechniqueRep };
 
-/** Feeds raw MediaPipe poses to the rep counter of the exercise. */
+/** Feeds raw MediaPipe poses to the rep counter of the movement pattern. */
 export interface PoseRepTracker {
   addPose: (landmarks: readonly PoseLandmark[], aspectRatio: number, timestampMs: number) => void;
   readonly repCount: number;
@@ -14,20 +13,14 @@ export interface PoseRepTracker {
   finish: () => TechniqueRep[];
 }
 
-const TRACKER_FACTORIES: Readonly<Record<TechniqueRuleSetId, () => PoseRepTracker>> = {
-  squat: () => {
-    const tracker = createSquatRepTracker();
-    return {
-      addPose: (landmarks, aspectRatio, timestampMs) => tracker.addFrame({ timestampMs, measures: measureSquatFrame(landmarks, aspectRatio) }),
-      get repCount() {
-        return tracker.repCount;
-      },
-      isIdle: (nowMs) => tracker.isIdle(nowMs),
-      finish: () => tracker.finish(),
-    };
-  },
-};
-
-export function createPoseRepTracker(ruleSetId: TechniqueRuleSetId): PoseRepTracker {
-  return TRACKER_FACTORIES[ruleSetId]();
+export function createPoseRepTracker(pattern: MovementPattern): PoseRepTracker {
+  const tracker = createRepTracker(pattern);
+  return {
+    addPose: (landmarks, aspectRatio, timestampMs) => tracker.addFrame({ timestampMs, measures: pattern.measureFrame(landmarks, aspectRatio) }),
+    get repCount() {
+      return tracker.repCount;
+    },
+    isIdle: (nowMs) => tracker.isIdle(nowMs),
+    finish: () => tracker.finish(),
+  };
 }

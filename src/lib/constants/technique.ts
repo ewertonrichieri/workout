@@ -32,7 +32,8 @@ export const MAX_RECORDING_SECONDS = 90;
 export const CAMERA_VIEWS = ["side", "front"] as const;
 export type CameraView = (typeof CAMERA_VIEWS)[number];
 
-export const TECHNIQUE_RULE_SET_IDS = ["squat"] as const;
+/** Movement patterns (D13): every exercise of a pattern shares its rules. */
+export const TECHNIQUE_RULE_SET_IDS = ["squat", "hinge", "row"] as const;
 export type TechniqueRuleSetId = (typeof TECHNIQUE_RULE_SET_IDS)[number];
 
 export interface TechniqueRuleSet {
@@ -40,10 +41,27 @@ export interface TechniqueRuleSet {
   cameraView: CameraView;
 }
 
-/** Decision D3: exercises supported in steps 5.1 to 5.4 (the deadlift and the row come in 5.5). */
+const SQUAT: TechniqueRuleSet = { id: "squat", cameraView: "side" };
+const HINGE: TechniqueRuleSet = { id: "hinge", cameraView: "side" };
+const ROW: TechniqueRuleSet = { id: "row", cameraView: "side" };
+
+/** Decisions D3 and D15: supported exercises and their movement pattern (one-arm rows stay out: one arm hides the other). */
 export const TECHNIQUE_EXERCISES: Readonly<Record<string, TechniqueRuleSet>> = {
-  "barbell-back-squat": { id: "squat", cameraView: "side" },
-  "dumbbell-goblet-squat": { id: "squat", cameraView: "side" },
+  "barbell-back-squat": SQUAT,
+  "dumbbell-goblet-squat": SQUAT,
+  "barbell-romanian-deadlift": HINGE,
+  "dumbbell-romanian-deadlift": HINGE,
+  "stiff-leg-deadlift": HINGE,
+  "dumbbell-stiff-leg-deadlift": HINGE,
+  "single-dumbbell-stiff-leg-deadlift": HINGE,
+  "barbell-bent-over-row": ROW,
+  "barbell-underhand-bent-over-row": ROW,
+  "barbell-reverse-grip-bent-over-row": ROW,
+  "ez-bar-reverse-grip-bent-over-row": ROW,
+  "smith-bent-over-row": ROW,
+  "smith-reverse-grip-bent-over-row": ROW,
+  "dumbbell-bent-over-row": ROW,
+  "dumbbell-palm-rotational-bent-over-row": ROW,
 };
 
 /** Front camera: the user sees the framing while positioning the phone. */

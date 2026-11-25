@@ -2,7 +2,7 @@
 
 **Etapas:** 5.0 a 5.6 (checklist `docs/reference/001-checklist-implementacao.md`). Promovida de `docs/planning/001-planejamento-inicial.md` (Fase 5).
 
-**Status:** aprovada. Decisões D1 a D12 confirmadas pelo usuário em 2026-11-25 (D5 provisória, calibrada na 5.2).
+**Status:** concluída (Fase 5 testada de ponta a ponta em 2026-11-25). Decisões D1 a D15 aprovadas pelo usuário em 2026-11-25 (D5 calibrada na 5.2; D13–D15 na 5.7).
 
 **Pré-requisito:** Fase 4 concluída (2026-11-25).
 
@@ -137,6 +137,9 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 | D10 | Cruzar com o treino adaptativo (ex.: tronco cai nas últimas reps → sugerir menos carga) | **Só texto na análise** ("considere reduzir a carga"). Nada muda sozinho na carga ou no plano |
 | D11 | Limite de análises pela IA | **10 em 24 horas** por usuário (`technique.analyze`) |
 | D12 | Modelo da análise | `claude-haiku-5-5` (o padrão do app), esforço `low`; reavaliar com a chamada real na 5.4 |
+| D13 | Calibração por padrão de movimento (aprovada em 2026-11-25) | A análise é por **padrão** (agachar, dobrar o quadril, puxar), não por exercício: as variações do mesmo padrão usam as mesmas regras. Para dobrar o quadril e puxar, as regras **comparam cada repetição com a 1ª avaliada da série** (não dependem do corpo nem da câmera) e aparecem como **"Atenção"**; um aviso de referência da literatura por padrão aparece só como **"Para conferir"** |
+| D14 | Regras de dobrar o quadril e puxar (calibradas com o vídeo do usuário de 2026-11-25) | **Dobrar o quadril** (conta pelo ângulo do quadril, como o agachamento: 160°/150°/140°): amplitude caindo (quadril 25°+ mais aberto que na 1ª), joelho dobrando mais (15°+ mais dobrado que na 1ª), descida rápida (< 0,7 s); referência: joelho abaixo de 140° = parece agachamento (Para conferir). **Puxar** (conta pela altura do punho em relação ao quadril, em comprimentos de tronco: parado ≤ −0,20, saiu > −0,15, conta se chegar a ≥ −0,10): puxada curta (punho abaixo de +0,10), tronco subindo para puxar (8°+ em relação ao tronco parado antes da puxada); referência: tronco a menos de 40° da vertical = mais em pé que o comum (Para conferir) |
+| D15 | Exercícios liberados (aprovado em 2026-11-25) | Dobrar o quadril: terra romeno com barra e com halteres, stiff com barra, com halteres e com um halter. Puxar: remada curvada com barra (pronada, supinada e reversa), com barra EZ, no Smith (pronada e reversa), com halteres e com rotação de punho. Ficam de fora as remadas unilaterais (de lado, um braço esconde o outro) e o good morning |
 
 ## Checklist de aceite
 
@@ -145,14 +148,15 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - [x] 5.2 (2026-11-25): cálculo de ângulos, máquina de contagem e métricas do agachamento com testes (sequências de pontos fictícias: repetição completa, parcial, ruído, ponto pouco visível → "não avaliada"); D5 calibrada com vídeos reais do usuário (POS-001)
 - [x] 5.3 (2026-11-25): contagem e alertas falados com intervalo mínimo, botão de som, fallback só na tela, com testes das regras
 - [x] 5.4 (2026-11-25): rota com 401/400/422/429/502; servidor reclassificando os erros; resposta da IA filtrada pelo vocabulário; migration com RLS testada num bloco desfeito e aplicada no Supabase; replay com erros marcados; chamada real medida
-- [ ] 5.5: histórico paginado no detalhe do exercício (com apagar + desfazer) — **entregue em 2026-11-25**; regras do terra romeno e da remada curvada com testes — pendente (POS-002)
+- [x] 5.5 (2026-11-25): histórico paginado no detalhe do exercício (com apagar + desfazer); regras do terra romeno e da remada curvada entregues na 5.7 (POS-002 fechada)
 - [x] 5.6 (2026-11-25): teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
+- [x] 5.7 (2026-11-25): análise genérica por padrão de movimento (D13–D15): métricas, contagem, regras, alertas falados, resumo, prompt, API e banco por padrão; dobrar o quadril e puxar validados com o vídeo do usuário; agachamento sem mudança de comportamento
 
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| POS-002 | **Regras do terra romeno e da remada curvada (D3, parte da 5.5).** Antes de codar: decidir com o usuário o que medir em cada exercício (D13/D14 propostas na conversa de 2026-11-25) e calibrar com vídeos de lado do usuário, como a POS-001. Hoje o código é só do agachamento: as métricas por repetição, as colunas de `technique_reps` e o prompt precisam virar genéricos por exercício | `src/lib/technique/`, `src/lib/technique-analysis/`, migration nova | Média (fecha a 5.5) |
+| — | Nenhuma (POS-002 fechada em 2026-11-25 pela etapa 5.7) | — | — |
 
 ## Atualizações
 
@@ -254,5 +258,16 @@ Defeitos achados e corrigidos (com testes): o texto de uma correção foi **cort
 
 Não testado aqui: o link "Analisar minha execução" dentro do card do treino (precisa de um plano com agachamento; coberto por testes de componente) e o limite de 10 análises em 24 h (mesmo mecanismo das fases 3 e 4, coberto por testes). Usuário e todos os dados dele apagados no fim (contagens zeradas).
 - **Pendências:** nenhuma nova (POS-002 continua).
+
+### 2026-11-25 — 5.7 Análise por padrão de movimento (D13–D15)
+
+- **Pedido:** fechar a POS-002 sem gravar um vídeo por exercício; calibração por padrão de movimento (aprovada pelo usuário). Esforço `high`.
+- **Pesquisa:** não há limites prontos e validados para câmera 2D. Projetos abertos com MediaPipe usam números sem fonte (ex.: quadril 165°/100° no terra) e nenhum tem a remada; estudos dão faixas (terra romeno com joelho quase reto ~145°+, remada com tronco 40–65° da vertical). Esses números entraram só como referência ("Para conferir").
+- **Mudança (código):** a análise virou genérica por **padrão de movimento** (`src/lib/technique/patterns/`): cada padrão define como medir o quadro (sinal de contagem + valores), a contagem com folga (direção, repouso, saída, alvo), as métricas por repetição (mín./máx., algumas relativas ao último quadro parado), as regras, os alertas falados e o texto para a IA. Um único contador (`rep-tracker.ts`) serve aos três. **Agachamento:** mesmas regras e limites de antes (testes portados). **Dobrar o quadril** (terra romeno, stiff) e **puxar** (remadas com barra, Smith e halteres, sem as unilaterais): regras da D14, comparando com a 1ª repetição avaliada, como "Atenção"; referências da literatura como "Para conferir". Alertas falados novos: "Quadril para trás", "Joelho mais reto", "Puxe até a barriga", "Tronco parado". Resumo com as medidas de cada padrão (quadril e joelho; até onde a mão subiu e quanto o tronco subiu). Prompt da IA genérico, com as regras e os números do padrão; a IA só cita profissional quando há limitação na anamnese. Nova regra para todos: repetição com menos de 0,4 s não conta (um quadro com ruído virou uma "puxada").
+- **API e banco:** cada repetição manda `metrics` (nome → valor, só os do padrão do exercício, dentro das faixas; senão 400). Migration `20261203000000_technique_patterns.sql`: métricas numa tabela própria (`technique_rep_metrics`, uma linha por métrica, RLS), colunas fixas do agachamento removidas (tabela vazia), vocabulário de problemas ampliado e `save_technique_analysis` atualizada; testada num bloco desfeito (6 métricas e 3 problemas gravados, outro usuário não viu nada, métrica desconhecida recusada, apagar levou as métricas junto) e aplicada no Supabase.
+- **Validação com o vídeo do usuário** (de lado, 90 s, só números; o código real do app rodou quadro a quadro): **dobrar o quadril** — 12 de 12 repetições, e cada grupo recebeu só o seu aviso (3 certas sem aviso; 3 curtas → amplitude caindo; 3 com o joelho dobrando → joelho dobrando mais; 3 rápidas → descida rápida); "joelho como agachamento" em todas, como "Para conferir" (o joelho chegou a ~90° já nas certas). **Puxar** — 14 puxadas (4 normais sem aviso, 3 curtas → puxada curta, 3 até o ombro → tronco subindo 9–13°, 4 extras sem aviso); "tronco mais em pé" em todas, como "Para conferir" (~35° da vertical).
+- **Chamada real da IA** (séries fictícias, `scripts/measure-technique-analysis.ts --pattern=hinge|row`): 3,6–4,6 s, ~US$ 0,0005–0,0006 por análise; correções só do que as regras acusaram. Corrigido: a IA sugeriu "professional" (em inglês) sem limitação informada.
+- **Não testado aqui:** a rota com login e o banco real para o terra romeno e a remada juntos (o caminho é o mesmo do agachamento, testado na 5.6; a função do banco foi testada no bloco desfeito).
+- **Pendências:** nenhuma. Vídeo e quadros apagados no fim.
 
 ## Fim da spec

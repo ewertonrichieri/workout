@@ -4,8 +4,8 @@ import type { CameraView } from "@/lib/constants/technique";
 import type { TechniqueIssue } from "@/lib/constants/technique-rules";
 import { RepositoryError } from "@/lib/errors/app-errors";
 import { translate } from "@/lib/i18n/translate";
-import type { SquatRep } from "@/lib/technique/squat/squat-rep-tracker";
-import type { RepIssue } from "@/lib/technique/squat/squat-rules";
+import type { RepIssue } from "@/lib/technique/rep-rules";
+import type { TechniqueRep } from "@/lib/technique/rep-types";
 import { toRepMetrics } from "./rep-metrics";
 
 /** One finished analysis (decision D9: only analyses the AI completed are saved). */
@@ -14,7 +14,7 @@ export interface TechniqueAnalysisRecord {
   cameraView: CameraView;
   overallScore: number;
   mainTip: string;
-  reps: Array<{ rep: SquatRep; score: number | null; issues: RepIssue[] }>;
+  reps: Array<{ rep: TechniqueRep; score: number | null; issues: RepIssue[] }>;
   strengths: string[];
   corrections: Array<{ issue: TechniqueIssue; repNumbers: number[]; text: string }>;
 }
@@ -36,11 +36,7 @@ function toRepRows(reps: TechniqueAnalysisRecord["reps"]) {
       is_evaluated: rep.isEvaluated,
       duration_ms: metrics.durationMs,
       descent_ms: metrics.descentMs,
-      min_knee_angle: metrics.minKneeAngle,
-      min_thigh_angle: metrics.minThighAngle,
-      max_trunk_lean: metrics.maxTrunkLean,
-      max_knee_travel_ratio: metrics.maxKneeTravelRatio,
-      max_heel_rise_ratio: metrics.maxHeelRiseRatio,
+      metrics: metrics.metrics,
       issues: issues.map((item) => ({ issue: item.issue, severity: item.severity })),
     };
   });
