@@ -558,7 +558,8 @@
       "camera_busy": "A câmera está sendo usada por outro aplicativo. Feche-o e tente de novo.",
       "unavailable": "Não conseguimos ligar a câmera agora. Tente de novo.",
       "model": "Não conseguimos preparar a análise neste aparelho agora. Seu treino continua normal.",
-      "retry": "Tentar de novo"
+      "retry": "Tentar de novo",
+      "notSupported": "Este exercício ainda não tem análise de execução."
     },
     "summary": {
       "title": "Resumo da série",
@@ -588,7 +589,6 @@
         "trunk_lean_fatigue": "o tronco inclinou cerca de {degrees}° a mais que na 1ª repetição (sinal de cansaço)",
         "knee_forward": "o joelho passou da ponta do pé (comum em muitas pessoas)"
       },
-      "aiNextStep": "A nota e as dicas da IA chegam na próxima etapa.",
       "recordAgain": "Gravar de novo"
     },
     "cues": {
@@ -600,6 +600,30 @@
       "on": "Alertas falados: ligados",
       "off": "Alertas falados: desligados",
       "unsupported": "Seu navegador não fala os alertas: eles aparecem só na tela."
+    },
+    "analysis": {
+      "loading": "Analisando sua série com a IA...",
+      "title": "Análise da IA",
+      "score": "Nota da série: {score}/{max}",
+      "repScore": "Nota: {score}/{max}",
+      "mainTip": "Dica principal",
+      "strengths": "O que foi bem",
+      "corrections": "O que corrigir",
+      "repsOne": "({reps} repetição)",
+      "repsOther": "({reps} repetições)",
+      "ordinal": "{number}ª",
+      "failed": "Não conseguimos gerar a análise agora. O resumo e o replay continuam aqui.",
+      "retry": "Tentar de novo",
+      "limitationsNotice": "Você informou uma lesão ou limitação: confira a execução com um profissional antes de aumentar a carga."
+    },
+    "replay": {
+      "title": "Replay",
+      "videoLabel": "Replay da série com o esqueleto desenhado",
+      "legend": "Em vermelho: repetições com ponto a corrigir ou atenção.",
+      "jumpLabel": "Ir para uma repetição",
+      "goToRep": "Ir para a {number}ª repetição",
+      "goToRepWithCorrection": "Ir para a {number}ª repetição (com ponto a corrigir)",
+      "unavailable": "Seu navegador não permite gravar o replay. O resumo e a análise continuam normais."
     }
   }
 }

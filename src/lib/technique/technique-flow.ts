@@ -1,5 +1,6 @@
 import type { CameraErrorReason } from "./camera-support";
 import type { TechniqueRep } from "./pose-rep-tracker";
+import type { TechniqueReplay } from "./replay";
 
 /**
  * Screens of the technique analysis (spec 014, flow): privacy and limits notice → positioning guide →
@@ -11,7 +12,7 @@ export type TechniqueFlowState =
   | { phase: "framing" }
   | { phase: "countdown" }
   | { phase: "recording" }
-  | { phase: "summary"; reps: TechniqueRep[] }
+  | { phase: "summary"; reps: TechniqueRep[]; replay: TechniqueReplay | null }
   | { phase: "camera_error"; reason: CameraErrorReason }
   | { phase: "model_error" };
 
@@ -21,7 +22,7 @@ export type TechniqueFlowEvent =
   | { type: "start_countdown" }
   | { type: "countdown_done" }
   | { type: "framing_lost" }
-  | { type: "recording_finished"; reps: TechniqueRep[] }
+  | { type: "recording_finished"; reps: TechniqueRep[]; replay: TechniqueReplay | null }
   | { type: "record_again" }
   | { type: "camera_failed"; reason: CameraErrorReason }
   | { type: "model_failed" }
@@ -50,7 +51,7 @@ function reduceFailure(state: TechniqueFlowState, event: TechniqueFlowEvent): Te
 }
 
 export function reduceTechniqueFlow(state: TechniqueFlowState, event: TechniqueFlowEvent): TechniqueFlowState {
-  if (event.type === "recording_finished") return state.phase === "recording" ? { phase: "summary", reps: event.reps } : state;
+  if (event.type === "recording_finished") return state.phase === "recording" ? { phase: "summary", reps: event.reps, replay: event.replay } : state;
   const failure = reduceFailure(state, event);
   if (failure) return failure;
   const transition = TRANSITIONS[event.type];

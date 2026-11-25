@@ -8,7 +8,7 @@ const FRAME_MS = 100;
 const ONE_REP = [STANDING, STANDING, PARALLEL_BOTTOM, PARALLEL_BOTTOM, STANDING];
 
 function setup() {
-  const dispatch = vi.fn();
+  const dispatch = vi.fn(); // onFinish
   const { result } = renderHook(() => useRepTracking("squat", dispatch));
   const feed = (poses: typeof ONE_REP, startMs: number) =>
     act(() => poses.forEach((joints, index) => result.current.handlePose(buildSidePose(joints), 1, startMs + index * FRAME_MS)));
@@ -28,7 +28,7 @@ describe("useRepTracking", () => {
     feed([...ONE_REP, ...ONE_REP], 0);
     expect(result.current.repCount).toBe(2);
     act(() => result.current.finishRecording());
-    expect(dispatch).toHaveBeenCalledWith({ type: "recording_finished", reps: [expect.objectContaining({ repNumber: 1 }), expect.objectContaining({ repNumber: 2 })] });
+    expect(dispatch).toHaveBeenCalledWith([expect.objectContaining({ repNumber: 1 }), expect.objectContaining({ repNumber: 2 })]);
   });
 
   it("stops by itself after standing still for the D8 time once", () => {
@@ -39,11 +39,11 @@ describe("useRepTracking", () => {
     feed([STANDING], lastRepEndMs + IDLE_STOP_MS);
     feed([STANDING], lastRepEndMs + IDLE_STOP_MS + FRAME_MS);
     expect(dispatch).toHaveBeenCalledTimes(1);
-    expect(dispatch).toHaveBeenCalledWith({ type: "recording_finished", reps: [expect.objectContaining({ repNumber: 1 })] });
+    expect(dispatch).toHaveBeenCalledWith([expect.objectContaining({ repNumber: 1 })]);
   });
 
   it("reports each new rep with its spoken cue (calibrated rules)", () => {
-    const dispatch = vi.fn();
+    const dispatch = vi.fn(); // onFinish
     const onRep = vi.fn();
     const { result } = renderHook(() => useRepTracking("squat", dispatch, onRep));
     act(() => result.current.startTracking());
