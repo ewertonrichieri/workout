@@ -10,7 +10,7 @@ import { TechniqueNotice } from "./technique-notice";
 import { TechniqueSummaryView } from "./technique-summary-view";
 
 /** "Analisar minha execução": notice → positioning guide → camera (framing, countdown, recording) → summary. */
-export function TechniqueScreen({ ruleSet }: { ruleSet: TechniqueRuleSet }) {
+export function TechniqueScreen({ exerciseSlug, ruleSet }: { exerciseSlug: string; ruleSet: TechniqueRuleSet }) {
   const [flow, dispatch] = useReducer(reduceTechniqueFlow, INITIAL_TECHNIQUE_FLOW);
   const backToGuide = () => dispatch({ type: "back_to_guide" });
   switch (flow.phase) {
@@ -23,7 +23,15 @@ export function TechniqueScreen({ ruleSet }: { ruleSet: TechniqueRuleSet }) {
     case "model_error":
       return <CameraErrorPanel reason="model" onRetry={backToGuide} />;
     case "summary":
-      return <TechniqueSummaryView reps={flow.reps} onRecordAgain={() => dispatch({ type: "record_again" })} />;
+      return (
+        <TechniqueSummaryView
+          reps={flow.reps}
+          replay={flow.replay}
+          exerciseSlug={exerciseSlug}
+          cameraView={ruleSet.cameraView}
+          onRecordAgain={() => dispatch({ type: "record_again" })}
+        />
+      );
     default:
       return <TechniqueCamera phase={flow.phase} ruleSet={ruleSet} dispatch={dispatch} />;
   }

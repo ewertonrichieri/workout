@@ -32,6 +32,10 @@ const USER_TABLES = [
   "adjustment_proposal_changes",
   "substitution_caches",
   "substitution_cache_choices",
+  "technique_analyses",
+  "technique_reps",
+  "technique_rep_issues",
+  "technique_analysis_feedback",
 ];
 
 function readAllMigrations(): string {

@@ -31,7 +31,7 @@ async function TechniqueContent({ params }: { params: TechniqueParams }) {
   return (
     <>
       <h2 className="text-xl font-semibold">{exercise.name}</h2>
-      <TechniqueScreen ruleSet={ruleSet} />
+      <TechniqueScreen exerciseSlug={slug} ruleSet={ruleSet} />
     </>
   );
 }

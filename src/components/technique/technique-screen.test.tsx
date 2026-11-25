@@ -30,7 +30,7 @@ describe("TechniqueScreen", () => {
 
   it("shows the privacy notice and the positioning guide before turning the camera on", async () => {
     const getUserMedia = mockGetUserMedia(() => new Promise(() => undefined));
-    render(<TechniqueScreen ruleSet={SQUAT} />);
+    render(<TechniqueScreen exerciseSlug="barbell-back-squat" ruleSet={SQUAT} />);
     expect(screen.getByText("O vídeo fica só no seu celular: não é enviado nem guardado.")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Entendi, continuar" }));
     expect(screen.getByRole("heading", { name: "Posicione o celular" })).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe("TechniqueScreen", () => {
 
   it("asks for the camera only after the tap and keeps Começar disabled until the body is framed", async () => {
     const getUserMedia = mockGetUserMedia(() => new Promise(() => undefined));
-    render(<TechniqueScreen ruleSet={SQUAT} />);
+    render(<TechniqueScreen exerciseSlug="barbell-back-squat" ruleSet={SQUAT} />);
     await openCamera();
     expect(getUserMedia).toHaveBeenCalledWith({ video: { facingMode: "user" }, audio: false });
     expect(screen.getByRole("button", { name: "Começar" })).toBeDisabled();
@@ -49,7 +49,7 @@ describe("TechniqueScreen", () => {
 
   it("explains a denied permission and goes back to the guide on retry", async () => {
     mockGetUserMedia(() => Promise.reject(new DOMException("denied", "NotAllowedError")));
-    render(<TechniqueScreen ruleSet={SQUAT} />);
+    render(<TechniqueScreen exerciseSlug="barbell-back-squat" ruleSet={SQUAT} />);
     await openCamera();
     expect(await screen.findByRole("alert")).toHaveTextContent("Sem permissão para usar a câmera");
     fireEvent.click(screen.getByRole("button", { name: "Tentar de novo" }));
@@ -59,7 +59,7 @@ describe("TechniqueScreen", () => {
   it("shows a friendly message when the pose model cannot load", async () => {
     mockGetUserMedia(() => new Promise(() => undefined));
     loadPoseDetector.mockRejectedValue(new Error("network"));
-    render(<TechniqueScreen ruleSet={SQUAT} />);
+    render(<TechniqueScreen exerciseSlug="barbell-back-squat" ruleSet={SQUAT} />);
     await openCamera();
     expect(await screen.findByRole("alert")).toHaveTextContent("Não conseguimos preparar a análise neste aparelho agora");
   });

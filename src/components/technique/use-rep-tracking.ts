@@ -1,12 +1,11 @@
 "use client";
 
-import { useCallback, useRef, useState, type Dispatch } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { TechniqueRuleSetId } from "@/lib/constants/technique";
 import { SQUAT_RULES_CALIBRATED } from "@/lib/constants/technique-rules";
 import { pickLiveCue, type SpokenCue } from "@/lib/technique/live-cues";
 import type { PoseLandmark } from "@/lib/technique/body-framing";
-import { createPoseRepTracker, type PoseRepTracker } from "@/lib/technique/pose-rep-tracker";
-import type { TechniqueFlowEvent } from "@/lib/technique/technique-flow";
+import { createPoseRepTracker, type PoseRepTracker, type TechniqueRep } from "@/lib/technique/pose-rep-tracker";
 
 export interface RepTracking {
   repCount: number;
@@ -19,8 +18,11 @@ export interface RepTracking {
 
 export type RepListener = (repCount: number, cue: SpokenCue | null) => void;
 
-/** Counts reps from the camera poses only while recording (steps 5.2–5.3); `onRep` hears each new rep with its cue. */
-export function useRepTracking(ruleSetId: TechniqueRuleSetId, dispatch: Dispatch<TechniqueFlowEvent>, onRep?: RepListener): RepTracking {
+/**
+ * Counts reps from the camera poses only while recording (steps 5.2–5.3): `onRep` hears each new rep with its cue,
+ * `onFinish` gets the reps once (Encerrar, the time cap or standing still).
+ */
+export function useRepTracking(ruleSetId: TechniqueRuleSetId, onFinish: (reps: TechniqueRep[]) => void, onRep?: RepListener): RepTracking {
   const trackerRef = useRef<PoseRepTracker | null>(null);
   const [repCount, setRepCount] = useState(0);
 
@@ -30,10 +32,11 @@ export function useRepTracking(ruleSetId: TechniqueRuleSetId, dispatch: Dispatch
   }, [ruleSetId]);
 
   const finishRecording = useCallback(() => {
-    const reps = trackerRef.current?.finish() ?? [];
+    const tracker = trackerRef.current;
+    if (!tracker) return;
     trackerRef.current = null;
-    dispatch({ type: "recording_finished", reps });
-  }, [dispatch]);
+    onFinish(tracker.finish());
+  }, [onFinish]);
 
   const handlePose = useCallback((landmarks: readonly PoseLandmark[], aspectRatio: number, timestampMs: number) => {
     const tracker = trackerRef.current;
