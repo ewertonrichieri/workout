@@ -8,7 +8,7 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **Fase 5** — correção de postura (V3; spec a criar e aprovar) → `planning/001-planejamento-inicial.md`
+1. **5.0 Spec da Fase 5** — correção de postura (V3), aguardando aprovação de D1–D12 → `specs/014-correcao-postura.md`
 2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
 3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
@@ -98,7 +98,7 @@ Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-i
 
 ### Planning
 
-- Fase 3B promovida para `specs/012-treino-adaptativo.md`; Fase 4 e V3 → `planning/001-planejamento-inicial.md`
+- Fase 3B → `specs/012-treino-adaptativo.md`, Fase 4 → `specs/013-equipamentos-por-foto.md`, Fase 5 → `specs/014-correcao-postura.md`; Fase 5B → `planning/001-planejamento-inicial.md`
 
 ### Improvements
 
