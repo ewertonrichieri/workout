@@ -2,7 +2,7 @@
 
 **Etapas:** 5.0 a 5.6 (checklist `docs/reference/001-checklist-implementacao.md`). Promovida de `docs/planning/001-planejamento-inicial.md` (Fase 5).
 
-**Status:** rascunho; aguardando aprovação das decisões D1 a D12.
+**Status:** aprovada. Decisões D1 a D12 confirmadas pelo usuário em 2026-11-25 (D5 provisória, calibrada na 5.2).
 
 **Pré-requisito:** Fase 4 concluída (2026-11-25).
 
@@ -129,7 +129,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 | D2 | Onde ficam o modelo e o WASM | **No próprio app** (`public/`, servido pela Vercel com cache), sem depender do CDN do Google em tempo de uso. Arquivos com versão fixa no repositório e licença registrada |
 | D3 | Exercícios suportados | **5.2–5.4:** só agachamento (`barbell-back-squat`, `dumbbell-goblet-squat`, câmera de lado). **5.5:** levantamento terra romeno (`barbell-romanian-deadlift`, `dumbbell-romanian-deadlift`) e remada curvada (`barbell-bent-over-row`, `dumbbell-bent-over-row`). Aparelhos ficam fora desta fase |
 | D4 | Câmera de frente (valgo e simetria) | **Fora da Fase 5** (vai para backlog). Só gravação de lado |
-| D5 | Limites do agachamento (valores iniciais, calibrados na 5.2 com gravações reais e revistos com você) | Profundidade: quadril até a altura do joelho (fêmur paralelo). Inclinação do tronco: alerta acima de ~45° da vertical ou se aumentar ~15° em relação à 1ª repetição (fadiga). Joelho à frente: só informativo, não é erro. Calcanhar saindo do chão: erro. Descida mais rápida que ~1 s: aviso de controle. **Não são dados curados:** são pontos de partida para você aprovar ou trocar |
+| D5 | Limites do agachamento (valores iniciais, calibrados na 5.2 com gravações reais e revistos com você) | Profundidade: quadril até a altura do joelho (fêmur paralelo). Inclinação do tronco: alerta acima de ~45° da vertical ou se aumentar ~15° em relação à 1ª repetição (fadiga). Joelho à frente: só informativo, não é erro. Calcanhar saindo do chão: erro. Descida mais rápida que ~1 s: aviso de controle. **Não são dados curados.** Aprovado: até a calibração com gravações reais do usuário na 5.2, os limites **só informam** e não entram na nota como erro. Depois, profundidade e calcanhar viram erro; a inclinação do tronco começa só pela comparação com a 1ª repetição (fadiga). Os valores calibrados são mostrados ao usuário e confirmados antes de contar |
 | D6 | Quadros-chave para a IA | **Não enviar nenhum quadro**, só métricas: o vídeo e as imagens nunca saem do celular. (A outra opção, 2–3 quadros com o rosto borrado, aumenta custo e risco de privacidade) |
 | D7 | Alertas falados | Voz do navegador (`speechSynthesis`, pt-BR), **ligada por padrão** com botão para desligar. Frases curtas: "Desça mais", "Peito para cima", "Calcanhar no chão", "Mais devagar", e a contagem "um, dois…" |
 | D8 | Como encerra a gravação | Toque em "Encerrar" **ou** parada automática após **5 s** em pé sem movimento depois de pelo menos 1 repetição. Teto de **90 s** por gravação |
@@ -140,7 +140,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 
 ## Checklist de aceite
 
-- [ ] 5.0: spec aprovada (D1–D12)
+- [x] 5.0: spec aprovada (D1–D12), 2026-11-25
 - [ ] 5.1: câmera com permissão e desligamento corretos; MediaPipe carregado sob demanda do próprio app; esqueleto na tela; guia de posicionamento; "Começar" só com corpo inteiro visível; fallbacks sem câmera, sem permissão e sem modelo; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
 - [ ] 5.2: cálculo de ângulos, máquina de contagem e métricas do agachamento com testes (sequências de pontos fictícias: repetição completa, parcial, ruído, ponto pouco visível → "não avaliada")
 - [ ] 5.3: contagem e alertas falados com intervalo mínimo, botão de som, fallback só na tela, com testes das regras
@@ -153,5 +153,13 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
 | — | Nenhuma | — | — |
+
+## Atualizações
+
+### 2026-11-25 — 5.0 Spec aprovada
+
+- **Pedido:** etapa 5.0 (esforço `high`).
+- **Mudança:** D1–D12 aprovadas; D5 provisória (só informa até a calibração na 5.2, com valores confirmados pelo usuário).
+- **Pendências:** nenhuma.
 
 ## Fim da spec
