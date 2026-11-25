@@ -30,7 +30,7 @@ describe("useTechniqueAnalysis", () => {
     expect(url).toBe("/api/technique-analyses");
     expect(JSON.parse(String(init.body))).toEqual({
       exerciseSlug: "barbell-back-squat", cameraView: "side",
-      reps: [{ repNumber: 1, durationMs: 3000, descentMs: 1500, minKneeAngle: 80, minThighAngle: -5, maxTrunkLean: 30, maxKneeTravelRatio: -0.1, maxHeelRiseRatio: 0, frameCount: 90, seenFrameCount: 90 }],
+      reps: [{ repNumber: 1, durationMs: 3000, descentMs: 1500, frameCount: 90, seenFrameCount: 90, metrics: { minKneeAngle: 80, minThighAngle: -5, maxTrunkLean: 30, maxKneeTravelRatio: -0.1, maxHeelRiseRatio: 0 } }],
     });
   });
 

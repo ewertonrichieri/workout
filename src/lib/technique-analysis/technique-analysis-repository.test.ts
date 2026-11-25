@@ -14,7 +14,7 @@ const RECORD: TechniqueAnalysisRecord = {
   reps: [
     { rep: buildSquatRep(1), score: 9, issues: [] },
     { rep: buildSquatRep(2, { isEvaluated: false }), score: null, issues: [] },
-    { rep: buildSquatRep(3, { minThighAngle: 20 }), score: 5, issues: [{ issue: "shallow_depth", severity: "error" }] },
+    { rep: buildSquatRep(3, {}, { minThighAngle: 20 }), score: 5, issues: [{ issue: "shallow_depth", severity: "error" }] },
   ],
   strengths: ["Boa profundidade."],
   corrections: [{ issue: "shallow_depth", repNumbers: [3], text: "Desça mais." }],
@@ -35,9 +35,9 @@ describe("technique analysis repository", () => {
       p_overall_score: 7,
       p_main_tip: "Desça um pouco mais.",
       p_reps: [
-        expect.objectContaining({ rep_number: 1, score: 9, is_evaluated: true, duration_ms: 3000, descent_ms: 1500, min_thigh_angle: -5, issues: [] }),
+        { rep_number: 1, score: 9, is_evaluated: true, duration_ms: 3000, descent_ms: 1500, metrics: { minKneeAngle: 80, minThighAngle: -5, maxTrunkLean: 30, maxKneeTravelRatio: -0.1, maxHeelRiseRatio: 0 }, issues: [] },
         expect.objectContaining({ rep_number: 2, score: null, is_evaluated: false }),
-        expect.objectContaining({ rep_number: 3, min_thigh_angle: 20, issues: [{ issue: "shallow_depth", severity: "error" }] }),
+        expect.objectContaining({ rep_number: 3, metrics: expect.objectContaining({ minThighAngle: 20 }), issues: [{ issue: "shallow_depth", severity: "error" }] }),
       ],
       p_feedback: [
         { kind: "strength", position: 1, issue: null, text: "Boa profundidade." },

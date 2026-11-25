@@ -2,8 +2,9 @@
 
 import { useCallback, useRef, useState } from "react";
 import type { TechniqueRuleSetId } from "@/lib/constants/technique";
-import { SQUAT_RULES_CALIBRATED } from "@/lib/constants/technique-rules";
-import { pickLiveCue, type SpokenCue } from "@/lib/technique/live-cues";
+import { TECHNIQUE_RULES_CALIBRATED, type TechniqueIssue } from "@/lib/constants/technique-rules";
+import { pickLiveCue } from "@/lib/technique/live-cues";
+import { getMovementPattern } from "@/lib/technique/patterns/movement-patterns";
 import type { PoseLandmark } from "@/lib/technique/body-framing";
 import { createPoseRepTracker, type PoseRepTracker, type TechniqueRep } from "@/lib/technique/pose-rep-tracker";
 
@@ -16,7 +17,7 @@ export interface RepTracking {
   handlePose: (landmarks: readonly PoseLandmark[], aspectRatio: number, timestampMs: number) => void;
 }
 
-export type RepListener = (repCount: number, cue: SpokenCue | null) => void;
+export type RepListener = (repCount: number, cue: TechniqueIssue | null) => void;
 
 /**
  * Counts reps from the camera poses only while recording (steps 5.2–5.3): `onRep` hears each new rep with its cue,
@@ -27,7 +28,7 @@ export function useRepTracking(ruleSetId: TechniqueRuleSetId, onFinish: (reps: T
   const [repCount, setRepCount] = useState(0);
 
   const startTracking = useCallback(() => {
-    trackerRef.current = createPoseRepTracker(ruleSetId);
+    trackerRef.current = createPoseRepTracker(getMovementPattern(ruleSetId));
     setRepCount(0);
   }, [ruleSetId]);
 
@@ -44,9 +45,9 @@ export function useRepTracking(ruleSetId: TechniqueRuleSetId, onFinish: (reps: T
     const previousCount = tracker.repCount;
     tracker.addPose(landmarks, aspectRatio, timestampMs);
     setRepCount(tracker.repCount);
-    if (tracker.repCount > previousCount) onRep?.(tracker.repCount, pickLiveCue(tracker.finish(), SQUAT_RULES_CALIBRATED));
+    if (tracker.repCount > previousCount) onRep?.(tracker.repCount, pickLiveCue(getMovementPattern(ruleSetId), tracker.finish(), TECHNIQUE_RULES_CALIBRATED));
     if (tracker.isIdle(timestampMs)) finishRecording();
-  }, [finishRecording, onRep]);
+  }, [finishRecording, onRep, ruleSetId]);
 
   return { repCount, startTracking, finishRecording, handlePose };
 }

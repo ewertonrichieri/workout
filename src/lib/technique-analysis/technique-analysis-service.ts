@@ -2,17 +2,20 @@ import type { AiUsageGuard } from "@/lib/ai-usage/ai-usage-guard";
 import type { ExerciseRepository } from "@/lib/catalog/exercises/exercise-repository";
 import type { ExerciseDetail } from "@/lib/catalog/exercises/exercise-types";
 import { TECHNIQUE_ANALYSIS_EFFORT, TECHNIQUE_ANALYSIS_OPERATION } from "@/lib/constants/technique-analysis";
-import { SQUAT_RULES_CALIBRATED } from "@/lib/constants/technique-rules";
+import type { TechniqueRuleSet } from "@/lib/constants/technique";
+import { TECHNIQUE_RULES_CALIBRATED } from "@/lib/constants/technique-rules";
 import { InvalidInputError, NotFoundError, UnprocessableError } from "@/lib/errors/app-errors";
 import { translate } from "@/lib/i18n/translate";
 import type { StructuredOutputClient } from "@/lib/integrations/claude/structured-output-client";
 import type { Logger } from "@/lib/logger/logger";
 import { buildTechniqueSummary, type TechniqueSummary } from "@/lib/technique/technique-summary";
+import { getMovementPattern } from "@/lib/technique/patterns/movement-patterns";
+import type { MovementPattern } from "@/lib/technique/patterns/pattern-types";
 import { findTechniqueRuleSet } from "@/lib/technique/technique-support";
 import { buildAnalysisPrompt, TECHNIQUE_ANALYSIS_SYSTEM_PROMPT } from "./analysis-prompt";
 import { sanitizeAnalysis, type SanitizedAnalysis } from "./analysis-rules";
 import { aiTechniqueAnalysisSchema, type TechniqueAnalysisResult } from "./analysis-schema";
-import { fromRepMetrics, techniqueAnalysisInputSchema, type TechniqueAnalysisInput } from "./rep-metrics";
+import { fromRepMetrics, hasPatternMetrics, techniqueAnalysisInputSchema, type TechniqueAnalysisInput } from "./rep-metrics";
 import type { TechniqueAnalysisRecord, TechniqueAnalysisRepository } from "./technique-analysis-repository";
 
 /** Whether the latest assessment reports an injury or limitation (health reinforcement, as in step 3.7). */
@@ -34,17 +37,29 @@ export interface TechniqueAnalysisService {
   analyze(userId: string, rawInput: unknown): Promise<TechniqueAnalysisResult>;
 }
 
-function parseInput(rawInput: unknown): TechniqueAnalysisInput {
+interface ParsedRequest {
+  input: TechniqueAnalysisInput;
+  pattern: MovementPattern;
+}
+
+function findRuleSet(input: TechniqueAnalysisInput): TechniqueRuleSet {
+  const ruleSet = findTechniqueRuleSet(input.exerciseSlug);
+  if (!ruleSet || ruleSet.cameraView !== input.cameraView) throw new InvalidInputError(translate("technique.errors.notSupported"));
+  return ruleSet;
+}
+
+/** Valid body, a supported exercise and exactly the metrics of its movement pattern (D13). */
+function parseInput(rawInput: unknown): ParsedRequest {
   const parsed = techniqueAnalysisInputSchema.safeParse(rawInput);
   if (!parsed.success) throw new InvalidInputError(translate("errors.invalidInput"));
-  const ruleSet = findTechniqueRuleSet(parsed.data.exerciseSlug);
-  if (!ruleSet || ruleSet.cameraView !== parsed.data.cameraView) throw new InvalidInputError(translate("technique.errors.notSupported"));
-  return parsed.data;
+  const pattern = getMovementPattern(findRuleSet(parsed.data).id);
+  if (!hasPatternMetrics(pattern, parsed.data.reps)) throw new InvalidInputError(translate("errors.invalidInput"));
+  return { input: parsed.data, pattern };
 }
 
 /** The server classifies the reps itself; the phone only sends numbers. */
-function summarize(input: TechniqueAnalysisInput): TechniqueSummary {
-  const summary = buildTechniqueSummary(input.reps.map(fromRepMetrics), SQUAT_RULES_CALIBRATED);
+function summarize({ input, pattern }: ParsedRequest): TechniqueSummary {
+  const summary = buildTechniqueSummary(pattern, input.reps.map(fromRepMetrics), TECHNIQUE_RULES_CALIBRATED);
   if (summary.needsRerecord) throw new UnprocessableError(translate("technique.summary.rerecord"));
   return summary;
 }
@@ -78,8 +93,9 @@ function buildResult(id: string, summary: TechniqueSummary, sanitized: Sanitized
 
 export function createTechniqueAnalysisService(dependencies: TechniqueAnalysisServiceDependencies): TechniqueAnalysisService {
   const { logger } = dependencies;
-  const explain = async (exerciseName: string, input: TechniqueAnalysisInput, summary: TechniqueSummary, hasLimitations: boolean): Promise<SanitizedAnalysis> => {
-    const prompt = buildAnalysisPrompt({ exerciseName, cameraView: input.cameraView, assessments: summary.reps, hasLimitations });
+  const explain = async (exerciseName: string, request: ParsedRequest, summary: TechniqueSummary, hasLimitations: boolean): Promise<SanitizedAnalysis> => {
+    const { input, pattern } = request;
+    const prompt = buildAnalysisPrompt({ exerciseName, cameraView: input.cameraView, pattern, assessments: summary.reps, hasLimitations });
     const output = await dependencies.structuredOutputClient.generate({
       operation: TECHNIQUE_ANALYSIS_OPERATION, system: TECHNIQUE_ANALYSIS_SYSTEM_PROMPT, prompt, schema: aiTechniqueAnalysisSchema, effort: TECHNIQUE_ANALYSIS_EFFORT,
     });
@@ -89,12 +105,13 @@ export function createTechniqueAnalysisService(dependencies: TechniqueAnalysisSe
   };
   return {
     async analyze(userId, rawInput) {
-      const input = parseInput(rawInput);
-      const summary = summarize(input);
+      const request = parseInput(rawInput);
+      const { input } = request;
+      const summary = summarize(request);
       const exercise = await loadExercise(dependencies.exerciseSource, input.exerciseSlug);
       const hasLimitations = await dependencies.limitationsSource.hasLimitations(userId);
       await dependencies.aiUsageGuard.reserve(TECHNIQUE_ANALYSIS_OPERATION);
-      const sanitized = await explain(exercise.name, input, summary, hasLimitations);
+      const sanitized = await explain(exercise.name, request, summary, hasLimitations);
       const id = await dependencies.analysisRepository.saveAnalysis(toRecord(exercise.id, input, summary, sanitized));
       logger.info("technique analyzed", { operation: TECHNIQUE_ANALYSIS_OPERATION, repCount: summary.repCount });
       return buildResult(id, summary, sanitized, hasLimitations);

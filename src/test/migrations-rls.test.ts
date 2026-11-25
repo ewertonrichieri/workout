@@ -36,6 +36,7 @@ const USER_TABLES = [
   "technique_reps",
   "technique_rep_issues",
   "technique_analysis_feedback",
+  "technique_rep_metrics",
 ];
 
 function readAllMigrations(): string {

@@ -1,16 +1,17 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { SquatRep } from "@/lib/technique/squat/squat-rep-tracker";
+import { TECHNIQUE_EXERCISES } from "@/lib/constants/technique";
+import { buildRep } from "@/lib/technique/patterns/test-reps";
+import type { TechniqueRep } from "@/lib/technique/rep-types";
 import { TechniqueSummaryView } from "./technique-summary-view";
 
-function rep(repNumber: number, overrides: Partial<SquatRep> = {}): SquatRep {
-  return {
-    repNumber, startMs: 0, bottomMs: 1500, endMs: 3000, descentMs: 1500, minKneeAngle: 80, minThighAngle: -5, maxTrunkLean: 30,
-    maxKneeTravelRatio: -0.1, maxHeelRiseRatio: 0, frameCount: 30, seenFrameCount: 30, isEvaluated: true, ...overrides,
-  };
+type RepChange = Partial<Omit<TechniqueRep, "metrics">> & { minThighAngle?: number };
+
+function rep(repNumber: number, { minThighAngle, ...overrides }: RepChange = {}): TechniqueRep {
+  return buildRep(repNumber, overrides, minThighAngle === undefined ? {} : { minThighAngle });
 }
 
-const BASE_PROPS = { replay: null, exerciseSlug: "barbell-back-squat", cameraView: "side" as const };
+const BASE_PROPS = { replay: null, exerciseSlug: "barbell-back-squat", ruleSet: TECHNIQUE_EXERCISES["barbell-back-squat"]! };
 const ANALYSIS = {
   id: "00000000-0000-4000-8000-0000000000aa", overallScore: 6, mainTip: "Desça mais.", strengths: [], corrections: [], hasLimitations: false,
   reps: [{ repNumber: 1, score: 9, isEvaluated: true, issues: [] }, { repNumber: 2, score: 4, isEvaluated: true, issues: [] }, { repNumber: 3, score: null, isEvaluated: false, issues: [] }],

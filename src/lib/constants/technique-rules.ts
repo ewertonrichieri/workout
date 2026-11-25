@@ -15,6 +15,11 @@ export const SQUAT_REP_MAX_BOTTOM_KNEE_ANGLE = 140;
 export const MAX_UNSEEN_FRAME_RATIO = 0.25;
 /** A rep with fewer seen frames than this share is not counted at all: the camera cannot confirm it happened (POS-001). */
 export const MIN_SEEN_FRAME_RATIO_TO_COUNT = 0.5;
+/**
+ * A rep shorter than this is a blip of the pose model, not a movement (5.7: a single noisy frame counted as a pull;
+ * the fastest real reps of the calibration videos lasted 0.67 s or more).
+ */
+export const MIN_REP_DURATION_MS = 400;
 /** Decision D8: the recording stops after this long standing still, once at least one rep was done. */
 export const IDLE_STOP_MS = 5000;
 
@@ -37,24 +42,62 @@ export const SQUAT_MIN_DESCENT_MS = 700;
 /** Knee ahead of the toes (share of the shin length); informative only (D5). */
 export const SQUAT_KNEE_TRAVEL_INFO_RATIO = 0;
 
-/** D5 calibrated and confirmed by the user on 2026-11-25 (POS-001): severities apply. */
-export const SQUAT_RULES_CALIBRATED = true;
+/** Squat (D5, POS-001), hip hinge and row (D14) calibrated and confirmed by the user on 2026-11-25: severities apply. */
+export const TECHNIQUE_RULES_CALIBRATED = true;
+
+/**
+ * Hip hinge (D14): counted on the hip angle (shoulder–hip–knee) with the same hysteresis as the squat.
+ * Relative rules compare each rep with the first evaluated rep of the set (D13). Calibrated with the user's video:
+ * short reps opened the hip 31–50° more than the first, the others at most 18°; deeper knee bend 19–33°, the others ≤ 10°.
+ */
+export const HINGE_TOP_HIP_ANGLE = 160;
+export const HINGE_DESCENT_HIP_ANGLE = 150;
+export const HINGE_REP_MAX_BOTTOM_HIP_ANGLE = 140;
+export const HINGE_SHORT_RANGE_DEGREES = 25;
+export const HINGE_KNEE_BEND_DEGREES = 15;
+/** Literature reference (D13, "Para conferir"): in a Romanian deadlift the knee stays almost straight (~145°+). */
+export const HINGE_SQUAT_LIKE_KNEE_ANGLE = 140;
+
+/**
+ * Row (D14): counted on the wrist height above the hip, in torso lengths. Calibrated with the user's video:
+ * hanging −0.20 to −0.42; normal pulls peaked +0.15 to +0.44, short ones −0.05 to +0.04; pulling to the shoulders
+ * raised the trunk 9–13°, normal pulls at most 4°.
+ */
+export const ROW_REST_MAX_WRIST_HEIGHT = -0.2;
+export const ROW_START_MIN_WRIST_HEIGHT = -0.15;
+export const ROW_REP_MIN_PEAK_WRIST_HEIGHT = -0.1;
+export const ROW_SHORT_PULL_WRIST_HEIGHT = 0.1;
+export const ROW_TRUNK_RISE_DEGREES = 8;
+/** Literature reference (D13, "Para conferir"): rows are usually done with the trunk 40–65° from vertical. */
+export const ROW_UPRIGHT_TRUNK_DEGREES = 40;
 
 /** 2D angles are approximate: shown rounded to this step, with "cerca de" (spec 014). */
 export const DISPLAY_ANGLE_STEP_DEGREES = 5;
 
-export const TECHNIQUE_ISSUES = ["shallow_depth", "heel_lift", "fast_descent", "trunk_lean", "trunk_lean_fatigue", "knee_forward"] as const;
+export const TECHNIQUE_ISSUES = [
+  "shallow_depth", "heel_lift", "fast_descent", "trunk_lean", "trunk_lean_fatigue", "knee_forward",
+  "hinge_short_range", "hinge_knee_bend", "hinge_squat_like", "row_short_pull", "row_trunk_rise", "row_trunk_upright",
+] as const;
 export type TechniqueIssue = (typeof TECHNIQUE_ISSUES)[number];
 
 export const ISSUE_SEVERITIES = ["error", "warning", "info"] as const;
 export type IssueSeverity = (typeof ISSUE_SEVERITIES)[number];
 
-/** Severity of each issue once calibrated (D5 + POS-001): depth and fatigue are errors; the heel only informs. */
-export const SQUAT_ISSUE_SEVERITY: Readonly<Record<TechniqueIssue, IssueSeverity>> = {
+/**
+ * Severity of each issue once calibrated. Squat (D5 + POS-001): depth and fatigue are errors, the heel only informs.
+ * Hip hinge and row (D13): rules relative to the first rep are warnings; literature references only inform.
+ */
+export const ISSUE_SEVERITY: Readonly<Record<TechniqueIssue, IssueSeverity>> = {
   shallow_depth: "error",
   heel_lift: "info",
   fast_descent: "warning",
   trunk_lean: "info",
   trunk_lean_fatigue: "error",
   knee_forward: "info",
+  hinge_short_range: "warning",
+  hinge_knee_bend: "warning",
+  hinge_squat_like: "info",
+  row_short_pull: "warning",
+  row_trunk_rise: "warning",
+  row_trunk_upright: "info",
 };

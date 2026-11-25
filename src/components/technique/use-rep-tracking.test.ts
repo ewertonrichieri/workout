@@ -1,11 +1,11 @@
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { IDLE_STOP_MS } from "@/lib/constants/technique-rules";
-import { buildSidePose, PARALLEL_BOTTOM, STANDING } from "@/lib/technique/squat/squat-test-poses";
+import { buildSidePose, PARALLEL_BOTTOM, STANDING } from "@/lib/technique/patterns/test-poses";
 import { useRepTracking } from "./use-rep-tracking";
 
 const FRAME_MS = 100;
-const ONE_REP = [STANDING, STANDING, PARALLEL_BOTTOM, PARALLEL_BOTTOM, STANDING];
+const ONE_REP = [STANDING, STANDING, PARALLEL_BOTTOM, PARALLEL_BOTTOM, PARALLEL_BOTTOM, STANDING];
 
 function setup() {
   const dispatch = vi.fn(); // onFinish

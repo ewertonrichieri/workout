@@ -28,7 +28,7 @@ export function TechniqueScreen({ exerciseSlug, ruleSet }: { exerciseSlug: strin
           reps={flow.reps}
           replay={flow.replay}
           exerciseSlug={exerciseSlug}
-          cameraView={ruleSet.cameraView}
+          ruleSet={ruleSet}
           onRecordAgain={() => dispatch({ type: "record_again" })}
         />
       );

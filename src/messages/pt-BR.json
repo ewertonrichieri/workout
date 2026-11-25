@@ -587,15 +587,32 @@
         "fast_descent": "descida rápida (menos de {seconds} s); controle a descida",
         "trunk_lean": "tronco bem inclinado à frente",
         "trunk_lean_fatigue": "o tronco inclinou cerca de {degrees}° a mais que na 1ª repetição (sinal de cansaço)",
-        "knee_forward": "o joelho passou da ponta do pé (comum em muitas pessoas)"
+        "knee_forward": "o joelho passou da ponta do pé (comum em muitas pessoas)",
+        "hinge_short_range": "o quadril desceu cerca de {degrees}° menos que na 1ª repetição (amplitude caindo)",
+        "hinge_knee_bend": "o joelho dobrou cerca de {degrees}° mais que na 1ª repetição (virando agachamento)",
+        "hinge_squat_like": "o joelho dobrou bastante; no terra romeno e no stiff ele fica quase reto",
+        "row_short_pull": "a puxada ficou curta; leve o peso até a barriga",
+        "row_trunk_rise": "o tronco subiu cerca de {degrees}° para puxar; mantenha o tronco parado",
+        "row_trunk_upright": "tronco mais em pé que o comum na remada (cerca de {degrees}° da vertical; o usual é de 40° a 65°)"
       },
       "recordAgain": "Gravar de novo",
-      "historyLink": "Ver histórico de técnica"
+      "historyLink": "Ver histórico de técnica",
+      "hip": "Quadril: fechou até cerca de {degrees}°",
+      "knee": "Joelho: cerca de {degrees}° no ponto mais baixo",
+      "pullAboveHip": "Puxada: a mão passou da linha do quadril",
+      "pullAtHip": "Puxada: a mão parou na altura do quadril",
+      "trunkRise": "Tronco: subiu cerca de {degrees}° na puxada",
+      "trunkInclination": "Tronco inclinado cerca de {degrees}° da vertical",
+      "trunkSteady": "Tronco: ficou parado na puxada"
     },
     "cues": {
       "shallow_depth": "Desça mais",
       "trunk_lean_fatigue": "Peito para cima",
-      "fast_descent": "Mais devagar"
+      "fast_descent": "Mais devagar",
+      "hinge_short_range": "Quadril para trás",
+      "hinge_knee_bend": "Joelho mais reto",
+      "row_short_pull": "Puxe até a barriga",
+      "row_trunk_rise": "Tronco parado"
     },
     "sound": {
       "on": "Alertas falados: ligados",
@@ -651,7 +668,13 @@
         "fast_descent": "descida rápida",
         "trunk_lean": "tronco inclinado",
         "trunk_lean_fatigue": "tronco cansando",
-        "knee_forward": "joelho à frente"
+        "knee_forward": "joelho à frente",
+        "hinge_short_range": "amplitude",
+        "hinge_knee_bend": "joelho dobrando",
+        "hinge_squat_like": "joelho dobrado",
+        "row_short_pull": "puxada curta",
+        "row_trunk_rise": "tronco subindo",
+        "row_trunk_upright": "tronco alto"
       }
     }
   }
