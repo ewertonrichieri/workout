@@ -30,6 +30,8 @@ const USER_TABLES = [
   "ai_requests",
   "adjustment_proposals",
   "adjustment_proposal_changes",
+  "substitution_caches",
+  "substitution_cache_choices",
 ];
 
 function readAllMigrations(): string {
@@ -188,6 +190,23 @@ describe("AI cost control (2026-11-24)", () => {
 
   it("keeps the saved proposal read-only for the owner", () => {
     expect(sql).toContain("grant select, insert on public.adjustment_proposals, public.adjustment_proposal_changes to authenticated");
+  });
+});
+
+describe("substitution cache (SUB-001)", () => {
+  const sql = readAllMigrations();
+
+  it.each(["find_substitution_cache(text)", "save_substitution_cache(text, jsonb)"])("%s is executable only by authenticated users", (signature) => {
+    const name = signature.slice(0, signature.indexOf("("));
+    expect(latestDefinition(sql, name)).toContain("security invoker");
+    expect(sql).toContain(`revoke all on function public.${signature} from public, anon`);
+    expect(sql).toContain(`grant execute on function public.${signature} to authenticated`);
+  });
+
+  it("keeps each user's cache private and read-only once saved", () => {
+    expect(sql).toContain("unique (user_id, cache_key)");
+    expect(sql).toContain("grant select, insert on public.substitution_caches, public.substitution_cache_choices to authenticated");
+    expect(latestDefinition(sql, "find_substitution_cache")).toContain("c.user_id = (select auth.uid())");
   });
 });
 

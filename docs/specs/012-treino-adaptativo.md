@@ -269,7 +269,7 @@ Observações (não são defeitos): para a puxada frontal a IA pôs remadas ante
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| SUB-001 | **Voltar a conversar com o usuário** sobre o custo da troca na hora: hoje ela não tem limite de pedidos (decisão de 2026-11-24). Ideia do usuário: já trazer as trocas prontas em cache (calculadas antes, por exemplo ao gerar o plano ou uma vez por exercício e equipamento) e mostrar sem consultar a API toda vez. Decidir a abordagem com ele antes de implementar | `src/lib/substitution/substitution-service.ts` | média |
+| — | Nenhuma em aberto (SUB-001 fechada em 2026-11-25: cache das trocas) | — | — |
 
 ## Atualizações
 
@@ -290,6 +290,19 @@ Observações (não são defeitos): para a puxada frontal a IA pôs remadas ante
 - **Pedido:** análise de custo da IA (item 3).
 - **Mudança:** quando o pré-filtro deixa 3 candidatos ou menos (`MAX_SUBSTITUTION_SUGGESTIONS`), a IA não é chamada: a escolha dela só reordenaria as mesmas opções. As sugestões vêm na ordem automática, com o aviso de "Sugestões automáticas" que já existe.
 - **Pendências:** SUB-001 (voltar a conversar sobre o custo da troca)
+
+### 2026-11-25 — Cache das trocas escolhidas pela IA (SUB-001)
+
+- **Pedido:** SUB-001; o usuário escolheu o cache sob demanda (guardar na primeira troca, reaproveitar nas próximas iguais).
+- **Mudança:** a escolha da IA fica guardada por usuário e pela entrada exata enviada à IA (hash sha256 do prompt de sistema + prompt: exercício, prescrição, motivo, limitações e lista de candidatos). A mesma troca de novo devolve as escolhas guardadas sem chamar a IA. Tabelas `substitution_caches` + `substitution_cache_choices`, funções `find_substitution_cache` e `save_substitution_cache` (`20261129000000_substitution_cache.sql`).
+- **Pendências:** nenhuma (migration testada num bloco desfeito e aplicada no Supabase em 2026-11-25)
+
+#### Regras
+
+- Por usuário, não compartilhado: o motivo escrito pela IA pode citar as limitações da pessoa, e uma tabela comum deixaria um usuário gravar o que outros veem
+- Qualquer mudança no plano, nos equipamentos, no motivo, nas limitações ou no catálogo muda o hash: a troca volta à IA (não precisa de validade por tempo)
+- Escolhas guardadas passam pela mesma validação de uma resposta nova (`findSuggestionIssues`); se não servirem mais, a IA é chamada
+- Só a resposta válida da IA é guardada (nunca a ordem automática); falha ao ler ou gravar o cache vira aviso no log e a troca segue normalmente
 
 ## Checklist de aceite
 

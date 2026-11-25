@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import type { SavedAssessment } from "@/lib/assessment/assessment-schema";
-import { ExternalServiceError, InvalidInputError, NotFoundError, RateLimitExceededError, UnprocessableError } from "@/lib/errors/app-errors";
+import { ExternalServiceError, RepositoryError, InvalidInputError, NotFoundError, RateLimitExceededError, UnprocessableError } from "@/lib/errors/app-errors";
 import type { StructuredOutputClient } from "@/lib/integrations/claude/structured-output-client";
 import type { Logger } from "@/lib/logger/logger";
 import { buildPlanOverview, buildWorkout, buildWorkoutExercise } from "@/test/training-fixtures";
@@ -42,6 +42,8 @@ interface SetupOptions {
   output?: AiSubstitution;
   aiError?: Error;
   candidates?: typeof CANDIDATES;
+  cached?: { slug: string; reason: string }[] | null;
+  cacheError?: Error;
 }
 
 function setup(options: SetupOptions = {}) {
@@ -53,6 +55,15 @@ function setup(options: SetupOptions = {}) {
     planRepository: { findActivePlan: vi.fn(async () => PLAN) },
     assessmentRepository: { findLatestAssessment: vi.fn(async () => (options.assessment === undefined ? ASSESSMENT : options.assessment)) },
     substitutionRepository: { listCandidates: vi.fn(async () => ({ original: ORIGINAL, candidates: options.candidates ?? CANDIDATES })) },
+    cacheRepository: {
+      findChoices: vi.fn(async () => {
+        if (options.cacheError) throw options.cacheError;
+        return options.cached ?? null;
+      }),
+      saveChoices: vi.fn(async () => {
+        if (options.cacheError) throw options.cacheError;
+      }),
+    },
     exerciseSource: {
       listExerciseProfiles: vi.fn(async () => [{ slug: "fake-exercise-1", primaryMuscles: ["chest"], equipment: ["machine"] }, { slug: "fake-exercise-2", primaryMuscles: ["back"], equipment: ["cable"] }]),
       findExercisesBySlugs: vi.fn(async (slugs: readonly string[]) => [...slugs].reverse().map(info)),
@@ -130,5 +141,60 @@ describe("substitution service", () => {
     await expect(service.suggestSubstitutes("user-1", "abc", {})).rejects.toBeInstanceOf(InvalidInputError);
     await expect(service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "lazy" })).rejects.toBeInstanceOf(InvalidInputError);
     await expect(service.suggestSubstitutes("user-1", "33333333-3333-4333-8333-333333333333", {})).rejects.toBeInstanceOf(NotFoundError);
+  });
+
+  describe("cache of the AI's choices (SUB-001)", () => {
+    const CACHED = [{ slug: "push-up", reason: "Guardado" }];
+
+    it("returns the saved choices without calling the AI", async () => {
+      const { service, generate, dependencies } = setup({ cached: CACHED });
+      await expect(service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "equipment_busy" })).resolves.toEqual({
+        isAutomatic: false,
+        suggestions: [{ exercise: info("push-up"), reason: "Guardado" }],
+      });
+      expect(generate).not.toHaveBeenCalled();
+      expect(dependencies.cacheRepository.saveChoices).not.toHaveBeenCalled();
+      expect(dependencies.cacheRepository.findChoices).toHaveBeenCalledWith(expect.stringMatching(/^[0-9a-f]{64}$/));
+    });
+
+    it("saves the AI's choices under the same key it looked up", async () => {
+      const { service, dependencies } = setup();
+      await service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "equipment_busy" });
+      const [lookupKey] = vi.mocked(dependencies.cacheRepository.findChoices).mock.calls[0];
+      expect(dependencies.cacheRepository.saveChoices).toHaveBeenCalledWith(lookupKey, [
+        { slug: "dumbbell-bench-press", reason: "Mesmo empurrar" },
+        { slug: "push-up", reason: "Sem aparelho" },
+      ]);
+    });
+
+    it("uses a different key when the reason changes", async () => {
+      const { service, dependencies } = setup();
+      await service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "equipment_busy" });
+      await service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "other" });
+      const keys = vi.mocked(dependencies.cacheRepository.findChoices).mock.calls.map(([key]) => key);
+      expect(keys[0]).not.toBe(keys[1]);
+    });
+
+    it("ignores saved choices that are no longer among the options and asks the AI", async () => {
+      const { service, generate } = setup({ cached: [{ slug: "lever-pec-deck", reason: "x" }] });
+      await expect(service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "equipment_busy" })).resolves.toMatchObject({ isAutomatic: false });
+      expect(generate).toHaveBeenCalledOnce();
+    });
+
+    it("keeps working when the cache fails", async () => {
+      const { service, generate, dependencies } = setup({ cacheError: new RepositoryError("x", "op") });
+      await expect(service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "equipment_busy" })).resolves.toMatchObject({ isAutomatic: false });
+      expect(generate).toHaveBeenCalledOnce();
+      expect(dependencies.logger.warn).toHaveBeenCalledTimes(2);
+    });
+
+    it("saves nothing when the AI fails or is skipped", async () => {
+      const failed = setup({ aiError: new ExternalServiceError("x") });
+      await failed.service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "equipment_busy" });
+      expect(failed.dependencies.cacheRepository.saveChoices).not.toHaveBeenCalled();
+      const few = setup({ candidates: [profile("push-up", [], ["bodyweight"])] });
+      await few.service.suggestSubstitutes("user-1", PRESCRIPTION_ID, { reason: "equipment_busy" });
+      expect(few.dependencies.cacheRepository.findChoices).not.toHaveBeenCalled();
+    });
   });
 });
