@@ -100,7 +100,11 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 5.5 | Histórico de técnica + regras para mais exercícios — regras entregues na 5.7 | `medium` | [x] |
 | 5.6 | Teste de ponta a ponta da Fase 5 no navegador | `medium` | [x] |
 | 5.7 | Análise por padrão de movimento: dobrar o quadril (terra romeno, stiff) e puxar (remadas) — D13–D15, fecha a POS-002 | `high` | [x] |
-| 5B.1 | Previsão de evolução e detecção de estagnação | `high` | [ ] |
+| 5B.0 | Spec da Fase 5B (`015-previsao-evolucao.md`) com as decisões aprovadas pelo usuário | `high` | [ ] |
+| 5B.1 | Tendência, projeção e detecção de estagnação (cálculo no servidor) | `high` | [ ] |
+| 5B.2 | Tela de evolução: real × projetado, meta opcional, resumo no Início | `medium` | [ ] |
+| 5B.3 | Sugestão de ajuste na estagnação (esforço da 3B), aplicar e desfazer | `high` | [ ] |
+| 5B.4 | Teste de ponta a ponta da Fase 5B no navegador | `medium` | [ ] |
 
 ## Abertura para outros usuários
 

@@ -140,6 +140,8 @@ Abordagem escolhida: **o celular mede, a IA explica**.
 - 5.2 — Comparação com o esqueleto do vídeo de referência, lado a lado
 
 ### Fase 5B — Previsão de evolução (V3)
+> Promovida para `docs/specs/015-previsao-evolucao.md` (2026-11-25). O texto abaixo é o registro original da ideia.
+
 - Projeção de metas por exercício com base no histórico ("30 kg no supino em ~6 semanas")
 - Detecção de estagnação (ex: 3 semanas sem progresso) e ajuste automático da estratégia
 - Visualização da progressão real vs. projetada
