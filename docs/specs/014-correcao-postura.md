@@ -142,7 +142,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 
 - [x] 5.0: spec aprovada (D1–D12), 2026-11-25
 - [x] 5.1 (2026-11-25): câmera com permissão e desligamento corretos; MediaPipe carregado sob demanda do próprio app; esqueleto na tela; guia de posicionamento; "Começar" só com corpo inteiro visível; fallbacks sem câmera, sem permissão e sem modelo; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
-- [ ] 5.2: cálculo de ângulos, máquina de contagem e métricas do agachamento com testes (sequências de pontos fictícias: repetição completa, parcial, ruído, ponto pouco visível → "não avaliada")
+- [ ] 5.2: cálculo de ângulos, máquina de contagem e métricas do agachamento com testes (sequências de pontos fictícias: repetição completa, parcial, ruído, ponto pouco visível → "não avaliada") — código e testes entregues em 2026-11-25; falta a calibração da D5 com gravações reais (POS-001)
 - [ ] 5.3: contagem e alertas falados com intervalo mínimo, botão de som, fallback só na tela, com testes das regras
 - [ ] 5.4: rota com 401/400/422/429/502; servidor reclassificando os erros; resposta da IA filtrada pelo vocabulário; migration com RLS testada num bloco desfeito e aplicada no Supabase; replay com erros marcados; chamada real medida
 - [ ] 5.5: histórico paginado no detalhe do exercício (com apagar + desfazer); regras do terra romeno e da remada curvada com testes
@@ -152,7 +152,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| — | Nenhuma | — | — |
+| POS-001 | **Calibrar a D5 com gravações reais do usuário.** O usuário grava com a câmera do celular, de lado, a 2–3 m, com o corpo inteiro: 1 série certa (~5 repetições), 1 rasa de propósito, 1 com o calcanhar subindo, 1 descendo rápido e 1 inclinando o tronco. Os arquivos são enviados para a sessão por escolha dele (nunca para o repositório) e apagados depois. O agente roda o mesmo código de medição nesses vídeos e propõe os valores de profundidade, calcanhar (`SQUAT_HEEL_RISE_MAX_RATIO`, hoje 0,08), descida, fadiga, contagem (160°/150°/140°) e visão de lado (`SIDE_VIEW_MAX_SHOULDER_RATIO`, hoje 0,45), e avalia trocar o modelo "lite" pelo "full" (D1). Com os valores confirmados pelo usuário, `SQUAT_RULES_CALIBRATED` passa a `true` | `src/lib/constants/technique-rules.ts`, `src/lib/constants/technique.ts` | Alta (fecha a 5.2) |
 
 ## Atualizações
 
@@ -170,5 +170,13 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - **Ainda não nesta etapa:** contagem de repetições e métricas (5.2), voz (5.3), envio à IA e replay (5.4). Durante a gravação a tela avisa que a contagem e a análise chegam nas próximas etapas.
 - **Conferido no navegador:** Chromium com câmera falsa alimentada por uma foto de agachamento do Free Exercise DB (domínio público): o MediaPipe carregou dos arquivos do app, o esqueleto ficou alinhado ao corpo, "Começar" liberou ~1 s depois do corpo inteiro aparecer, contagem → gravação → "Encerrar" funcionaram e a câmera ficou ligada só na tela; com a foto cortada nos pés, "Seus pés não aparecem" e "Começar" desabilitado. Foi feito numa página de teste isolada (mesmos componentes) porque criar usuário temporário no Supabase real foi bloqueado pela permissão automática desta sessão; a rota com login entra no teste de ponta a ponta (5.6).
 - **Pendências:** nenhuma.
+
+### 2026-11-25 — 5.2 Métricas por repetição do agachamento (código; calibração pendente)
+
+- **Pedido:** etapa 5.2 (esforço `xhigh`).
+- **Mudança:** medição por quadro, de lado, com o lado do corpo que a câmera vê (`measureSquatFrame`): ângulo do joelho, coxa em relação à horizontal (0° = paralela), inclinação do tronco, calcanhar em relação à ponta do pé e joelho à frente da ponta do pé, sempre corrigindo a proporção da imagem; quadro com algum ponto não visto não é medido. Contagem com folga entre limites (`createSquatRepTracker`): a repetição começa ao sair de 150°, só conta se o joelho dobrar até 140° ou menos e volta a 160° (em pé); quadros não vistos não mexem na contagem; repetição com mais de 25% de quadros não vistos fica "não avaliada". Regras da D5 (`classifySquatRep`) com a gravidade aprovada, mas **tudo "Para conferir" até a calibração** (`SQUAT_RULES_CALIBRATED = false`). Contagem ao vivo na tela ("Repetições: N"); a gravação para sozinha 5 s depois da última repetição com o usuário em pé (D8), em "Encerrar" ou nos 90 s. Resumo local depois da série, com a câmera já desligada: repetições contadas, profundidade, tronco e descida por repetição (ângulos arredondados a 5°, "cerca de"), pontos a conferir, "não avaliada" e pedido para regravar quando mais da metade não foi vista; "Gravar de novo".
+- **Visão de lado (novo, ligado à D3/D5):** fotos reais de agachamento de frente ou muito em 3/4 deram ângulos errados (ex.: joelho com 158° num agachamento profundo). Por isso o "Começar" agora também exige estar de lado: largura dos ombros / comprimento do tronco ≤ 0,45 ("Fique de lado para a câmera…"). Medido nas fotos: 3/4 que mediu bem ≈ 0,34; de frente 0,5–0,71. Revisto na calibração (POS-001).
+- **Conferido no navegador** (Chromium, câmera falsa com fotos de domínio público do Free Exercise DB alternando em pé/embaixo): MediaPipe mediu o joelho com 179° em pé e 87° embaixo; 3 repetições contadas ao vivo; parada automática depois de ficar em pé; resumo com as 3. **Ruído observado:** a mesma foto "embaixo" deu profundidade de 5°, 10° e "paralela" em repetições diferentes, e uma vez acusou o calcanhar — reforça manter tudo só informativo até a calibração e testar o modelo "full".
+- **Pendências:** POS-001 (calibração; a etapa 5.2 só fecha com ela).
 
 ## Fim da spec

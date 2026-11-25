@@ -24,9 +24,17 @@ describe("reduceTechniqueFlow", () => {
     expect(reduceTechniqueFlow(counting, { type: "framing_lost" })).toEqual({ phase: "framing" });
   });
 
-  it("stops the recording back to framing", () => {
+  it("ends the recording in the summary with the reps, and records again from there", () => {
     const recording = run({ type: "accept_notice" }, { type: "open_camera" }, { type: "start_countdown" }, { type: "countdown_done" });
-    expect(reduceTechniqueFlow(recording, { type: "stop_recording" })).toEqual({ phase: "framing" });
+    const summary = reduceTechniqueFlow(recording, { type: "recording_finished", reps: [] });
+    expect(summary).toEqual({ phase: "summary", reps: [] });
+    expect(reduceTechniqueFlow(summary, { type: "record_again" })).toEqual({ phase: "framing" });
+    expect(reduceTechniqueFlow(summary, { type: "camera_failed", reason: "unavailable" })).toBe(summary);
+  });
+
+  it("ignores a finished recording outside the recording phase", () => {
+    const framing = run({ type: "accept_notice" }, { type: "open_camera" });
+    expect(reduceTechniqueFlow(framing, { type: "recording_finished", reps: [] })).toBe(framing);
   });
 
   it("shows camera and model failures from any camera phase and allows going back to the guide", () => {

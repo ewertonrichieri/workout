@@ -27,7 +27,7 @@ describe("usePoseTracking", () => {
   it("draws the skeleton and becomes stable after the body stays framed for the hold", () => {
     const detector: PoseDetector = { detect: vi.fn(() => STANDING_POSE), close: vi.fn() };
     const { videoRef, canvasRef, context } = buildRefs();
-    const { result } = renderHook(() => usePoseTracking({ videoRef, canvasRef, detector, isActive: true }));
+    const { result } = renderHook(() => usePoseTracking({ videoRef, canvasRef, detector, isActive: true, cameraView: "side" }));
     act(() => vi.advanceTimersByTime(FRAME_MS * 2));
     expect(result.current).toEqual({ framing: { isReady: true }, isStable: false });
     expect(context.canvas).toMatchObject({ width: 640, height: 480 });
@@ -39,15 +39,24 @@ describe("usePoseTracking", () => {
   it("reports the framing issue when nobody is in the image", () => {
     const detector: PoseDetector = { detect: vi.fn(() => []), close: vi.fn() };
     const { videoRef, canvasRef } = buildRefs();
-    const { result } = renderHook(() => usePoseTracking({ videoRef, canvasRef, detector, isActive: true }));
+    const { result } = renderHook(() => usePoseTracking({ videoRef, canvasRef, detector, isActive: true, cameraView: "side" }));
     act(() => vi.advanceTimersByTime(FRAME_MS * 2));
     expect(result.current).toEqual({ framing: { isReady: false, issue: "no_person" }, isStable: false });
+  });
+
+  it("reports every analyzed pose with the image aspect ratio", () => {
+    const detector: PoseDetector = { detect: vi.fn(() => STANDING_POSE), close: vi.fn() };
+    const onPose = vi.fn();
+    const { videoRef, canvasRef } = buildRefs();
+    renderHook(() => usePoseTracking({ videoRef, canvasRef, detector, isActive: true, cameraView: "side", onPose }));
+    act(() => vi.advanceTimersByTime(FRAME_MS * 2));
+    expect(onPose).toHaveBeenCalledWith(STANDING_POSE, 640 / 480, expect.any(Number));
   });
 
   it("does not analyze while inactive", () => {
     const detector: PoseDetector = { detect: vi.fn(() => STANDING_POSE), close: vi.fn() };
     const { videoRef, canvasRef } = buildRefs();
-    renderHook(() => usePoseTracking({ videoRef, canvasRef, detector, isActive: false }));
+    renderHook(() => usePoseTracking({ videoRef, canvasRef, detector, isActive: false, cameraView: "side" }));
     act(() => vi.advanceTimersByTime(FRAME_MS * 4));
     expect(detector.detect).not.toHaveBeenCalled();
   });

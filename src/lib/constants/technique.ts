@@ -15,6 +15,11 @@ export const POSE_MAX_PEOPLE = 1;
 export const MIN_LANDMARK_VISIBILITY = 0.5;
 /** Normalized distance from the frame edges a body part must keep to count as inside the frame. */
 export const FRAME_EDGE_MARGIN = 0.02;
+/**
+ * Side-view exercises: shoulder width / torso length above this = not sideways (step 5.2, measured on reference
+ * photos; revisited in the calibration, POS-001). Front or 3/4 views give wrong joint angles in 2D.
+ */
+export const SIDE_VIEW_MAX_SHOULDER_RATIO = 0.45;
 /** "Começar" is enabled only after the whole body stays framed for this long (spec 014, flow step 3). */
 export const FRAMING_HOLD_MS = 1000;
 /** Countdown before recording (spec 014, flow step 3). */
