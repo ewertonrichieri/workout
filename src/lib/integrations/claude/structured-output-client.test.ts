@@ -51,6 +51,27 @@ beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
 describe("structured output client", () => {
+  it("sends labeled images before the prompt text, never logging their content", async () => {
+    const { service, stream, logger } = setup([textMessage('{"title":"Plano A","days":3}')]);
+    const images = [
+      { label: "Photo 1", mediaType: "image/webp" as const, base64Data: "AAAA" },
+      { label: "Photo 2", mediaType: "image/jpeg" as const, base64Data: "BBBB" },
+    ];
+    await service.generate({ ...REQUEST, images });
+    const [body] = stream.mock.calls[0];
+    expect(body.messages).toEqual([{
+      role: "user",
+      content: [
+        { type: "text", text: "Photo 1" },
+        { type: "image", source: { type: "base64", media_type: "image/webp", data: "AAAA" } },
+        { type: "text", text: "Photo 2" },
+        { type: "image", source: { type: "base64", media_type: "image/jpeg", data: "BBBB" } },
+        { type: "text", text: REQUEST.prompt },
+      ],
+    }]);
+    expect(JSON.stringify(logger.info.mock.calls)).not.toContain("AAAA");
+  });
+
   it("sends a streamed request with schema, fallback and effort, and returns the validated output", async () => {
     const { service, stream } = setup([textMessage('{"title":"Plano A","days":3}')]);
     await expect(service.generate({ ...REQUEST, effort: "xhigh" })).resolves.toEqual({ title: "Plano A", days: 3 });

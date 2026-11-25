@@ -1,6 +1,6 @@
 import type Anthropic from "@anthropic-ai/sdk";
 import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
-import type { BetaContentBlock, BetaJSONOutputFormat, BetaMessage, BetaMessageStreamParams } from "@anthropic-ai/sdk/resources/beta/messages/messages";
+import type { BetaContentBlock, BetaContentBlockParam, BetaJSONOutputFormat, BetaMessage, BetaMessageStreamParams } from "@anthropic-ai/sdk/resources/beta/messages/messages";
 import type { z } from "zod";
 import {
   AI_RETRY_POLICY,
@@ -17,11 +17,23 @@ import { translate } from "@/lib/i18n/translate";
 import type { Logger } from "@/lib/logger/logger";
 import { classifyClaudeError, toClaudeAppError } from "./claude-errors";
 
+export type StructuredOutputImageMediaType = "image/jpeg" | "image/png" | "image/webp";
+
+/** An image sent with the prompt (e.g. a gym photo); only in memory, never logged. */
+export interface StructuredOutputImage {
+  /** Short text placed right before the image, so the answer can refer to it (e.g. "Photo 1"). */
+  label: string;
+  mediaType: StructuredOutputImageMediaType;
+  base64Data: string;
+}
+
 export interface StructuredOutputRequest<T> {
   /** Name for the logs (e.g. "plan.generate"); never the content. */
   operation: string;
   system: string;
   prompt: string;
+  /** Labeled images sent before the prompt text. */
+  images?: readonly StructuredOutputImage[];
   schema: z.ZodType<T>;
   /** Defaults to CLAUDE_MODEL. */
   model?: string;
@@ -53,6 +65,15 @@ function buildSystem<T>(request: StructuredOutputRequest<T>): BetaMessageStreamP
   return [{ type: "text", text: request.system, cache_control: { type: "ephemeral" } }];
 }
 
+function buildUserContent<T>(request: StructuredOutputRequest<T>): string | BetaContentBlockParam[] {
+  if (!request.images || request.images.length === 0) return request.prompt;
+  const imageBlocks = request.images.flatMap((image): BetaContentBlockParam[] => [
+    { type: "text", text: image.label },
+    { type: "image", source: { type: "base64", media_type: image.mediaType, data: image.base64Data } },
+  ]);
+  return [...imageBlocks, { type: "text", text: request.prompt }];
+}
+
 function buildRequestBody<T>(request: StructuredOutputRequest<T>): BetaMessageStreamParams {
   return {
     model: request.model ?? CLAUDE_MODEL,
@@ -60,7 +81,7 @@ function buildRequestBody<T>(request: StructuredOutputRequest<T>): BetaMessageSt
     betas: [CLAUDE_FALLBACK_BETA],
     fallbacks: CLAUDE_FALLBACK_MODE,
     system: buildSystem(request),
-    messages: [{ role: "user", content: request.prompt }],
+    messages: [{ role: "user", content: buildUserContent(request) }],
     output_config: { effort: request.effort ?? DEFAULT_CLAUDE_EFFORT, format: toOutputFormat(request.schema) },
   };
 }

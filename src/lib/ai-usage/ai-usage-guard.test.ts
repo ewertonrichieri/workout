@@ -23,6 +23,12 @@ describe("AI usage guard", () => {
     expect(repository.registerRequest).toHaveBeenCalledWith("readiness.adjust", { maxRequests: 5, windowSeconds: 86_400 });
   });
 
+  it("uses the equipment detection limit (spec 013, D6)", async () => {
+    const { guard, repository } = setup(true);
+    await guard.reserve("equipment.detect");
+    expect(repository.registerRequest).toHaveBeenCalledWith("equipment.detect", { maxRequests: 5, windowSeconds: 86_400 });
+  });
+
   it("rejects with 429 and a Portuguese message once the limit is reached", async () => {
     const { guard, logger } = setup(false);
     const error = await guard.reserve("plan.generate").catch((caught: unknown) => caught);

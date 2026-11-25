@@ -210,6 +210,16 @@ describe("substitution cache (SUB-001)", () => {
   });
 });
 
+describe("equipment detection limit (spec 013)", () => {
+  it("accepts the detection among the limited AI operations", () => {
+    const sql = readAllMigrations();
+    const lastCheck = sql.slice(sql.lastIndexOf("constraint ai_requests_operation_check"));
+    expect(lastCheck).toContain("'equipment.detect'");
+    expect(lastCheck).toContain("'plan.generate'");
+    expect(lastCheck).toContain("'readiness.adjust'");
+  });
+});
+
 describe("table privileges", () => {
   it("lets authenticated users read the catalog and their training data (RLS filters rows)", () => {
     const sql = readAllMigrations();

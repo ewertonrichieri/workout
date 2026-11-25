@@ -18,6 +18,7 @@ import { PLAN_GOALS } from "@/lib/constants/training";
 import { sendJsonRequest } from "@/lib/http/send-json-request";
 import { translate } from "@/lib/i18n/translate";
 import { ChoiceFieldset, FieldText, describedBy, FOCUS_CLASS, INPUT_CLASS, type ChoiceOption } from "./assessment-fields";
+import { EquipmentPhotoDetection } from "./equipment-photo-detection";
 import { buildFormDefaults, describeFieldError, readAssessmentForm, type AssessmentFormDefaults } from "./assessment-form-values";
 
 export const ASSESSMENTS_ENDPOINT = "/api/assessments";
@@ -108,6 +109,7 @@ export function AssessmentForm({ equipment, latest }: AssessmentFormProps) {
       <ScheduleFields defaults={defaults} errors={errors} />
       <ChoiceFieldset id="assessment-split" type="radio" name="splitPreference" legend={translate("assessment.splitLegend")} options={SPLIT_OPTIONS} isChecked={(value) => value === defaults.splitPreference} hint={translate("assessment.splitHint")} error={errors.splitPreference} />
       <ChoiceFieldset id="assessment-equipment" type="checkbox" name="equipmentSlugs" legend={translate("assessment.equipmentLegend")} options={equipmentOptions} isChecked={(value) => defaults.equipmentSlugs.includes(value)} hint={translate("assessment.equipmentHint")} error={errors.equipmentSlugs} />
+      <EquipmentPhotoDetection />
       <LimitationsField defaultValue={defaults.limitations} error={errors.limitations} />
       <SubmitFeedback state={state} />
       <button type="submit" disabled={state.name === "submitting"} className={`min-h-11 rounded-lg bg-accent px-4 font-semibold text-accent-foreground disabled:opacity-60 ${FOCUS_CLASS}`}>

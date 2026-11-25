@@ -461,5 +461,26 @@
       "cardReplaced": "No lugar de {original} hoje: {reason}",
       "continueButton": "Seguir com o treino"
     }
+  },
+  "equipmentDetection": {
+    "photoCount": "Escolha de 1 a {max} fotos.",
+    "tooLarge": "As fotos passam de {maxMegabytes} MB juntas. Envie menos fotos de cada vez.",
+    "unsupportedType": "Envie fotos em JPEG, PNG ou WebP.",
+    "button": "Identificar por foto",
+    "hint": "Envie até {max} fotos dos aparelhos. A IA identifica os equipamentos e as fotos são descartadas logo depois.",
+    "preparing": "Preparando as fotos...",
+    "analyzing": "Analisando as fotos com a IA. Isso leva alguns segundos...",
+    "failed": "Não foi possível analisar as fotos. O que você marcou continua igual; tente de novo.",
+    "compressionFailed": "Não foi possível ler uma das fotos. Tente outra foto, em JPEG, PNG ou WebP.",
+    "resultTitle": "Encontramos estes equipamentos",
+    "resultHint": "Confira e marque na lista de equipamentos o que você tem.",
+    "empty": "Não encontramos equipamentos nessas fotos. Tente fotos mais de perto ou marque a lista à mão.",
+    "confidence": {
+      "high": "Certeza alta",
+      "medium": "Certeza média",
+      "low": "Talvez"
+    },
+    "photoNumbers": "Foto {numbers}",
+    "photoNumbersPlural": "Fotos {numbers}"
   }
 }
