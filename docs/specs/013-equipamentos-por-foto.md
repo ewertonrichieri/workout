@@ -2,7 +2,7 @@
 
 **Etapas:** 4.0 a 4.4 (checklist `docs/reference/001-checklist-implementacao.md`). Promovida de `docs/planning/001-planejamento-inicial.md` (Fase 4).
 
-**Status:** rascunho. Decisões D1 a D8 aguardando o usuário.
+**Status:** aprovada. Decisões D1 a D8 confirmadas pelo usuário em 2026-11-25 (D2 com compressão pedida por ele).
 
 **Pré-requisito:** Fase 3B concluída (2026-11-24).
 
@@ -83,7 +83,7 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 | # | Decisão | Proposta |
 |---|---|---|
 | D1 | Quantas fotos por análise | Até **5** |
-| D2 | Tamanho das fotos | O navegador reduz para no máximo **1.568 px** no lado maior (JPEG 0,8); o servidor recusa acima de **5 MB** cada |
+| D2 | Tamanho das fotos | O navegador reduz para no máximo **1.568 px** no lado maior e **comprime** a imagem (como o TinyPNG faz: perde um pouco de qualidade, fica bem mais leve), recodificando em **WebP qualidade 0,7** (JPEG 0,7 onde o navegador não gera WebP); o servidor recusa acima de **5 MB** cada |
 | D3 | Onde fica o recurso | Só na **anamnese** (seção de equipamentos); sem tela nova separada |
 | D4 | Itens de certeza baixa | Aparecem **desmarcados** com "Talvez"; alta e média vêm marcados |
 | D5 | Equipamentos de cada perfil pronto | **Academia completa:** todos os 30, exceto `tire`, `sledgehammer`, `massage-ball`. **Academia básica:** `barbell`, `dumbbell`, `weight-plate`, `bench`, `cable`, `machine`, `pull-up-bar`, `bodyweight`. **Casa com halteres:** `dumbbell`, `bench`, `band`, `bodyweight`. **Peso corporal:** `bodyweight`, `pull-up-bar` |
@@ -93,7 +93,7 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 
 ## Checklist de aceite
 
-- [ ] 4.0: spec aprovada (D1–D8)
+- [x] 4.0: spec aprovada (D1–D8), 2026-11-25
 - [ ] 4.1: validação das fotos e da resposta da IA com testes (slug fora do vocabulário, certeza, foto sem equipamento, falha, timeout, 429); wrapper com imagens; rota com 401/400/429/502; migration do limite aplicada e testada no Supabase; chamada real medida
 - [ ] 4.2: revisão com marcar/desmarcar, "Talvez", desfazer e perfis prontos, com testes; estados de carregamento, vazio e erro; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
 - [ ] 4.3: geração e troca na hora usando a lista confirmada, com testes

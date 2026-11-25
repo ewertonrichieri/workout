@@ -8,7 +8,7 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **Fase 4 (4.0)** — aprovar as decisões D1–D8 da spec de equipamentos por foto → `specs/013-equipamentos-por-foto.md`
+1. **4.1** — envio de fotos + identificação dos equipamentos pela IA (esforço `xhigh`) → `specs/013-equipamentos-por-foto.md`
 2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
 3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
@@ -17,6 +17,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Concluído recentemente
 
+- **4.0 Spec da Fase 4** — `specs/013-equipamentos-por-foto.md` aprovada (D1–D8; fotos comprimidas no navegador em WebP 0,7, até 1.568 px) → `specs/013-equipamentos-por-foto.md`
 - **SUB-001 Cache das trocas** — a escolha da IA na troca na hora fica guardada por usuário e pela entrada exata da IA (hash); a mesma troca de novo não chama a IA; migration testada num bloco desfeito e aplicada no Supabase → `specs/012-treino-adaptativo.md`
 - **Controle de custo da IA** — limite por usuário em 24 horas (gerar/renovar plano: 3; ajuste do dia: 5; troca na hora sem limite por decisão do usuário, SUB-001) com HTTP 429 em português; proposta do ajuste guardada por check-in (pedir de novo não paga a IA); troca sem IA quando sobram até 3 opções; migration testada num bloco desfeito e aplicada no Supabase → `specs/011-geracao-treino-ia.md`, `specs/012-treino-adaptativo.md`
 - **3B.5 Teste de ponta a ponta (Fase 3B)** — check-in, ajuste da IA (aceitar, manter, desfazer, fallback quando a IA propôs mais que o plano), troca na hora com desfazer, esforço por série, finalizar e autorregulação (descer para 28,5 kg e manter com "no limite") testados no navegador contra o Supabase real com IA real; nenhum defeito; dados temporários apagados; Fase 3B concluída → `specs/012-treino-adaptativo.md`
@@ -64,7 +65,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
-- **4.0 Spec da Fase 4** — rascunho escrito; aguardando o usuário aprovar D1–D8 → `specs/013-equipamentos-por-foto.md`
 - **0.7 Autenticação** — código na `main`; Google configurado (AUTH-001 fechada); falta só a AUTH-002 (teste do cadastro por e-mail) → `specs/007-autenticacao.md`
 
 ---

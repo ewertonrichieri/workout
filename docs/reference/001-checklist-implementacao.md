@@ -82,7 +82,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 3B.3 | Percepção de esforço por série + autorregulação de carga (regra simplificada, D5) | `medium` | [x] |
 | 3B.4 | Substituição na hora (exercício equivalente) | `high` | [x] |
 | 3B.5 | Teste de ponta a ponta da Fase 3B no navegador | `medium` | [x] |
-| 4.0 | Spec da Fase 4 (`013`) com as decisões aprovadas pelo usuário | `medium` | [ ] |
+| 4.0 | Spec da Fase 4 (`013-equipamentos-por-foto.md`) com as decisões aprovadas pelo usuário | `medium` | [x] |
 | 4.1 | Envio de fotos + identificação de equipamentos pela IA | `xhigh` | [ ] |
 | 4.2 | Revisão da lista de equipamentos + perfis prontos | `medium` | [ ] |
 | 4.3 | Filtro de exercícios por equipamento na geração | `low` | [ ] |
