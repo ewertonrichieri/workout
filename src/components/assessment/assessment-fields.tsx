@@ -35,17 +35,21 @@ interface ChoiceFieldsetProps extends FieldTextProps {
   type: "radio" | "checkbox";
   options: readonly ChoiceOption[];
   isChecked: (value: string) => boolean;
+  /** Makes the group controlled (e.g. equipment replaced by a preset); otherwise isChecked is only the default. */
+  onToggle?: (value: string, isChecked: boolean) => void;
 }
 
 /** Radio or checkbox group with legend, hint and error, each option a 44px target. */
-export function ChoiceFieldset({ id, legend, name, type, options, isChecked, hint, error }: ChoiceFieldsetProps) {
+export function ChoiceFieldset({ id, legend, name, type, options, isChecked, onToggle, hint, error }: ChoiceFieldsetProps) {
   return (
     <fieldset className="flex flex-col gap-2" aria-invalid={error ? true : undefined} aria-describedby={describedBy(id, hint, error)}>
       <legend className="mb-1 font-semibold">{legend}</legend>
       <FieldText id={id} hint={hint} error={error} />
       {options.map((option) => (
         <label key={option.value} className={OPTION_CLASS}>
-          <input type={type} name={name} value={option.value} defaultChecked={isChecked(option.value)} className={CONTROL_CLASS} />
+          {onToggle
+            ? <input type={type} name={name} value={option.value} checked={isChecked(option.value)} onChange={(event) => onToggle(option.value, event.currentTarget.checked)} className={CONTROL_CLASS} />
+            : <input type={type} name={name} value={option.value} defaultChecked={isChecked(option.value)} className={CONTROL_CLASS} />}
           <span>{option.label}</span>
         </label>
       ))}

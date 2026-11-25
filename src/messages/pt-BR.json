@@ -473,7 +473,7 @@
     "failed": "Não foi possível analisar as fotos. O que você marcou continua igual; tente de novo.",
     "compressionFailed": "Não foi possível ler uma das fotos. Tente outra foto, em JPEG, PNG ou WebP.",
     "resultTitle": "Encontramos estes equipamentos",
-    "resultHint": "Confira e marque na lista de equipamentos o que você tem.",
+    "resultHint": "Marque o que você tem. Ao usar a lista, ela substitui os equipamentos marcados.",
     "empty": "Não encontramos equipamentos nessas fotos. Tente fotos mais de perto ou marque a lista à mão.",
     "confidence": {
       "high": "Certeza alta",
@@ -481,6 +481,21 @@
       "low": "Talvez"
     },
     "photoNumbers": "Foto {numbers}",
-    "photoNumbersPlural": "Fotos {numbers}"
+    "photoNumbersPlural": "Fotos {numbers}",
+    "restored": "Lista de equipamentos restaurada.",
+    "undo": "Desfazer",
+    "presetsLegend": "Usar um perfil pronto",
+    "presetsHint": "Marca de uma vez os equipamentos do perfil. Você pode ajustar depois.",
+    "presets": {
+      "full_gym": "Academia completa",
+      "basic_gym": "Academia básica",
+      "home_dumbbells": "Casa com halteres",
+      "bodyweight_only": "Só peso corporal"
+    },
+    "presetApplied": "Perfil \"{name}\" aplicado à lista de equipamentos.",
+    "reviewApplied": "Lista de equipamentos atualizada com as fotos.",
+    "applyButton": "Usar esta lista",
+    "applyEmpty": "Marque pelo menos um equipamento.",
+    "alwaysAvailable": "Sempre disponível"
   }
 }

@@ -23,5 +23,6 @@ export function usePhotoDetection() {
     const result = await requestEquipmentDetection(prepared.photos);
     setState(result.ok ? { name: "done", equipment: result.data.equipment } : { name: "error", message: result.message });
   };
-  return { state, detect, isBusy: state.name === "preparing" || state.name === "analyzing" };
+  const reset = () => setState({ name: "idle" });
+  return { state, detect, reset, isBusy: state.name === "preparing" || state.name === "analyzing" };
 }

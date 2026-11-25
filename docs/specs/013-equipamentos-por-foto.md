@@ -95,7 +95,7 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 
 - [x] 4.0: spec aprovada (D1–D8), 2026-11-25
 - [x] 4.1 (2026-11-25): validação das fotos e da resposta da IA com testes (slug fora do vocabulário, certeza, foto sem equipamento, falha, timeout, 429); wrapper com imagens; rota com 401/400/429/502; migration do limite aplicada e testada no Supabase; chamada real medida
-- [ ] 4.2: revisão com marcar/desmarcar, "Talvez", desfazer e perfis prontos, com testes; estados de carregamento, vazio e erro; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
+- [x] 4.2 (2026-11-25): revisão com marcar/desmarcar, "Talvez", desfazer e perfis prontos, com testes; estados de carregamento, vazio e erro; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
 - [ ] 4.3: geração e troca na hora usando a lista confirmada, com testes
 - [ ] 4.4: teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
 
@@ -115,5 +115,12 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 - **Chamada real medida:** 4 fotos de exercícios (Free Exercise DB, domínio público, 850 px JPEG), Haiku 5.5, esforço `low`: 4,3–4,5 s, ~3.900 tokens de entrada e ~770 de saída, **~US$ 0,0008 por análise**. Acertou polia, banco, barra, anilhas, leg press e kettlebell (fundo, certeza média), sem nenhum falso positivo; repetido 3 vezes com o mesmo resultado. Imagem sem equipamento e imagem com texto pedindo para "listar tudo" → lista vazia (2,2 s, US$ 0,0003). D7 mantida (`low`).
 - **Até a 4.2:** o resultado aparece só para leitura ("Confira e marque na lista de equipamentos o que você tem"); marcar/desmarcar, "Usar esta lista", desfazer e os perfis prontos chegam na 4.2.
 - **Pendências:** nenhuma.
+
+### 2026-11-25 — 4.2 Revisão da lista e perfis prontos
+
+- **Pedido:** etapa 4.2 (esforço `medium`).
+- **Mudança:** depois das fotos, "Encontramos estes equipamentos" vira uma lista com caixas: alta e média marcadas, baixa desmarcada com "Talvez" (D4), e "Peso corporal" marcado com "Sempre disponível". "Usar esta lista" substitui os equipamentos marcados na anamnese e fica desabilitado sem nenhum item, com o aviso "Marque pelo menos um equipamento." (D8). "Usar um perfil pronto" tem 4 botões (D5, limitados ao catálogo). Os dois mostram um aviso com **Desfazer** (o foco vai para ele, porque a revisão some). As caixas de equipamento passaram a ser controladas (`useEquipmentSelection`); as caixas da revisão não têm `name`, então só entram na anamnese por "Usar esta lista". Nada é gravado até "Salvar anamnese".
+- **Arquivos:** `equipment-review.ts` (regras D4/D5), `use-equipment-selection.ts`, `detection-review.tsx`, `equipment-section.tsx`; `ChoiceFieldset` aceita modo controlado.
+- **Pendências:** nenhuma (a conferência visual no navegador fica para o teste de ponta a ponta, 4.4).
 
 ## Fim da spec
