@@ -8,7 +8,7 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **Fase 4** — equipamentos da academia por foto (spec 013 a criar e aprovar) → `planning/001-planejamento-inicial.md`
+1. **Fase 4 (4.0)** — aprovar as decisões D1–D8 da spec de equipamentos por foto → `specs/013-equipamentos-por-foto.md`
 2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
 3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
@@ -64,6 +64,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
+- **4.0 Spec da Fase 4** — rascunho escrito; aguardando o usuário aprovar D1–D8 → `specs/013-equipamentos-por-foto.md`
 - **0.7 Autenticação** — código na `main`; Google configurado (AUTH-001 fechada); falta só a AUTH-002 (teste do cadastro por e-mail) → `specs/007-autenticacao.md`
 
 ---
