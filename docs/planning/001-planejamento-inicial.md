@@ -102,6 +102,8 @@ Modelo de dados: `readiness_checkins` (sessão, sono, dor por região, tempo, en
 - Geração do treino filtra exercícios pelos equipamentos disponíveis
 
 ### Fase 5 — Correção de postura (abordagem híbrida)
+> Promovida para `docs/specs/014-correcao-postura.md` (2026-11-25). O texto abaixo é o registro original da ideia.
+
 Abordagem escolhida: **o celular mede, a IA explica**.
 - Botão "Analisar minha execução" no card do exercício
 - Guia de posicionamento da câmera por exercício (ângulo, distância, corpo inteiro no quadro)
