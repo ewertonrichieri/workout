@@ -41,3 +41,14 @@ describe("buildReviewItems (D4)", () => {
     expect(buildReviewItems([], VOCABULARY)).toEqual([]);
   });
 });
+
+describe("ready-made profiles against the curated vocabulary (step 4.3)", () => {
+  it("only name equipment that exists in the catalog", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { FULL_GYM_EXCLUDED_EQUIPMENT, PRESET_EQUIPMENT } = await import("@/lib/constants/equipment-detection");
+    const vocabulary = JSON.parse(readFileSync("seed-data/catalog/vocabulary/equipment.json", "utf8")) as { entries: Array<{ slug: string }> };
+    const known = new Set(vocabulary.entries.map((entry) => entry.slug));
+    const named = [...FULL_GYM_EXCLUDED_EQUIPMENT, ...Object.values(PRESET_EQUIPMENT).flat()];
+    expect(named.filter((slug) => !known.has(slug))).toEqual([]);
+  });
+});
