@@ -179,4 +179,17 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - **Conferido no navegador** (Chromium, câmera falsa com fotos de domínio público do Free Exercise DB alternando em pé/embaixo): MediaPipe mediu o joelho com 179° em pé e 87° embaixo; 3 repetições contadas ao vivo; parada automática depois de ficar em pé; resumo com as 3. **Ruído observado:** a mesma foto "embaixo" deu profundidade de 5°, 10° e "paralela" em repetições diferentes, e uma vez acusou o calcanhar — reforça manter tudo só informativo até a calibração e testar o modelo "full".
 - **Pendências:** POS-001 (calibração; a etapa 5.2 só fecha com ela).
 
+### 2026-11-25 — POS-001: 1º vídeo de calibração (não fecha a pendência)
+
+- **Vídeo:** 11,6 s, agachamento com barra, celular na mão, filmado **de frente na diagonal (~3/4)**, não de lado. Processado quadro a quadro (30 por segundo) com o mesmo código do app, modelos "lite" e "full"; vídeo e quadros apagados depois (só os números ficaram).
+- **Contagem:** os dois modelos contaram **2 repetições**, o certo (o vídeo começa no meio de uma descida, que não conta porque não partiu da posição em pé). Joelho embaixo: lite ~96°, full ~102°.
+- **Visão de lado:** ombros/tronco entre 0,40 e 0,55 (mediana 0,46–0,48), bem perto do limite 0,45: o "Começar" ficaria quase sempre bloqueado, mas liberaria em alguns quadros. **Proposta:** baixar para 0,40, a confirmar com um vídeo de lado de verdade (para não bloquear quem está de lado).
+- **Tronco:** medido em ~10°, mas a inclinação real é claramente maior; de frente/diagonal a pessoa inclina na direção da câmera e a inclinação some na imagem. Confirma que a medição só vale de lado; tronco e fadiga não dão para calibrar com este vídeo.
+- **Profundidade:** coxa 32–37° acima da paralela, coerente com o que se vê (meio agachamento).
+- **Calcanhar (no chão):** 0,02–0,07 contra o limite 0,08 — pouca folga nesta vista; decidir com o vídeo de lado.
+- **Descida:** 0,7–1,0 s, bem em cima do limite de 1 s; depende de onde a repetição começa (último quadro em pé). Rever com o vídeo de lado.
+- **Em pé:** joelho 165–177° (lite) e 160–163° (full) nesta vista; com o "full" a folga para o limite de 160° é pequena. De lado, em pé, o esperado é ~175°.
+- **Lite x full:** contaram igual; o "full" variou menos em pé, mas sem um vídeo de lado não dá para dizer qual mede melhor. Mantido o "lite" por enquanto.
+- **Falta para fechar a POS-001:** um vídeo **de lado** (celular apoiado na altura do quadril, a 2–3 m, perpendicular ao corpo, corpo inteiro), com séries certas e com os erros de propósito.
+
 ## Fim da spec
