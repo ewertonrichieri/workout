@@ -497,5 +497,64 @@
     "applyButton": "Usar esta lista",
     "applyEmpty": "Marque pelo menos um equipamento.",
     "alwaysAvailable": "Sempre disponível"
+  },
+  "technique": {
+    "analyzeLink": "Analisar minha execução",
+    "analyzeUnavailable": "Analisar minha execução indisponível: seu aparelho ou navegador não permite usar a câmera aqui",
+    "title": "Análise da execução",
+    "backToWorkout": "Voltar ao treino",
+    "loadError": "Não foi possível abrir a análise deste exercício.",
+    "notice": {
+      "title": "Antes de começar",
+      "privacy": "O vídeo fica só no seu celular: não é enviado nem guardado.",
+      "limits": "A análise usa uma câmera comum (2D) e pode errar com pouca luz, roupas largas ou parte do corpo escondida.",
+      "health": "Ela não substitui um profissional de educação física. Se sentir dor, pare o exercício.",
+      "accept": "Entendi, continuar"
+    },
+    "guide": {
+      "title": "Posicione o celular",
+      "squatSide": {
+        "side": "Coloque o celular de lado para você, na altura do quadril (no chão ou num banco).",
+        "distance": "Fique a cerca de 2 a 3 metros do celular.",
+        "fullBody": "Seu corpo inteiro precisa aparecer, da cabeça aos pés, durante toda a série.",
+        "light": "Prefira um lugar iluminado e roupas que mostrem o contorno dos joelhos e do quadril."
+      },
+      "illustration": "Ilustração: celular apoiado no chão, de lado para a pessoa, a 2 a 3 metros",
+      "openCamera": "Abrir a câmera"
+    },
+    "framing": {
+      "loadingModel": "Preparando a análise...",
+      "startingCamera": "Ligando a câmera...",
+      "ready": "Tudo certo! Seu corpo inteiro está aparecendo.",
+      "holdStill": "Fique parado um instante...",
+      "issues": {
+        "no_person": "Não encontramos você na imagem. Fique de frente para a área da câmera.",
+        "too_close": "Afaste o celular: seu corpo inteiro precisa aparecer.",
+        "feet_hidden": "Seus pés não aparecem. Afaste o celular ou incline-o para baixo.",
+        "head_hidden": "Sua cabeça não aparece. Afaste o celular ou incline-o para cima.",
+        "off_center": "Centralize o corpo no meio da imagem."
+      },
+      "start": "Começar",
+      "startDisabledHint": "Começar fica disponível quando o corpo inteiro aparecer por 1 segundo.",
+      "cameraPreview": "Imagem da câmera com o esqueleto desenhado"
+    },
+    "countdown": {
+      "label": "Começando em {seconds}",
+      "cancel": "Cancelar"
+    },
+    "recording": {
+      "label": "Gravando",
+      "elapsed": "{seconds} s de {max} s",
+      "stop": "Encerrar",
+      "nextStepsNotice": "Faça a série normalmente. A contagem das repetições e a análise chegam nas próximas etapas."
+    },
+    "errors": {
+      "permission_denied": "Sem permissão para usar a câmera. Libere a câmera para este site nas configurações do navegador (ícone de cadeado ao lado do endereço) e tente de novo.",
+      "no_camera": "Não encontramos uma câmera neste aparelho.",
+      "camera_busy": "A câmera está sendo usada por outro aplicativo. Feche-o e tente de novo.",
+      "unavailable": "Não conseguimos ligar a câmera agora. Tente de novo.",
+      "model": "Não conseguimos preparar a análise neste aparelho agora. Seu treino continua normal.",
+      "retry": "Tentar de novo"
+    }
   }
 }
