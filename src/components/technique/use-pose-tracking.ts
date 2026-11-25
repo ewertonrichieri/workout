@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, type RefObject } from "react";
-import { FRAMING_HOLD_MS } from "@/lib/constants/technique";
-import { assessFraming, type FramingResult } from "@/lib/technique/body-framing";
+import { useEffect, useEffectEvent, useState, type RefObject } from "react";
+import { FRAMING_HOLD_MS, type CameraView } from "@/lib/constants/technique";
+import { assessFraming, type FramingResult, type PoseLandmark } from "@/lib/technique/body-framing";
 import { createFramingHold } from "@/lib/technique/framing-hold";
 import { drawPoseOverlay, type OverlayColors } from "./pose-overlay";
 import type { PoseDetector } from "./pose-detector";
@@ -40,11 +40,16 @@ interface PoseTrackingInput {
   canvasRef: RefObject<HTMLCanvasElement | null>;
   detector: PoseDetector | null;
   isActive: boolean;
+  /** Side-view exercises also require the user to stand sideways (step 5.2). */
+  cameraView: CameraView;
+  /** Every analyzed pose, with the image aspect ratio (rep counting, step 5.2). */
+  onPose?: (landmarks: readonly PoseLandmark[], aspectRatio: number, timestampMs: number) => void;
 }
 
 /** Runs the pose model on every camera frame, draws the skeleton and says whether the body is framed. */
-export function usePoseTracking({ videoRef, canvasRef, detector, isActive }: PoseTrackingInput): PoseTrackingState {
+export function usePoseTracking({ videoRef, canvasRef, detector, isActive, cameraView, onPose }: PoseTrackingInput): PoseTrackingState {
   const [tracking, setTracking] = useState<PoseTrackingState>(INITIAL_TRACKING);
+  const reportPose = useEffectEvent((landmarks: readonly PoseLandmark[], aspectRatio: number, timestampMs: number) => onPose?.(landmarks, aspectRatio, timestampMs));
 
   useEffect(() => {
     if (!isActive || !detector) return;
@@ -58,9 +63,11 @@ export function usePoseTracking({ videoRef, canvasRef, detector, isActive }: Pos
       if (!video || !context || video.readyState < VIDEO_HAS_FRAME) return;
       const nowMs = performance.now();
       const landmarks = detector.detect(video, nowMs);
+      const aspectRatio = video.videoWidth / video.videoHeight;
+      reportPose(landmarks, aspectRatio, nowMs);
       matchCanvasToVideo(context.canvas, video);
       drawPoseOverlay(context, landmarks, colors);
-      const framing = assessFraming(landmarks);
+      const framing = assessFraming(landmarks, { aspectRatio, cameraView });
       const next = { framing, isStable: hold.update(framing.isReady, nowMs) };
       setTracking((previous) => (isSameTracking(previous, next) ? previous : next));
     };
@@ -69,7 +76,7 @@ export function usePoseTracking({ videoRef, canvasRef, detector, isActive }: Pos
       cancelAnimationFrame(frameRequest);
       setTracking(INITIAL_TRACKING);
     };
-  }, [isActive, detector, videoRef, canvasRef]);
+  }, [isActive, detector, videoRef, canvasRef, cameraView]);
 
   return tracking;
 }

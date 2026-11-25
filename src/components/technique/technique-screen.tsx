@@ -7,8 +7,9 @@ import { CameraErrorPanel } from "./camera-error-panel";
 import { PositioningGuide } from "./positioning-guide";
 import { TechniqueCamera } from "./technique-camera";
 import { TechniqueNotice } from "./technique-notice";
+import { TechniqueSummaryView } from "./technique-summary-view";
 
-/** "Analisar minha execução": notice → positioning guide → camera with skeleton and framing check. */
+/** "Analisar minha execução": notice → positioning guide → camera (framing, countdown, recording) → summary. */
 export function TechniqueScreen({ ruleSet }: { ruleSet: TechniqueRuleSet }) {
   const [flow, dispatch] = useReducer(reduceTechniqueFlow, INITIAL_TECHNIQUE_FLOW);
   const backToGuide = () => dispatch({ type: "back_to_guide" });
@@ -21,7 +22,9 @@ export function TechniqueScreen({ ruleSet }: { ruleSet: TechniqueRuleSet }) {
       return <CameraErrorPanel reason={flow.reason} onRetry={backToGuide} />;
     case "model_error":
       return <CameraErrorPanel reason="model" onRetry={backToGuide} />;
+    case "summary":
+      return <TechniqueSummaryView reps={flow.reps} onRecordAgain={() => dispatch({ type: "record_again" })} />;
     default:
-      return <TechniqueCamera phase={flow.phase} dispatch={dispatch} />;
+      return <TechniqueCamera phase={flow.phase} ruleSet={ruleSet} dispatch={dispatch} />;
   }
 }

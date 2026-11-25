@@ -8,10 +8,11 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **5.2 Métricas por repetição** — começando pelo agachamento, com calibração da D5 (`xhigh`) → `specs/014-correcao-postura.md`
-2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
-3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
+1. **POS-001** — calibrar a D5 com gravações suas de agachamento, de lado (fecha a 5.2) (usuário + `xhigh`) → `specs/014-correcao-postura.md`
+2. **5.3 Alertas falados ao vivo + contagem** (`high`) → `specs/014-correcao-postura.md`
+3. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
+4. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
+5. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 
 ---
 
@@ -71,6 +72,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
+- **5.2 Métricas por repetição** — medição, contagem ao vivo, parada automática (D8), checagem de estar de lado e resumo da série entregues e testados; falta a calibração da D5 (POS-001) → `specs/014-correcao-postura.md`
 - **0.7 Autenticação** — código na `main`; Google configurado (AUTH-001 fechada); falta só a AUTH-002 (teste do cadastro por e-mail) → `specs/007-autenticacao.md`
 
 ---
@@ -79,6 +81,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
+- **POS-001** — calibrar a D5 com gravações reais de agachamento do usuário (fecha a 5.2) → `specs/014-correcao-postura.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`

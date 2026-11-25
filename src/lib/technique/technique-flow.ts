@@ -1,8 +1,9 @@
 import type { CameraErrorReason } from "./camera-support";
+import type { TechniqueRep } from "./pose-rep-tracker";
 
 /**
  * Screens of the technique analysis (spec 014, flow): privacy and limits notice → positioning guide →
- * framing (camera on, "Começar" once the body is framed) → countdown → recording.
+ * framing (camera on, "Começar" once the body is framed) → countdown → recording → summary (camera off).
  */
 export type TechniqueFlowState =
   | { phase: "notice" }
@@ -10,6 +11,7 @@ export type TechniqueFlowState =
   | { phase: "framing" }
   | { phase: "countdown" }
   | { phase: "recording" }
+  | { phase: "summary"; reps: TechniqueRep[] }
   | { phase: "camera_error"; reason: CameraErrorReason }
   | { phase: "model_error" };
 
@@ -19,7 +21,8 @@ export type TechniqueFlowEvent =
   | { type: "start_countdown" }
   | { type: "countdown_done" }
   | { type: "framing_lost" }
-  | { type: "stop_recording" }
+  | { type: "recording_finished"; reps: TechniqueRep[] }
+  | { type: "record_again" }
   | { type: "camera_failed"; reason: CameraErrorReason }
   | { type: "model_failed" }
   | { type: "back_to_guide" };
@@ -35,7 +38,7 @@ const TRANSITIONS: Partial<Record<TechniqueFlowEvent["type"], { from: TechniqueF
   start_countdown: { from: "framing", to: { phase: "countdown" } },
   countdown_done: { from: "countdown", to: { phase: "recording" } },
   framing_lost: { from: "countdown", to: { phase: "framing" } },
-  stop_recording: { from: "recording", to: { phase: "framing" } },
+  record_again: { from: "summary", to: { phase: "framing" } },
 };
 
 function reduceFailure(state: TechniqueFlowState, event: TechniqueFlowEvent): TechniqueFlowState | undefined {
@@ -47,6 +50,7 @@ function reduceFailure(state: TechniqueFlowState, event: TechniqueFlowEvent): Te
 }
 
 export function reduceTechniqueFlow(state: TechniqueFlowState, event: TechniqueFlowEvent): TechniqueFlowState {
+  if (event.type === "recording_finished") return state.phase === "recording" ? { phase: "summary", reps: event.reps } : state;
   const failure = reduceFailure(state, event);
   if (failure) return failure;
   const transition = TRANSITIONS[event.type];

@@ -532,7 +532,8 @@
         "too_close": "Afaste o celular: seu corpo inteiro precisa aparecer.",
         "feet_hidden": "Seus pés não aparecem. Afaste o celular ou incline-o para baixo.",
         "head_hidden": "Sua cabeça não aparece. Afaste o celular ou incline-o para cima.",
-        "off_center": "Centralize o corpo no meio da imagem."
+        "off_center": "Centralize o corpo no meio da imagem.",
+        "not_side_view": "Fique de lado para a câmera: o celular precisa ver seu corpo de perfil."
       },
       "start": "Começar",
       "startDisabledHint": "Começar fica disponível quando o corpo inteiro aparecer por 1 segundo.",
@@ -546,7 +547,8 @@
       "label": "Gravando",
       "elapsed": "{seconds} s de {max} s",
       "stop": "Encerrar",
-      "nextStepsNotice": "Faça a série normalmente. A contagem das repetições e a análise chegam nas próximas etapas."
+      "nextStepsNotice": "Faça a série normalmente. A gravação para sozinha depois de 5 segundos parado em pé. Os alertas falados e a análise pela IA chegam nas próximas etapas.",
+      "repCount": "Repetições: {count}"
     },
     "errors": {
       "permission_denied": "Sem permissão para usar a câmera. Libere a câmera para este site nas configurações do navegador (ícone de cadeado ao lado do endereço) e tente de novo.",
@@ -555,6 +557,37 @@
       "unavailable": "Não conseguimos ligar a câmera agora. Tente de novo.",
       "model": "Não conseguimos preparar a análise neste aparelho agora. Seu treino continua normal.",
       "retry": "Tentar de novo"
+    },
+    "summary": {
+      "title": "Resumo da série",
+      "repCountOne": "{count} repetição contada",
+      "repCountOther": "{count} repetições contadas",
+      "noReps": "Não contamos nenhuma repetição. Confira o guia de posicionamento e grave de novo.",
+      "rerecord": "Não conseguimos ver bem mais da metade das repetições. Grave de novo seguindo o guia de posicionamento.",
+      "calibrationNotice": "Os limites ainda estão em calibração: por enquanto, os pontos abaixo só informam e não contam como erro.",
+      "estimateNotice": "Os ângulos são aproximados (câmera comum, 2D).",
+      "repTitle": "{number}ª repetição",
+      "notEvaluated": "Não avaliada: parte do corpo ficou fora da imagem ou escondida.",
+      "noIssues": "Nada a apontar nesta repetição.",
+      "depthOk": "Profundidade: coxa na linha do joelho (paralela) ou abaixo",
+      "depthShallow": "Profundidade: coxa cerca de {degrees}° acima da paralela",
+      "trunk": "Tronco: inclinação máxima de cerca de {degrees}°",
+      "descent": "Descida: {seconds} s",
+      "severity": {
+        "error": "Corrigir",
+        "warning": "Atenção",
+        "info": "Para conferir"
+      },
+      "issues": {
+        "shallow_depth": "a coxa não chegou à linha do joelho (paralela)",
+        "heel_lift": "o calcanhar pode ter saído do chão",
+        "fast_descent": "descida rápida (menos de 1 s); controle a descida",
+        "trunk_lean": "tronco bem inclinado à frente",
+        "trunk_lean_fatigue": "o tronco inclinou cerca de {degrees}° a mais que na 1ª repetição (sinal de cansaço)",
+        "knee_forward": "o joelho passou da ponta do pé (comum em muitas pessoas)"
+      },
+      "aiNextStep": "A nota e as dicas da IA chegam na próxima etapa.",
+      "recordAgain": "Gravar de novo"
     }
   }
 }
