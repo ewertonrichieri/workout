@@ -96,7 +96,7 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 - [x] 4.0: spec aprovada (D1–D8), 2026-11-25
 - [x] 4.1 (2026-11-25): validação das fotos e da resposta da IA com testes (slug fora do vocabulário, certeza, foto sem equipamento, falha, timeout, 429); wrapper com imagens; rota com 401/400/429/502; migration do limite aplicada e testada no Supabase; chamada real medida
 - [x] 4.2 (2026-11-25): revisão com marcar/desmarcar, "Talvez", desfazer e perfis prontos, com testes; estados de carregamento, vazio e erro; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
-- [ ] 4.3: geração e troca na hora usando a lista confirmada, com testes
+- [x] 4.3 (2026-11-25): geração e troca na hora usando a lista confirmada, com testes
 - [ ] 4.4: teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
 
 ## Pendências
@@ -122,5 +122,12 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 - **Mudança:** depois das fotos, "Encontramos estes equipamentos" vira uma lista com caixas: alta e média marcadas, baixa desmarcada com "Talvez" (D4), e "Peso corporal" marcado com "Sempre disponível". "Usar esta lista" substitui os equipamentos marcados na anamnese e fica desabilitado sem nenhum item, com o aviso "Marque pelo menos um equipamento." (D8). "Usar um perfil pronto" tem 4 botões (D5, limitados ao catálogo). Os dois mostram um aviso com **Desfazer** (o foco vai para ele, porque a revisão some). As caixas de equipamento passaram a ser controladas (`useEquipmentSelection`); as caixas da revisão não têm `name`, então só entram na anamnese por "Usar esta lista". Nada é gravado até "Salvar anamnese".
 - **Arquivos:** `equipment-review.ts` (regras D4/D5), `use-equipment-selection.ts`, `detection-review.tsx`, `equipment-section.tsx`; `ChoiceFieldset` aceita modo controlado.
 - **Pendências:** nenhuma (a conferência visual no navegador fica para o teste de ponta a ponta, 4.4).
+
+### 2026-11-25 — 4.3 Filtro por equipamento na geração e na troca
+
+- **Pedido:** etapa 4.3 (esforço `low`).
+- **Mudança:** nenhum código novo de filtro: a geração (`list_plan_candidates`), o ajuste do dia e a troca na hora já leem `equipmentSlugs` da última anamnese, e a lista confirmada por foto ou perfil é gravada ali. Novo teste: todo slug dos perfis prontos (D5) existe no vocabulário curado.
+- **Conferido no Supabase:** `list_plan_candidates` com cada perfil — Academia completa 1.294 candidatos, básica 1.010, casa com halteres 703, só peso corporal 329 — e **0** candidatos usando equipamento fora da lista.
+- **Pendências:** nenhuma.
 
 ## Fim da spec
