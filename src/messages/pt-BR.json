@@ -581,7 +581,7 @@
       "issues": {
         "shallow_depth": "a coxa não chegou à linha do joelho (paralela)",
         "heel_lift": "o calcanhar pode ter saído do chão",
-        "fast_descent": "descida rápida (menos de 1 s); controle a descida",
+        "fast_descent": "descida rápida (menos de {seconds} s); controle a descida",
         "trunk_lean": "tronco bem inclinado à frente",
         "trunk_lean_fatigue": "o tronco inclinou cerca de {degrees}° a mais que na 1ª repetição (sinal de cansaço)",
         "knee_forward": "o joelho passou da ponta do pé (comum em muitas pessoas)"

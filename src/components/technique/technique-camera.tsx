@@ -8,6 +8,7 @@ import { translate } from "@/lib/i18n/translate";
 import { CameraControls, type CameraPhase } from "./camera-controls";
 import { describeCountdown, describeFraming, describeRecording, type CameraStage } from "./technique-status";
 import { useCameraStream } from "./use-camera-stream";
+import { useFramingLossGuard } from "./use-framing-loss-guard";
 import { usePoseDetector } from "./use-pose-detector";
 import { usePoseTracking, type PoseTrackingState } from "./use-pose-tracking";
 import { useRepTracking, type RepTracking } from "./use-rep-tracking";
@@ -42,9 +43,8 @@ function useCameraTimers(phase: CameraPhase, isFramed: boolean, repTracking: Rep
   }, [startTracking, dispatch]);
   const countdownSeconds = useSecondsTimer(phase === "countdown", RECORDING_COUNTDOWN_SECONDS, finishCountdown);
   const recordingSeconds = useSecondsTimer(phase === "recording", MAX_RECORDING_SECONDS, finishRecording);
-  useEffect(() => {
-    if (phase === "countdown" && !isFramed) dispatch({ type: "framing_lost" });
-  }, [phase, isFramed, dispatch]);
+  const cancelCountdown = useCallback(() => dispatch({ type: "framing_lost" }), [dispatch]);
+  useFramingLossGuard(phase === "countdown", isFramed, cancelCountdown);
   return { countdownSeconds, recordingSeconds };
 }
 

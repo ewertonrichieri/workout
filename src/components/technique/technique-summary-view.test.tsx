@@ -11,13 +11,13 @@ function rep(repNumber: number, overrides: Partial<SquatRep> = {}): SquatRep {
 }
 
 describe("TechniqueSummaryView", () => {
-  it("lists each rep with its measures and, before calibration, issues only as 'Para conferir'", () => {
+  it("lists each rep with its measures and the calibrated issues", () => {
     render(<TechniqueSummaryView reps={[rep(1), rep(2, { minThighAngle: 20 }), rep(3, { isEvaluated: false })]} onRecordAgain={vi.fn()} />);
     expect(screen.getByText("3 repetições contadas")).toBeInTheDocument();
-    expect(screen.getByText(/Os limites ainda estão em calibração/)).toBeInTheDocument();
+    expect(screen.queryByText(/Os limites ainda estão em calibração/)).not.toBeInTheDocument();
     const cards = screen.getAllByRole("listitem").filter((item) => item.querySelector("h3"));
     expect(within(cards[0]!).getByText("Nada a apontar nesta repetição.")).toBeInTheDocument();
-    expect(within(cards[1]!).getByText("Para conferir: a coxa não chegou à linha do joelho (paralela)")).toBeInTheDocument();
+    expect(within(cards[1]!).getByText("Corrigir: a coxa não chegou à linha do joelho (paralela)")).toBeInTheDocument();
     expect(within(cards[2]!).getByText(/Não avaliada/)).toBeInTheDocument();
   });
 

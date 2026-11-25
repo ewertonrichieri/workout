@@ -1,5 +1,5 @@
 import { APP_LOCALE } from "@/lib/constants/training";
-import { DISPLAY_ANGLE_STEP_DEGREES, SQUAT_DEPTH_MAX_THIGH_ANGLE } from "@/lib/constants/technique-rules";
+import { DISPLAY_ANGLE_STEP_DEGREES, SQUAT_DEPTH_MAX_THIGH_ANGLE, SQUAT_MIN_DESCENT_MS } from "@/lib/constants/technique-rules";
 import type { SquatRep } from "@/lib/technique/squat/squat-rep-tracker";
 import type { RepIssue } from "@/lib/technique/squat/squat-rules";
 import { translate } from "@/lib/i18n/translate";
@@ -32,6 +32,7 @@ export function describeDescent(rep: SquatRep): string {
 /** "Corrigir: …" / "Atenção: …" / "Para conferir: …". */
 export function describeIssue({ issue, severity }: RepIssue, rep: SquatRep, referenceTrunkLean: number | null): string {
   const extraDegrees = roundAngle(rep.maxTrunkLean - (referenceTrunkLean ?? rep.maxTrunkLean));
-  const text = translate(`technique.summary.issues.${issue}`, { degrees: extraDegrees });
+  const minimumSeconds = secondsFormatter.format(SQUAT_MIN_DESCENT_MS / MS_PER_SECOND);
+  const text = translate(`technique.summary.issues.${issue}`, { degrees: extraDegrees, seconds: minimumSeconds });
   return `${translate(`technique.summary.severity.${severity}`)}: ${text}`;
 }

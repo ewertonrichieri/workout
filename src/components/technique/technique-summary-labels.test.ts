@@ -30,7 +30,7 @@ describe("technique summary labels", () => {
       "Corrigir: o tronco inclinou cerca de 15° a mais que na 1ª repetição (sinal de cansaço)",
     );
     expect(describeIssue({ issue: "shallow_depth", severity: "info" }, REP, 30)).toBe("Para conferir: a coxa não chegou à linha do joelho (paralela)");
-    expect(describeIssue({ issue: "fast_descent", severity: "warning" }, REP, null)).toBe("Atenção: descida rápida (menos de 1 s); controle a descida");
+    expect(describeIssue({ issue: "fast_descent", severity: "warning" }, REP, null)).toBe("Atenção: descida rápida (menos de 0,7 s); controle a descida");
   });
 
   it("counts reps in singular and plural", () => {

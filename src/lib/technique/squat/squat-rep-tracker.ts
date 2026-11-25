@@ -1,6 +1,7 @@
 import {
   IDLE_STOP_MS,
   MAX_UNSEEN_FRAME_RATIO,
+  MIN_SEEN_FRAME_RATIO_TO_COUNT,
   SQUAT_DESCENT_KNEE_ANGLE,
   SQUAT_REP_MAX_BOTTOM_KNEE_ANGLE,
   SQUAT_TOP_KNEE_ANGLE,
@@ -103,7 +104,8 @@ function handleTop(state: TrackerState, frame: SquatFrame, measures: SquatMeasur
 
 function handleDown(state: TrackerState, rep: RepInProgress, frame: SquatFrame, measures: SquatMeasures): void {
   if (measures.kneeAngle < SQUAT_TOP_KNEE_ANGLE) return accumulate(rep, frame);
-  if (rep.minKneeAngle <= SQUAT_REP_MAX_BOTTOM_KNEE_ANGLE) {
+  const isConfirmed = rep.seenFrameCount / rep.frameCount >= MIN_SEEN_FRAME_RATIO_TO_COUNT;
+  if (isConfirmed && rep.minKneeAngle <= SQUAT_REP_MAX_BOTTOM_KNEE_ANGLE) {
     state.reps.push(closeRep(rep, state.reps.length + 1, frame.timestampMs));
     state.lastRepEndMs = frame.timestampMs;
   }

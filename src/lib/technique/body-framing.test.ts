@@ -61,13 +61,18 @@ describe("assessFraming", () => {
       expect(assessFraming(pose, { aspectRatio: 1, cameraView: "front" })).toEqual({ isReady: true });
     });
 
+    it("uses the calibrated limit (0.40): a 3/4 view at 0.44 is not sideways", () => {
+      const pose = buildStandingPose({ 11: { x: 0.445, y: 0.3 }, 12: { x: 0.555, y: 0.3 }, 23: { x: 0.5, y: 0.55 }, 24: { x: 0.5, y: 0.55 } });
+      expect(assessFraming(pose, { aspectRatio: 1, cameraView: "side" })).toEqual({ isReady: false, issue: "not_side_view" });
+    });
+
     it("accepts a side view, where the shoulders overlap", () => {
       const pose = buildStandingPose({ 11: { x: 0.49, y: 0.3 }, 12: { x: 0.51, y: 0.3 }, 23: { x: 0.5, y: 0.55 }, 24: { x: 0.5, y: 0.55 } });
       expect(assessFraming(pose, { aspectRatio: 1, cameraView: "side" })).toEqual({ isReady: true });
     });
 
     it("corrects the aspect ratio before comparing widths", () => {
-      const pose = buildStandingPose({ 11: { x: 0.45, y: 0.3 }, 12: { x: 0.55, y: 0.3 }, 23: { x: 0.5, y: 0.55 }, 24: { x: 0.5, y: 0.55 } });
+      const pose = buildStandingPose({ 11: { x: 0.46, y: 0.3 }, 12: { x: 0.54, y: 0.3 }, 23: { x: 0.5, y: 0.55 }, 24: { x: 0.5, y: 0.55 } });
       expect(assessFraming(pose, { aspectRatio: 1, cameraView: "side" })).toEqual({ isReady: true });
       expect(assessFraming(pose, { aspectRatio: 2, cameraView: "side" })).toEqual({ isReady: false, issue: "not_side_view" });
     });

@@ -129,7 +129,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 | D2 | Onde ficam o modelo e o WASM | **No próprio app** (`public/`, servido pela Vercel com cache), sem depender do CDN do Google em tempo de uso. Arquivos com versão fixa no repositório e licença registrada |
 | D3 | Exercícios suportados | **5.2–5.4:** só agachamento (`barbell-back-squat`, `dumbbell-goblet-squat`, câmera de lado). **5.5:** levantamento terra romeno (`barbell-romanian-deadlift`, `dumbbell-romanian-deadlift`) e remada curvada (`barbell-bent-over-row`, `dumbbell-bent-over-row`). Aparelhos ficam fora desta fase |
 | D4 | Câmera de frente (valgo e simetria) | **Fora da Fase 5** (vai para backlog). Só gravação de lado |
-| D5 | Limites do agachamento (valores iniciais, calibrados na 5.2 com gravações reais e revistos com você) | Profundidade: quadril até a altura do joelho (fêmur paralelo). Inclinação do tronco: alerta acima de ~45° da vertical ou se aumentar ~15° em relação à 1ª repetição (fadiga). Joelho à frente: só informativo, não é erro. Calcanhar saindo do chão: erro. Descida mais rápida que ~1 s: aviso de controle. **Não são dados curados.** Aprovado: até a calibração com gravações reais do usuário na 5.2, os limites **só informam** e não entram na nota como erro. Depois, profundidade e calcanhar viram erro; a inclinação do tronco começa só pela comparação com a 1ª repetição (fadiga). Os valores calibrados são mostrados ao usuário e confirmados antes de contar |
+| D5 | Limites do agachamento (valores iniciais, calibrados na 5.2 com gravações reais e revistos com você; **calibrados em 2026-11-25**, ver Atualizações — tronco absoluto 60°, calcanhar só informa acima de 0,25, descida < 0,7 s) | Profundidade: quadril até a altura do joelho (fêmur paralelo). Inclinação do tronco: alerta acima de ~45° da vertical ou se aumentar ~15° em relação à 1ª repetição (fadiga). Joelho à frente: só informativo, não é erro. Calcanhar saindo do chão: erro. Descida mais rápida que ~1 s: aviso de controle. **Não são dados curados.** Aprovado: até a calibração com gravações reais do usuário na 5.2, os limites **só informam** e não entram na nota como erro. Depois, profundidade e calcanhar viram erro; a inclinação do tronco começa só pela comparação com a 1ª repetição (fadiga). Os valores calibrados são mostrados ao usuário e confirmados antes de contar |
 | D6 | Quadros-chave para a IA | **Não enviar nenhum quadro**, só métricas: o vídeo e as imagens nunca saem do celular. (A outra opção, 2–3 quadros com o rosto borrado, aumenta custo e risco de privacidade) |
 | D7 | Alertas falados | Voz do navegador (`speechSynthesis`, pt-BR), **ligada por padrão** com botão para desligar. Frases curtas: "Desça mais", "Peito para cima", "Calcanhar no chão", "Mais devagar", e a contagem "um, dois…" |
 | D8 | Como encerra a gravação | Toque em "Encerrar" **ou** parada automática após **5 s** em pé sem movimento depois de pelo menos 1 repetição. Teto de **90 s** por gravação |
@@ -142,7 +142,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 
 - [x] 5.0: spec aprovada (D1–D12), 2026-11-25
 - [x] 5.1 (2026-11-25): câmera com permissão e desligamento corretos; MediaPipe carregado sob demanda do próprio app; esqueleto na tela; guia de posicionamento; "Começar" só com corpo inteiro visível; fallbacks sem câmera, sem permissão e sem modelo; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
-- [ ] 5.2: cálculo de ângulos, máquina de contagem e métricas do agachamento com testes (sequências de pontos fictícias: repetição completa, parcial, ruído, ponto pouco visível → "não avaliada") — código e testes entregues em 2026-11-25; falta a calibração da D5 com gravações reais (POS-001)
+- [x] 5.2 (2026-11-25): cálculo de ângulos, máquina de contagem e métricas do agachamento com testes (sequências de pontos fictícias: repetição completa, parcial, ruído, ponto pouco visível → "não avaliada"); D5 calibrada com vídeos reais do usuário (POS-001)
 - [ ] 5.3: contagem e alertas falados com intervalo mínimo, botão de som, fallback só na tela, com testes das regras
 - [ ] 5.4: rota com 401/400/422/429/502; servidor reclassificando os erros; resposta da IA filtrada pelo vocabulário; migration com RLS testada num bloco desfeito e aplicada no Supabase; replay com erros marcados; chamada real medida
 - [ ] 5.5: histórico paginado no detalhe do exercício (com apagar + desfazer); regras do terra romeno e da remada curvada com testes
@@ -152,7 +152,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| POS-001 | **Calibrar a D5 com gravações reais do usuário.** O usuário grava com a câmera do celular, de lado, a 2–3 m, com o corpo inteiro: 1 série certa (~5 repetições), 1 rasa de propósito, 1 com o calcanhar subindo, 1 descendo rápido e 1 inclinando o tronco. Os arquivos são enviados para a sessão por escolha dele (nunca para o repositório) e apagados depois. O agente roda o mesmo código de medição nesses vídeos e propõe os valores de profundidade, calcanhar (`SQUAT_HEEL_RISE_MAX_RATIO`, hoje 0,08), descida, fadiga, contagem (160°/150°/140°) e visão de lado (`SIDE_VIEW_MAX_SHOULDER_RATIO`, hoje 0,45), e avalia trocar o modelo "lite" pelo "full" (D1). Com os valores confirmados pelo usuário, `SQUAT_RULES_CALIBRATED` passa a `true` | `src/lib/constants/technique-rules.ts`, `src/lib/constants/technique.ts` | Alta (fecha a 5.2) |
+| — | Nenhuma (POS-001 fechada em 2026-11-25: calibração aplicada, ver Atualizações) | — | — |
 
 ## Atualizações
 
@@ -191,5 +191,27 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - **Em pé:** joelho 165–177° (lite) e 160–163° (full) nesta vista; com o "full" a folga para o limite de 160° é pequena. De lado, em pé, o esperado é ~175°.
 - **Lite x full:** contaram igual; o "full" variou menos em pé, mas sem um vídeo de lado não dá para dizer qual mede melhor. Mantido o "lite" por enquanto.
 - **Falta para fechar a POS-001:** um vídeo **de lado** (celular apoiado na altura do quadril, a 2–3 m, perpendicular ao corpo, corpo inteiro), com séries certas e com os erros de propósito.
+
+### 2026-11-25 — POS-001 fechada: D5 calibrada com vídeos de lado
+
+- **Vídeos:** 2 gravações de lado do usuário (celular apoiado): agachamento livre com séries certa, rasa e com o tronco inclinado (5 repetições, de calça e meia), e outra descalço, de calça dobrada, com calcanhar subindo e descidas rápidas (9 repetições). Processadas quadro a quadro com o mesmo código do app (modelos "lite" e "full"); o usuário confirmou a leitura de cada repetição. Vídeos e quadros apagados no fim.
+- **Valores confirmados pelo usuário:**
+
+| Limite | Antes | Calibrado | Evidência |
+|---|---|---|---|
+| Profundidade (Corrigir) | coxa ≤ 0° | **mantido** | Só a repetição funda chegou à paralela (−4°); rasas 9–39° acima |
+| Tronco absoluto (só informa) | 45° | **60°** | Repetição funda e certa: 49°; inclinadas de propósito: 75° e 84° |
+| Fadiga (Corrigir) | +15° sobre a 1ª | **mantido** | Acusou as inclinadas (+36° e +45°), não as normais (+10° e +12°) |
+| Calcanhar | erro acima de 0,08 | **só informa, acima de 0,25** | No chão chegou a 0,235 (calça e meia cobrindo o tornozelo); levantado 0,26–0,35, com uma falha (0,17, logo depois de ficar na ponta dos pés). Folga pequena demais para ser erro (falso positivo é pior) |
+| Descida rápida (Atenção) | < 1 s | **< 0,7 s** | Normais 0,8–2,6 s; rápidas de propósito 0,37–0,63 s |
+| Visão de lado | 0,45 | **0,40** | De lado ≤ 0,33 (só passou ao virar para a câmera); 3/4 nunca abaixo de 0,40 |
+| Contagem (160°/150°/140°) | — | **mantida** | 5 de 5 e 9 de 9; uma subida pela metade (joelho ~145°) entre duas descidas conta como uma repetição, pela regra de voltar em pé |
+| Modelo | lite | **mantido** | Mediu igual ao "full" (±5°) e separou melhor o calcanhar; 3,6 MB menor |
+
+- **Ajustes técnicos que saíram dos vídeos:** repetição com menos da metade dos quadros vistos não é contada (o "lite" contou uma repetição fantasma com 1 de 37 quadros vistos enquanto o celular era posicionado); a contagem regressiva só é cancelada depois de 0,5 s fora do quadro (falhas do modelo de ~170 ms cancelavam).
+- **Resultado com os valores calibrados:** vídeo 2 — a repetição certa sem correção; rasas com "Corrigir: profundidade"; inclinadas com "Corrigir: tronco… (cansaço)". Vídeo 3 — calcanhar apontado em 5 das 6 que subiram e em nenhuma que ficou no chão; descida rápida nas 6 rápidas.
+- **Observação:** "joelho passou da ponta do pé" (só informa) apareceu em quase todas as repetições; é comum no agachamento livre. Se incomodar, dá para esconder ou subir o limite depois.
+- `SQUAT_RULES_CALIBRATED = true`: profundidade e fadiga contam como "Corrigir", descida rápida como "Atenção"; tronco absoluto, joelho e calcanhar como "Para conferir". O aviso de "limites em calibração" sai do resumo.
+- **Pendências:** nenhuma. Etapa 5.2 concluída.
 
 ## Fim da spec

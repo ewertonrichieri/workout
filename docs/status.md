@@ -8,16 +8,16 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **POS-001** — calibrar a D5 com gravações suas de agachamento, de lado (fecha a 5.2) (usuário + `xhigh`) → `specs/014-correcao-postura.md`
-2. **5.3 Alertas falados ao vivo + contagem** (`high`) → `specs/014-correcao-postura.md`
-3. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
-4. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-5. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
+1. **5.3 Alertas falados ao vivo + contagem** (`high`) → `specs/014-correcao-postura.md`
+2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
+3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
+4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 
 ---
 
 ## Concluído recentemente
 
+- **5.2 Métricas por repetição (agachamento)** — medição, contagem ao vivo, parada automática (D8), checagem de estar de lado e resumo da série; D5 calibrada com 2 vídeos de lado do usuário (tronco 60° só informa, calcanhar só informa acima de 0,25, descida < 0,7 s, visão de lado 0,40; POS-001 fechada) → `specs/014-correcao-postura.md`
 - **5.1 Câmera + MediaPipe Pose + guia** — "Analisar minha execução" nos agachamentos; aviso de privacidade, guia de posicionamento, câmera com esqueleto, "Começar" só com o corpo inteiro visível, contagem e gravação (até 90 s); MediaPipe servido pelo próprio app e carregado sob demanda; conferido no Chromium com câmera falsa → `specs/014-correcao-postura.md`
 - **5.0 Spec da Fase 5** — `specs/014-correcao-postura.md` aprovada (D1–D12; D5 provisória, só informa até a calibração na 5.2) → `specs/014-correcao-postura.md`
 - **4.4 Teste de ponta a ponta (Fase 4)** — perfil + desfazer, fotos reais com IA, revisão, salvar, fotos sem equipamento, plano gerado só com a lista, limite de 5 análises e teclado testados no navegador contra o Supabase real; nenhum defeito; dados temporários apagados; Fase 4 concluída → `specs/013-equipamentos-por-foto.md`
@@ -72,7 +72,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
-- **5.2 Métricas por repetição** — medição, contagem ao vivo, parada automática (D8), checagem de estar de lado e resumo da série entregues e testados; falta a calibração da D5 (POS-001) → `specs/014-correcao-postura.md`
 - **0.7 Autenticação** — código na `main`; Google configurado (AUTH-001 fechada); falta só a AUTH-002 (teste do cadastro por e-mail) → `specs/007-autenticacao.md`
 
 ---
@@ -81,7 +80,6 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
-- **POS-001** — calibrar a D5 com gravações reais de agachamento do usuário (fecha a 5.2) → `specs/014-correcao-postura.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`
