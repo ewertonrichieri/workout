@@ -589,7 +589,8 @@
         "trunk_lean_fatigue": "o tronco inclinou cerca de {degrees}° a mais que na 1ª repetição (sinal de cansaço)",
         "knee_forward": "o joelho passou da ponta do pé (comum em muitas pessoas)"
       },
-      "recordAgain": "Gravar de novo"
+      "recordAgain": "Gravar de novo",
+      "historyLink": "Ver histórico de técnica"
     },
     "cues": {
       "shallow_depth": "Desça mais",
@@ -624,6 +625,34 @@
       "goToRep": "Ir para a {number}ª repetição",
       "goToRepWithCorrection": "Ir para a {number}ª repetição (com ponto a corrigir)",
       "unavailable": "Seu navegador não permite gravar o replay. O resumo e a análise continuam normais."
+    },
+    "history": {
+      "resource": "Análise",
+      "title": "Técnica",
+      "subtitle": "Suas análises de execução deste exercício",
+      "loading": "Carregando análises...",
+      "empty": "Nenhuma análise ainda. Use \"Analisar minha execução\" no treino para começar.",
+      "loadError": "Não foi possível carregar o histórico de técnica.",
+      "retry": "Tentar de novo",
+      "score": "Nota {score}/{max}",
+      "reps": "{evaluated} de {total} repetições avaliadas",
+      "frequentIssues": "Mais frequente: {issues}",
+      "noIssues": "Nenhum ponto a corrigir.",
+      "issueCount": "{issue} ({count}×)",
+      "loadMore": "Carregar mais",
+      "delete": "Apagar",
+      "deleteLabel": "Apagar a análise de {date}",
+      "deleted": "Análise apagada.",
+      "undo": "Desfazer",
+      "deleteFailed": "Não foi possível apagar a análise. Ela continua no histórico.",
+      "issues": {
+        "shallow_depth": "profundidade",
+        "heel_lift": "calcanhar",
+        "fast_descent": "descida rápida",
+        "trunk_lean": "tronco inclinado",
+        "trunk_lean_fatigue": "tronco cansando",
+        "knee_forward": "joelho à frente"
+      }
     }
   }
 }

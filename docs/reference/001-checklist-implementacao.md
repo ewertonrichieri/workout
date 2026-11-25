@@ -97,7 +97,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 5.2 | Métricas por repetição (ângulos, amplitude, ritmo) — começar pelo agachamento; D5 calibrada com vídeos reais (POS-001) | `xhigh` | [x] |
 | 5.3 | Alertas falados ao vivo + contagem de repetições | `high` | [x] |
 | 5.4 | Análise pós-série pela IA + replay com erros marcados | `high` | [x] |
-| 5.5 | Histórico de técnica + regras para mais exercícios | `medium` | [ ] |
+| 5.5 | Histórico de técnica + regras para mais exercícios — histórico entregue; regras do terra romeno e da remada pendentes (POS-002) | `medium` | [ ] |
 | 5.6 | Teste de ponta a ponta da Fase 5 no navegador | `medium` | [ ] |
 | 5B.1 | Previsão de evolução e detecção de estagnação | `high` | [ ] |
 

@@ -145,14 +145,14 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - [x] 5.2 (2026-11-25): cálculo de ângulos, máquina de contagem e métricas do agachamento com testes (sequências de pontos fictícias: repetição completa, parcial, ruído, ponto pouco visível → "não avaliada"); D5 calibrada com vídeos reais do usuário (POS-001)
 - [x] 5.3 (2026-11-25): contagem e alertas falados com intervalo mínimo, botão de som, fallback só na tela, com testes das regras
 - [x] 5.4 (2026-11-25): rota com 401/400/422/429/502; servidor reclassificando os erros; resposta da IA filtrada pelo vocabulário; migration com RLS testada num bloco desfeito e aplicada no Supabase; replay com erros marcados; chamada real medida
-- [ ] 5.5: histórico paginado no detalhe do exercício (com apagar + desfazer); regras do terra romeno e da remada curvada com testes
+- [ ] 5.5: histórico paginado no detalhe do exercício (com apagar + desfazer) — **entregue em 2026-11-25**; regras do terra romeno e da remada curvada com testes — pendente (POS-002)
 - [ ] 5.6: teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
 
 ## Pendências
 
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
-| — | Nenhuma (POS-001 fechada em 2026-11-25: calibração aplicada, ver Atualizações) | — | — |
+| POS-002 | **Regras do terra romeno e da remada curvada (D3, parte da 5.5).** Antes de codar: decidir com o usuário o que medir em cada exercício (D13/D14 propostas na conversa de 2026-11-25) e calibrar com vídeos de lado do usuário, como a POS-001. Hoje o código é só do agachamento: as métricas por repetição, as colunas de `technique_reps` e o prompt precisam virar genéricos por exercício | `src/lib/technique/`, `src/lib/technique-analysis/`, migration nova | Média (fecha a 5.5) |
 
 ## Atualizações
 
@@ -231,5 +231,13 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - **Chamada real medida** (série fictícia de 5 repetições, `scripts/measure-technique-analysis.ts`): **5–6 s, ~2.000 tokens de entrada e ~1.100 de saída, ~US$ 0,0008 por análise**; notas estáveis entre chamadas (9, 9, 6, 4, 3); nada descartado pelo filtro. Duas correções feitas depois das primeiras medições: uma resposta veio sem acentos (o prompt agora pede acentos) e a IA escreveu correção para o joelho à frente, que só informa (agora o filtro descarta). D12 mantida (`low`).
 - **Conferido no Chromium** (câmera falsa, API interceptada no navegador porque criar usuário de teste no Supabase foi bloqueado nesta sessão): um pedido só, com apenas as chaves numéricas; replay de 17 s gravado na memória; botões das repetições com as marcadas; pular para a repetição; painel da IA. A rota com login, o banco e a IA juntos ficam para o teste de ponta a ponta (5.6).
 - **Pendências:** nenhuma.
+
+### 2026-11-25 — 5.5 Histórico de técnica (parte 1 de 2)
+
+- **Pedido:** etapa 5.5 (esforço `medium`).
+- **Mudança:** `GET /api/technique-analyses?exercise=<slug>&page=<n>` (10 por página, só exercícios com análise) e `DELETE /api/technique-analyses/:id` (404 se não for do usuário). No detalhe do exercício, seção "Técnica": data (no fuso do app), nota, repetições avaliadas, erros mais frequentes (só erro/atenção, quantas repetições) e a dica principal; "Carregar mais"; estados de carregamento, vazio e erro. "Apagar" esconde a análise e mostra "Análise apagada. Desfazer" (foco no Desfazer) por 5 s; só então apaga de verdade (D9); se falhar, a análise volta com aviso; sair da tela dentro dos 5 s ainda apaga. No resumo da série, "Ver histórico de técnica" depois que a IA conclui.
+- **Banco:** migration `20261202000000_technique_history_delete.sql` (permissão de apagar; RLS já restringia ao dono) testada num bloco desfeito — outro usuário não apagou, o dono apagou e as repetições foram junto — e aplicada no Supabase.
+- **Conferido no Chromium** (API simulada no navegador): lista, desfazer, apagar depois de 5 s. Defeito achado e corrigido: a data aparecia com a hora colada ("25T12:00…/11/2026"); agora o servidor devolve a data no fuso do app.
+- **Pendências:** POS-002 (regras do terra romeno e da remada).
 
 ## Fim da spec

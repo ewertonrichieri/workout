@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo } from "react";
+import { buildExerciseDetailHref } from "@/components/exercises/exercise-search-href";
 import { PRIMARY_BUTTON_CLASS } from "@/components/readiness/readiness-styles";
 import type { CameraView } from "@/lib/constants/technique";
 import { TECHNIQUE_SCORE_MAX } from "@/lib/constants/technique-analysis";
@@ -101,6 +103,11 @@ export function TechniqueSummaryView(props: TechniqueSummaryViewProps) {
         </ol>
       )}
       <button type="button" onClick={props.onRecordAgain} className={PRIMARY_BUTTON_CLASS}>{translate("technique.summary.recordAgain")}</button>
+      {analysis.state.status === "success" && (
+        <Link href={`${buildExerciseDetailHref(props.exerciseSlug)}#tecnica`} className="flex min-h-11 items-center self-start font-medium text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong">
+          {translate("technique.summary.historyLink")}
+        </Link>
+      )}
     </section>
   );
 }
