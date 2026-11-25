@@ -9,15 +9,15 @@
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
 1. **POS-002** — regras do terra romeno e da remada (decisões + vídeos do usuário; fecha a 5.5) → `specs/014-correcao-postura.md`
-2. **5.6 Teste de ponta a ponta da Fase 5** (`medium`; precisa de usuário de teste no Supabase ou da conta do usuário) → `specs/014-correcao-postura.md`
-3. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
-4. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-5. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
+2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
+3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
+4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 
 ---
 
 ## Concluído recentemente
 
+- **5.6 Teste de ponta a ponta (Fase 5)** — login, 401/400/422, câmera, voz, parada automática, análise real da IA, banco, histórico com desfazer e apagar testados no navegador contra o Supabase real; 3 defeitos de texto da IA corrigidos; dados temporários apagados → `specs/014-correcao-postura.md`
 - **5.4 Análise pela IA + replay** — `POST /api/technique-analyses` só com números, regras reaplicadas no servidor, IA filtrada (correções só do que as regras acusaram), limite de 10 em 24 h, gravação só quando a IA conclui; replay em memória com o esqueleto e as repetições a corrigir em vermelho; chamada real ~5–6 s e ~US$ 0,0008; migration testada num bloco desfeito e aplicada no Supabase → `specs/014-correcao-postura.md`
 - **5.3 Alertas falados ao vivo** — contagem regressiva e repetições faladas em pt-BR, um alerta curto por repetição ("Desça mais", "Peito para cima", "Mais devagar") com intervalo mínimo de 4 s, botão de som lembrado no aparelho, alertas também na tela → `specs/014-correcao-postura.md`
 - **5.2 Métricas por repetição (agachamento)** — medição, contagem ao vivo, parada automática (D8), checagem de estar de lado e resumo da série; D5 calibrada com 2 vídeos de lado do usuário (tronco 60° só informa, calcanhar só informa acima de 0,25, descida < 0,7 s, visão de lado 0,40; POS-001 fechada) → `specs/014-correcao-postura.md`

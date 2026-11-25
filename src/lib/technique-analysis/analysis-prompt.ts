@@ -18,13 +18,15 @@ export const TECHNIQUE_ANALYSIS_SYSTEM_PROMPT = `You are a strength coach explai
 - corrections: only for issues marked "error" or "warning", one per issue, using the issue code exactly, with the reps where it happened and a short, practical fix. "info" issues are not corrections. strengths: what went well, only when supported by the numbers.
 - Angles are approximate (2D camera): say "cerca de" and never sound more certain than the data.
 - Never give a medical diagnosis. When the person reported an injury or limitation, say once to check the movement with a professional.
-- Write every text in Brazilian Portuguese with correct accents (e.g. "próxima série", "chão"), short and friendly.`;
+- Never comment on the heel, not even as a strength: it is unreliable in 2D. Do not praise or correct "info" issues.
+- Each text has at most 200 characters. Write every text in Brazilian Portuguese with correct accents (e.g. "próxima série", "chão"), short and friendly.`;
 
 const MS_PER_SECOND = 1000;
 
 function describeThigh(thighAngle: number): string {
   const degrees = Math.round(Math.abs(thighAngle));
-  return thighAngle > 0 ? `thigh ${degrees}° above parallel` : `thigh ${degrees}° below parallel`;
+  // Any angle above parallel is shown as at least 1°, so "0° above" never contradicts a shallow_depth issue.
+  return thighAngle > 0 ? `thigh ${Math.max(1, degrees)}° above parallel` : `thigh ${degrees}° below parallel`;
 }
 
 function describeRep({ rep, issues }: RepAssessment): string {

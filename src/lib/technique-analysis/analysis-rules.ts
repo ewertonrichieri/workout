@@ -22,8 +22,16 @@ function clampScore(score: number): number {
   return Math.min(TECHNIQUE_SCORE_MAX, Math.max(0, Math.round(score)));
 }
 
+const ELLIPSIS = "…";
+
+/** Trims and, when too long, cuts at the last word boundary with "…" (never in the middle of a word). */
 function cleanText(text: string): string {
-  return text.trim().slice(0, MAX_FEEDBACK_TEXT_LENGTH);
+  const trimmed = text.trim();
+  if (trimmed.length <= MAX_FEEDBACK_TEXT_LENGTH) return trimmed;
+  const room = trimmed.slice(0, MAX_FEEDBACK_TEXT_LENGTH - ELLIPSIS.length);
+  const lastSpace = room.lastIndexOf(" ");
+  const cut = lastSpace > 0 ? room.slice(0, lastSpace) : room;
+  return `${cut.replace(/[\s,;:.\-–]+$/u, "")}${ELLIPSIS}`;
 }
 
 function isKnownIssue(issue: string): issue is TechniqueIssue {

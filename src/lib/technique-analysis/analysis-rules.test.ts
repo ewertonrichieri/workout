@@ -42,6 +42,13 @@ describe("sanitizeAnalysis (spec 014: the AI may only cite what was measured)", 
     expect(result.issues).toEqual(["unknown_issue", "unflagged_issue"]);
   });
 
+  it("cuts long texts at a word boundary, never in the middle of a word", () => {
+    const words = "Desça até a coxa ficar paralela ao chão ".repeat(10);
+    const result = sanitizeAnalysis({ ...OUTPUT, mainTip: words }, ASSESSMENTS);
+    expect(result.analysis.mainTip.length).toBeLessThanOrEqual(240);
+    expect(result.analysis.mainTip).toMatch(/\p{L}…$/u);
+  });
+
   it("clamps scores to 0–10, trims texts and limits the number of items", () => {
     const longText = "a".repeat(400);
     const result = sanitizeAnalysis({
@@ -51,6 +58,7 @@ describe("sanitizeAnalysis (spec 014: the AI may only cite what was measured)", 
     expect(result.analysis.overallScore).toBe(10);
     expect(result.analysis.reps).toEqual([{ repNumber: 1, score: 0 }]);
     expect(result.analysis.mainTip).toHaveLength(240);
+    expect(result.analysis.mainTip.endsWith("…")).toBe(true);
     expect(result.analysis.strengths).toEqual(["um", "dois", "três"]);
   });
 });
