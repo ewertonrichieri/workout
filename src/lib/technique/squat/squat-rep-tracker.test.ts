@@ -60,6 +60,12 @@ describe("createSquatRepTracker", () => {
     expect(tracker.finish()[0]).toMatchObject({ isEvaluated: false, frameCount: 6, seenFrameCount: 3 });
   });
 
+  it("does not count a rep the camera barely saw (less than half of its frames)", () => {
+    const tracker = feed([175, 140, null, null, null, 90, null, 175]);
+    expect(tracker.repCount).toBe(0);
+    expect(tracker.finish()).toEqual([]);
+  });
+
   it("keeps a rep evaluated with a few unseen frames", () => {
     const tracker = feed([175, 140, 120, null, 90, 100, 120, 150, 175]);
     expect(tracker.finish()[0]?.isEvaluated).toBe(true);
