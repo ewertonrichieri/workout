@@ -2,6 +2,8 @@
 
 import { useCallback, useRef, useState, type Dispatch } from "react";
 import type { TechniqueRuleSetId } from "@/lib/constants/technique";
+import { SQUAT_RULES_CALIBRATED } from "@/lib/constants/technique-rules";
+import { pickLiveCue, type SpokenCue } from "@/lib/technique/live-cues";
 import type { PoseLandmark } from "@/lib/technique/body-framing";
 import { createPoseRepTracker, type PoseRepTracker } from "@/lib/technique/pose-rep-tracker";
 import type { TechniqueFlowEvent } from "@/lib/technique/technique-flow";
@@ -15,8 +17,10 @@ export interface RepTracking {
   handlePose: (landmarks: readonly PoseLandmark[], aspectRatio: number, timestampMs: number) => void;
 }
 
-/** Counts reps from the camera poses only while recording (spec 014, step 5.2). */
-export function useRepTracking(ruleSetId: TechniqueRuleSetId, dispatch: Dispatch<TechniqueFlowEvent>): RepTracking {
+export type RepListener = (repCount: number, cue: SpokenCue | null) => void;
+
+/** Counts reps from the camera poses only while recording (steps 5.2–5.3); `onRep` hears each new rep with its cue. */
+export function useRepTracking(ruleSetId: TechniqueRuleSetId, dispatch: Dispatch<TechniqueFlowEvent>, onRep?: RepListener): RepTracking {
   const trackerRef = useRef<PoseRepTracker | null>(null);
   const [repCount, setRepCount] = useState(0);
 
@@ -34,10 +38,12 @@ export function useRepTracking(ruleSetId: TechniqueRuleSetId, dispatch: Dispatch
   const handlePose = useCallback((landmarks: readonly PoseLandmark[], aspectRatio: number, timestampMs: number) => {
     const tracker = trackerRef.current;
     if (!tracker) return;
+    const previousCount = tracker.repCount;
     tracker.addPose(landmarks, aspectRatio, timestampMs);
     setRepCount(tracker.repCount);
+    if (tracker.repCount > previousCount) onRep?.(tracker.repCount, pickLiveCue(tracker.finish(), SQUAT_RULES_CALIBRATED));
     if (tracker.isIdle(timestampMs)) finishRecording();
-  }, [finishRecording]);
+  }, [finishRecording, onRep]);
 
   return { repCount, startTracking, finishRecording, handlePose };
 }

@@ -11,8 +11,11 @@ import { useCameraStream } from "./use-camera-stream";
 import { useFramingLossGuard } from "./use-framing-loss-guard";
 import { usePoseDetector } from "./use-pose-detector";
 import { usePoseTracking, type PoseTrackingState } from "./use-pose-tracking";
-import { useRepTracking, type RepTracking } from "./use-rep-tracking";
+import { useRepTracking, type RepListener, type RepTracking } from "./use-rep-tracking";
 import { useSecondsTimer } from "./use-seconds-timer";
+import { SoundToggle } from "./sound-toggle";
+import { useLiveCues } from "./use-live-cues";
+import { useSpeech } from "./use-speech";
 
 interface TechniqueCameraProps {
   phase: CameraPhase;
@@ -54,12 +57,33 @@ function describeStatus(phase: CameraPhase, stage: CameraStage, tracking: PoseTr
   return describeFraming(stage, tracking.framing, tracking.isStable);
 }
 
-/** Camera preview with the skeleton, the framing message, the live rep count and the controls (steps 5.1–5.2). */
+function RecordingCounter({ repCount, lastCue }: { repCount: number; lastCue: string | null }) {
+  return (
+    <div aria-live="polite" className="flex flex-col gap-1">
+      <p className="text-4xl font-semibold">{translate("technique.recording.repCount", { count: repCount })}</p>
+      {lastCue && <p className="text-lg font-semibold text-accent-strong">{translate("technique.recording.lastCue", { cue: lastCue })}</p>}
+    </div>
+  );
+}
+
+/** Camera preview with the skeleton, framing message, live rep count, spoken cues and controls (steps 5.1–5.3). */
 export function TechniqueCamera({ phase, ruleSet, dispatch }: TechniqueCameraProps) {
-  const repTracking = useRepTracking(ruleSet.id, dispatch);
+  const speech = useSpeech();
+  const handleRepRef = useRef<RepListener>(() => undefined);
+  const onRep = useCallback<RepListener>((count, cue) => handleRepRef.current(count, cue), []);
+  const repTracking = useRepTracking(ruleSet.id, dispatch, onRep);
   const { videoRef, canvasRef, stage, tracking } = useCameraPipeline(dispatch, ruleSet.cameraView, repTracking.handlePose);
   const isFramed = tracking.framing?.isReady === true;
   const seconds = useCameraTimers(phase, isFramed, repTracking, dispatch);
+  const cues = useLiveCues(phase, seconds.countdownSeconds, speech);
+  useEffect(() => {
+    handleRepRef.current = cues.handleRep;
+  }, [cues.handleRep]);
+  const start = () => {
+    cues.resetCues();
+    cues.announceStart();
+    dispatch({ type: "start_countdown" });
+  };
   return (
     <section className="flex flex-col gap-3">
       <div className="relative overflow-hidden rounded-2xl border border-border bg-surface" role="img" aria-label={translate("technique.framing.cameraPreview")}>
@@ -67,11 +91,12 @@ export function TechniqueCamera({ phase, ruleSet, dispatch }: TechniqueCameraPro
         <canvas ref={canvasRef} className="absolute inset-0 h-full w-full -scale-x-100" />
       </div>
       <p role="status" aria-live="polite" className={`font-medium ${isFramed ? "text-accent-strong" : ""}`}>{describeStatus(phase, stage, tracking, seconds)}</p>
-      {phase === "recording" && <p aria-live="polite" className="text-4xl font-semibold">{translate("technique.recording.repCount", { count: repTracking.repCount })}</p>}
+      {phase === "recording" && <RecordingCounter repCount={repTracking.repCount} lastCue={cues.lastCue} />}
+      <SoundToggle isSupported={speech.isSupported} isEnabled={speech.isEnabled} onToggle={speech.toggle} />
       <CameraControls
         phase={phase}
         canStart={stage === "tracking" && tracking.isStable}
-        onStart={() => dispatch({ type: "start_countdown" })}
+        onStart={start}
         onCancelCountdown={() => dispatch({ type: "framing_lost" })}
         onStop={repTracking.finishRecording}
       />

@@ -42,6 +42,15 @@ describe("useRepTracking", () => {
     expect(dispatch).toHaveBeenCalledWith({ type: "recording_finished", reps: [expect.objectContaining({ repNumber: 1 })] });
   });
 
+  it("reports each new rep with its spoken cue (calibrated rules)", () => {
+    const dispatch = vi.fn();
+    const onRep = vi.fn();
+    const { result } = renderHook(() => useRepTracking("squat", dispatch, onRep));
+    act(() => result.current.startTracking());
+    act(() => [...ONE_REP, ...ONE_REP].forEach((joints, index) => result.current.handlePose(buildSidePose(joints), 1, index * FRAME_MS)));
+    expect(onRep.mock.calls).toEqual([[1, "fast_descent"], [2, "fast_descent"]]);
+  });
+
   it("starts from zero on a new recording", () => {
     const { result, feed } = setup();
     act(() => result.current.startTracking());
