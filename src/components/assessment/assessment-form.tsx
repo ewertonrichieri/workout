@@ -18,7 +18,7 @@ import { PLAN_GOALS } from "@/lib/constants/training";
 import { sendJsonRequest } from "@/lib/http/send-json-request";
 import { translate } from "@/lib/i18n/translate";
 import { ChoiceFieldset, FieldText, describedBy, FOCUS_CLASS, INPUT_CLASS, type ChoiceOption } from "./assessment-fields";
-import { EquipmentPhotoDetection } from "./equipment-photo-detection";
+import { EquipmentSection } from "./equipment-section";
 import { buildFormDefaults, describeFieldError, readAssessmentForm, type AssessmentFormDefaults } from "./assessment-form-values";
 
 export const ASSESSMENTS_ENDPOINT = "/api/assessments";
@@ -100,7 +100,6 @@ function SubmitFeedback({ state }: { state: SubmitState }) {
 export function AssessmentForm({ equipment, latest }: AssessmentFormProps) {
   const defaults = buildFormDefaults(latest);
   const { state, fieldErrors: errors, submit } = useAssessmentSubmit();
-  const equipmentOptions = equipment.map((term) => ({ value: term.slug, label: term.name }));
   return (
     <form noValidate onSubmit={(event) => void submit(event)} className="flex flex-col gap-6">
       <p className="text-muted">{translate("assessment.intro")}</p>
@@ -108,8 +107,7 @@ export function AssessmentForm({ equipment, latest }: AssessmentFormProps) {
       <ChoiceFieldset id="assessment-level" type="radio" name="experienceLevel" legend={translate("assessment.levelLegend")} options={LEVEL_OPTIONS} isChecked={(value) => value === defaults.experienceLevel} error={errors.experienceLevel} />
       <ScheduleFields defaults={defaults} errors={errors} />
       <ChoiceFieldset id="assessment-split" type="radio" name="splitPreference" legend={translate("assessment.splitLegend")} options={SPLIT_OPTIONS} isChecked={(value) => value === defaults.splitPreference} hint={translate("assessment.splitHint")} error={errors.splitPreference} />
-      <ChoiceFieldset id="assessment-equipment" type="checkbox" name="equipmentSlugs" legend={translate("assessment.equipmentLegend")} options={equipmentOptions} isChecked={(value) => defaults.equipmentSlugs.includes(value)} hint={translate("assessment.equipmentHint")} error={errors.equipmentSlugs} />
-      <EquipmentPhotoDetection />
+      <EquipmentSection equipment={equipment} initialSlugs={defaults.equipmentSlugs} error={errors.equipmentSlugs} />
       <LimitationsField defaultValue={defaults.limitations} error={errors.limitations} />
       <SubmitFeedback state={state} />
       <button type="submit" disabled={state.name === "submitting"} className={`min-h-11 rounded-lg bg-accent px-4 font-semibold text-accent-foreground disabled:opacity-60 ${FOCUS_CLASS}`}>

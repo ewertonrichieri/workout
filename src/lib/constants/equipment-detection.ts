@@ -27,3 +27,14 @@ export const DETECTION_CONFIDENCES = ["high", "medium", "low"] as const;
 export type DetectionConfidence = (typeof DETECTION_CONFIDENCES)[number];
 /** Decision D4: only these come checked in the review; "low" shows as "Talvez". */
 export const PRESELECTED_CONFIDENCES: readonly DetectionConfidence[] = ["high", "medium"];
+
+/** Ready-made equipment profiles (spec 013, step 4.2, decision D5). */
+export const EQUIPMENT_PRESETS = ["full_gym", "basic_gym", "home_dumbbells", "bodyweight_only"] as const;
+export type EquipmentPreset = (typeof EQUIPMENT_PRESETS)[number];
+/** "Academia completa" = the whole vocabulary except these. */
+export const FULL_GYM_EXCLUDED_EQUIPMENT: readonly string[] = ["tire", "sledgehammer", "massage-ball"];
+export const PRESET_EQUIPMENT: Record<Exclude<EquipmentPreset, "full_gym">, readonly string[]> = {
+  basic_gym: ["barbell", "dumbbell", "weight-plate", "bench", "cable", "machine", "pull-up-bar", "bodyweight"],
+  home_dumbbells: ["dumbbell", "bench", "band", "bodyweight"],
+  bodyweight_only: ["bodyweight", "pull-up-bar"],
+};

@@ -4,6 +4,8 @@ import type { SavedAssessment } from "@/lib/assessment/assessment-schema";
 import { AssessmentForm } from "./assessment-form";
 import { readAssessmentForm } from "./assessment-form-values";
 
+const compressPhoto = vi.hoisted(() => vi.fn(async () => new Blob(["x"], { type: "image/webp" })));
+vi.mock("./photo-compression", async (importOriginal) => ({ ...(await importOriginal<typeof import("./photo-compression")>()), compressPhoto }));
 vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
 
 const EQUIPMENT = [
@@ -138,5 +140,33 @@ describe("AssessmentForm", () => {
     const button = screen.getByRole("button", { name: "Identificar por foto" });
     expect(button).toHaveAttribute("type", "button");
     expect(screen.getByText(/Envie até 5 fotos dos aparelhos/)).toBeInTheDocument();
+  });
+
+  it("applies a ready-made profile to the checkboxes, sends it with the form and can undo it", async () => {
+    const fetchMock = mockFetch(201, { success: true, data: { assessmentId: "a" } });
+    render(<AssessmentForm equipment={EQUIPMENT} latest={LATEST} />);
+    fireEvent.click(screen.getByRole("button", { name: "Casa com halteres" }));
+    expect(screen.getByRole("status")).toHaveTextContent('Perfil "Casa com halteres" aplicado à lista de equipamentos.');
+    expect(screen.getByRole("checkbox", { name: "Banco" })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "Peso corporal" })).toBeChecked();
+    expect(screen.getByRole("button", { name: "Desfazer" })).toHaveFocus();
+    fireEvent.click(screen.getByRole("button", { name: "Salvar anamnese" }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    expect(JSON.parse(String(fetchMock.mock.calls[0][1]?.body)).equipmentSlugs).toEqual(["bench", "bodyweight", "dumbbell"]);
+    fireEvent.click(screen.getByRole("button", { name: "Desfazer" }));
+    expect(screen.getByRole("checkbox", { name: "Banco" })).not.toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "Halteres" })).toBeChecked();
+  });
+
+  it("replaces the checkboxes with the reviewed photo list", async () => {
+    vi.stubGlobal("createImageBitmap", vi.fn());
+    mockFetch(200, { success: true, data: { equipment: [{ slug: "bench", name: "Banco", confidence: "high", photoNumbers: [1] }] } });
+    render(<AssessmentForm equipment={EQUIPMENT} latest={LATEST} />);
+    fireEvent.change(screen.getByTestId("equipment-photo-input"), { target: { files: [new File(["x"], "a.jpg")] } });
+    fireEvent.click(await screen.findByRole("button", { name: "Usar esta lista" }));
+    expect(screen.getByRole("status")).toHaveTextContent("Lista de equipamentos atualizada com as fotos.");
+    expect(screen.getByRole("checkbox", { name: "Banco" })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "Peso corporal" })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "Halteres" })).not.toBeChecked();
   });
 });
