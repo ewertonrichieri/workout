@@ -146,7 +146,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - [x] 5.3 (2026-11-25): contagem e alertas falados com intervalo mínimo, botão de som, fallback só na tela, com testes das regras
 - [x] 5.4 (2026-11-25): rota com 401/400/422/429/502; servidor reclassificando os erros; resposta da IA filtrada pelo vocabulário; migration com RLS testada num bloco desfeito e aplicada no Supabase; replay com erros marcados; chamada real medida
 - [ ] 5.5: histórico paginado no detalhe do exercício (com apagar + desfazer) — **entregue em 2026-11-25**; regras do terra romeno e da remada curvada com testes — pendente (POS-002)
-- [ ] 5.6: teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
+- [x] 5.6 (2026-11-25): teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
 
 ## Pendências
 
@@ -239,5 +239,20 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - **Banco:** migration `20261202000000_technique_history_delete.sql` (permissão de apagar; RLS já restringia ao dono) testada num bloco desfeito — outro usuário não apagou, o dono apagou e as repetições foram junto — e aplicada no Supabase.
 - **Conferido no Chromium** (API simulada no navegador): lista, desfazer, apagar depois de 5 s. Defeito achado e corrigido: a data aparecia com a hora colada ("25T12:00…/11/2026"); agora o servidor devolve a data no fuso do app.
 - **Pendências:** POS-002 (regras do terra romeno e da remada).
+
+### 2026-11-25 — 5.6 Teste de ponta a ponta
+
+Usuário temporário criado já confirmado por SQL (liberado pelo usuário), app em modo produção nesta nuvem, Chromium em 375 px com câmera falsa (fotos de domínio público de agachamento, alternando em pé/embaixo), IA real (Haiku 5.5). Passaram:
+- **Login** por e-mail e senha; **API sem sessão** → 401; com sessão, exercício sem análise → **400** e série com mais da metade não vista → **422** (IA não chamada)
+- **Tela de técnica** direto em `/technique/barbell-back-squat`: aviso → guia → câmera → "Começar" liberado com o corpo inteiro de lado
+- **Voz:** "3", "2", "1", "Já!", "1. Desça mais", "2", "3. Desça mais" (intervalo mínimo segurou o alerta da 2ª)
+- **Parada automática** depois de ficar em pé; **resumo** com 3 repetições; **análise real** em ~8–10 s com nota, correções só do que as regras acusaram e dica; replay
+- **Banco:** 1 análise, 3 repetições, os erros e os textos gravados; 1 registro no limite de IA por análise
+- **Histórico** pelo link "Ver histórico de técnica": data, nota, erros mais frequentes e dica; **Desfazer** devolveu a análise; **Apagar** sumiu da tela e do banco (com as repetições) depois de 5 s
+
+Defeitos achados e corrigidos (com testes): o texto de uma correção foi **cortado no meio** pelo limite de 240 caracteres (agora o prompt pede até 200 e o corte é em fim de palavra com "…"); o prompt mostrava "coxa 0° acima da paralela" para 0,4° (agora no mínimo 1°); a IA elogiou "calcanhares no chão", medida não confiável em 2D (o prompt agora proíbe comentar o calcanhar e os pontos que só informam). Repetido depois das correções: tudo passou.
+
+Não testado aqui: o link "Analisar minha execução" dentro do card do treino (precisa de um plano com agachamento; coberto por testes de componente) e o limite de 10 análises em 24 h (mesmo mecanismo das fases 3 e 4, coberto por testes). Usuário e todos os dados dele apagados no fim (contagens zeradas).
+- **Pendências:** nenhuma nova (POS-002 continua).
 
 ## Fim da spec
