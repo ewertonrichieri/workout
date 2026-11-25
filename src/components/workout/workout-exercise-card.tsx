@@ -8,6 +8,7 @@ import type { DailyChange, WorkoutExercise } from "@/lib/training/plan-types";
 import { formatLoadInput, isExerciseCompleted, type SetEntry } from "@/lib/training/set-log-draft";
 import { SubstitutionControl } from "@/components/substitution/substitution-control";
 import type { DraftSubstitution } from "@/lib/substitution/substitution-schema";
+import { AnalyzeTechniqueLink } from "@/components/technique/analyze-technique-link";
 import { ExerciseDemoDisclosure } from "./exercise-demo-disclosure";
 import { SetLogList } from "./set-log-list";
 import { TrackProgressionSwitch } from "./track-progression-switch";
@@ -94,6 +95,7 @@ export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, l
       )}
       {canSwap && <SubstitutionControl key={exercise.slug} workoutExercise={workoutExercise} excludeSlugs={substitution.excludeSlugs} onChange={substitution.onChange} />}
       <ExerciseDemoDisclosure exercise={exercise} />
+      <AnalyzeTechniqueLink exerciseSlug={exercise.slug} />
       <Link href={buildProgressHref(exercise.slug)} className={PROGRESS_LINK_CLASS}>
         {translate("history.progressLink")}
       </Link>

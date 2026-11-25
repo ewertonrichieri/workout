@@ -93,7 +93,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | # | Etapa | Esforço | Status |
 |---|---|---|---|
 | 5.0 | Spec da Fase 5 (`014-correcao-postura.md`) com as decisões aprovadas pelo usuário | `high` | [x] |
-| 5.1 | Câmera + MediaPipe Pose + guia de posicionamento | `high` | [ ] |
+| 5.1 | Câmera + MediaPipe Pose + guia de posicionamento | `high` | [x] |
 | 5.2 | Métricas por repetição (ângulos, amplitude, ritmo) — começar pelo agachamento | `xhigh` | [ ] |
 | 5.3 | Alertas falados ao vivo + contagem de repetições | `high` | [ ] |
 | 5.4 | Análise pós-série pela IA + replay com erros marcados | `high` | [ ] |

@@ -141,7 +141,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 ## Checklist de aceite
 
 - [x] 5.0: spec aprovada (D1–D12), 2026-11-25
-- [ ] 5.1: câmera com permissão e desligamento corretos; MediaPipe carregado sob demanda do próprio app; esqueleto na tela; guia de posicionamento; "Começar" só com corpo inteiro visível; fallbacks sem câmera, sem permissão e sem modelo; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
+- [x] 5.1 (2026-11-25): câmera com permissão e desligamento corretos; MediaPipe carregado sob demanda do próprio app; esqueleto na tela; guia de posicionamento; "Começar" só com corpo inteiro visível; fallbacks sem câmera, sem permissão e sem modelo; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
 - [ ] 5.2: cálculo de ângulos, máquina de contagem e métricas do agachamento com testes (sequências de pontos fictícias: repetição completa, parcial, ruído, ponto pouco visível → "não avaliada")
 - [ ] 5.3: contagem e alertas falados com intervalo mínimo, botão de som, fallback só na tela, com testes das regras
 - [ ] 5.4: rota com 401/400/422/429/502; servidor reclassificando os erros; resposta da IA filtrada pelo vocabulário; migration com RLS testada num bloco desfeito e aplicada no Supabase; replay com erros marcados; chamada real medida
@@ -160,6 +160,15 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 
 - **Pedido:** etapa 5.0 (esforço `high`).
 - **Mudança:** D1–D12 aprovadas; D5 provisória (só informa até a calibração na 5.2, com valores confirmados pelo usuário).
+- **Pendências:** nenhuma.
+
+### 2026-11-25 — 5.1 Câmera, MediaPipe Pose e guia de posicionamento
+
+- **Pedido:** etapa 5.1 (esforço `high`).
+- **Mudança:** "Analisar minha execução" no card do treino só para os agachamentos (D3); sem câmera no aparelho, o botão fica desabilitado com `aria-label` explicativo. Tela `/technique/[slug]` (404 para exercício não suportado): aviso de privacidade, limites e saúde → guia de posicionamento (ilustração + texto) → câmera frontal espelhada com o esqueleto desenhado só nos pontos realmente vistos. Mensagens de enquadramento ("Seus pés não aparecem…", "Afaste o celular…", "Centralize o corpo…"); "Começar" só com o corpo inteiro visível por 1 s; contagem visual de 3 s (cancela se o corpo sair do quadro); gravação com "Encerrar" e teto de 90 s (D8). A câmera liga só depois do toque e desliga ao encerrar ou sair da tela. Erros em português para permissão negada, sem câmera, câmera ocupada e modelo que não carregou, com "Tentar de novo".
+- **D1/D2:** `@mediapipe/tasks-vision` 1.2.3 (Apache 2.0) com versão fixa; o modelo "lite" fica versionado em `public/mediapipe/models/` (SHA-256 conferido por teste, `public/mediapipe/NOTICE.md`); o WASM é copiado do pacote para `public/mediapipe/wasm/` antes de `dev`/`build` (`scripts/copy-pose-assets.ts`, não versionado). O proxy não checa sessão em `/mediapipe/` (arquivos públicos de código aberto). MediaPipe carregado sob demanda, só na tela de técnica (GPU, com CPU de reserva).
+- **Ainda não nesta etapa:** contagem de repetições e métricas (5.2), voz (5.3), envio à IA e replay (5.4). Durante a gravação a tela avisa que a contagem e a análise chegam nas próximas etapas.
+- **Conferido no navegador:** Chromium com câmera falsa alimentada por uma foto de agachamento do Free Exercise DB (domínio público): o MediaPipe carregou dos arquivos do app, o esqueleto ficou alinhado ao corpo, "Começar" liberou ~1 s depois do corpo inteiro aparecer, contagem → gravação → "Encerrar" funcionaram e a câmera ficou ligada só na tela; com a foto cortada nos pés, "Seus pés não aparecem" e "Começar" desabilitado. Foi feito numa página de teste isolada (mesmos componentes) porque criar usuário temporário no Supabase real foi bloqueado pela permissão automática desta sessão; a rota com login entra no teste de ponta a ponta (5.6).
 - **Pendências:** nenhuma.
 
 ## Fim da spec
