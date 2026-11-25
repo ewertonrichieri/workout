@@ -8,10 +8,11 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **5.5 Histórico de técnica + regras para mais exercícios** (`medium`) → `specs/014-correcao-postura.md`
-2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
-3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
-4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
+1. **POS-002** — regras do terra romeno e da remada (decisões + vídeos do usuário; fecha a 5.5) → `specs/014-correcao-postura.md`
+2. **5.6 Teste de ponta a ponta da Fase 5** (`medium`; precisa de usuário de teste no Supabase ou da conta do usuário) → `specs/014-correcao-postura.md`
+3. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
+4. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
+5. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
 
 ---
 
@@ -74,6 +75,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Em Progresso
 
+- **5.5 Histórico de técnica** — histórico com apagar/desfazer entregue; faltam as regras do terra romeno e da remada (POS-002) → `specs/014-correcao-postura.md`
 - **0.7 Autenticação** — código na `main`; Google configurado (AUTH-001 fechada); falta só a AUTH-002 (teste do cadastro por e-mail) → `specs/007-autenticacao.md`
 
 ---
@@ -82,6 +84,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 Espelho dos IDs na spec; detalhes e prioridade lá (ver `.agents/rules/pending-items.md`).
 
+- **POS-002** — regras do terra romeno e da remada curvada (fecha a 5.5) → `specs/014-correcao-postura.md`
 - **TRN-001** — gravar o plano atual (3×10, sem descanso) na conta do usuário → `specs/010-treino.md`
 - **AUTH-002** — teste manual do cadastro por e-mail (login já testado) → `specs/007-autenticacao.md`
 - **CAT-001** — vídeos do Free Exercise DB em R2 próprio (fase futura, etapa 6.5) → `specs/009-catalogo-exercicios.md`

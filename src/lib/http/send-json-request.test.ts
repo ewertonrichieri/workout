@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
-import { sendFormRequestForData, sendJsonRequest, sendJsonRequestForData } from "./send-json-request";
+import { fetchJsonData, sendDeleteRequest, sendFormRequestForData, sendJsonRequest, sendJsonRequestForData } from "./send-json-request";
 
 const FALLBACK = "Falhou.";
 const dataSchema = z.object({ id: z.string() });
@@ -52,5 +52,17 @@ describe("sendFormRequestForData", () => {
   it("uses the server message on errors", async () => {
     mockFetch(429, { success: false, error: "Limite atingido." });
     await expect(sendFormRequestForData("/api/x", new FormData(), dataSchema, FALLBACK)).resolves.toEqual({ ok: false, message: "Limite atingido." });
+  });
+});
+
+describe("fetchJsonData and sendDeleteRequest", () => {
+  it("reads validated data with GET and sends DELETE without a body", async () => {
+    const fetchMock = vi.fn(async () => new Response(JSON.stringify({ success: true, data: { id: "a" } }), { status: 200 }));
+    vi.stubGlobal("fetch", fetchMock);
+    await expect(fetchJsonData("/api/items", z.object({ id: z.string() }), "falhou")).resolves.toEqual({ ok: true, data: { id: "a" } });
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/items", { method: "GET" });
+    await expect(sendDeleteRequest("/api/items/a", "falhou", { keepalive: true })).resolves.toEqual({ ok: true });
+    expect(fetchMock).toHaveBeenLastCalledWith("/api/items/a", { method: "DELETE", keepalive: true });
+    vi.unstubAllGlobals();
   });
 });

@@ -6,6 +6,7 @@ import { respondWithJson } from "@/lib/http/api-handler";
 import { readJsonBody } from "@/lib/http/read-json-body";
 import { createServerLogger } from "@/lib/http/server-logger";
 import { createServerTechniqueAnalysisService } from "@/lib/technique-analysis/server-technique-analysis-service";
+import { createServerTechniqueHistoryService } from "@/lib/technique-analysis/server-technique-history-service";
 
 /** Must be a literal (static analysis): AI_TOTAL_TIMEOUT_MS (120 s) plus database and network headroom. */
 export const maxDuration = 130;
@@ -17,5 +18,14 @@ export async function POST(request: NextRequest) {
     const userId = await getAuthenticatedUserId();
     const service = await createServerTechniqueAnalysisService();
     return service.analyze(userId, await readJsonBody(request));
+  });
+}
+
+/** GET /api/technique-analyses?exercise=<slug>&page=<n> — the user's technique history of one exercise (step 5.5). */
+export async function GET(request: NextRequest) {
+  return respondWithJson({ route: TECHNIQUE_ANALYSES_ENDPOINT, logger: createServerLogger() }, async () => {
+    const userId = await getAuthenticatedUserId();
+    const service = await createServerTechniqueHistoryService();
+    return service.listHistory(userId, Object.fromEntries(request.nextUrl.searchParams));
   });
 }

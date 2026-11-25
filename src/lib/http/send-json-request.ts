@@ -47,3 +47,14 @@ export async function sendJsonRequest(url: string, method: JsonMethod, body: unk
   const result = await sendJsonRequestForData(url, method, body, z.unknown(), fallbackMessage);
   return result.ok ? { ok: true } : result;
 }
+
+/** GET from the app's own API (standard envelope), with the data validated; never throws. */
+export async function fetchJsonData<Data>(url: string, dataSchema: z.ZodType<Data>, fallbackMessage: string): Promise<JsonDataRequestResult<Data>> {
+  return requestEnvelopeData(url, { method: "GET" }, dataSchema, fallbackMessage);
+}
+
+/** DELETE on the app's own API; `keepalive` lets it finish while the page closes (pending undo windows). */
+export async function sendDeleteRequest(url: string, fallbackMessage: string, options: { keepalive?: boolean } = {}): Promise<JsonRequestResult> {
+  const result = await requestEnvelopeData(url, { method: "DELETE", ...options }, z.unknown(), fallbackMessage);
+  return result.ok ? { ok: true } : result;
+}

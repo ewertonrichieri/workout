@@ -21,3 +21,10 @@ export const MAX_FEEDBACK_TEXT_LENGTH = 240;
 /** Metrics are sent rounded: angles to 0.1°, ratios to 0.001. */
 export const ANGLE_DECIMALS = 1;
 export const RATIO_DECIMALS = 3;
+
+/** History of analyses per exercise (step 5.5). */
+export const TECHNIQUE_HISTORY_PAGE_SIZE = 10;
+/** Issues listed per analysis in the history ("erros mais frequentes"). */
+export const MAX_FREQUENT_ISSUES = 3;
+/** "Apagar" waits this long before deleting, so "Desfazer" can cancel it (decision D9). */
+export const DELETE_UNDO_WINDOW_MS = 5000;

@@ -3,6 +3,8 @@ import { buildProgressHref } from "@/components/history/history-labels";
 import type { CatalogTerm, ExerciseDetail } from "@/lib/catalog/exercises/exercise-types";
 import { translate, type TranslationKey } from "@/lib/i18n/translate";
 import { describeDifficulty } from "./exercise-labels";
+import { TechniqueHistory } from "@/components/technique/technique-history";
+import { findTechniqueRuleSet } from "@/lib/technique/technique-support";
 import { ExerciseMediaPlayer } from "./exercise-media-player";
 
 function TermSection({ titleKey, terms }: { titleKey: TranslationKey; terms: CatalogTerm[] }) {
@@ -30,6 +32,7 @@ export function ExerciseDetailView({ exercise }: { exercise: ExerciseDetail }) {
       <Link href={buildProgressHref(exercise.slug)} className="flex min-h-11 items-center self-start font-medium text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong">
         {translate("history.progressLink")}
       </Link>
+      {findTechniqueRuleSet(exercise.slug) && <TechniqueHistory exerciseSlug={exercise.slug} />}
       <TermSection titleKey="catalog.primaryMuscles" terms={exercise.primaryMuscles} />
       <TermSection titleKey="catalog.secondaryMuscles" terms={exercise.secondaryMuscles} />
       <TermSection titleKey="catalog.equipment" terms={exercise.equipment} />
