@@ -547,8 +547,10 @@
       "label": "Gravando",
       "elapsed": "{seconds} s de {max} s",
       "stop": "Encerrar",
-      "nextStepsNotice": "Faça a série normalmente. A gravação para sozinha depois de 5 segundos parado em pé. Os alertas falados e a análise pela IA chegam nas próximas etapas.",
-      "repCount": "Repetições: {count}"
+      "nextStepsNotice": "Faça a série normalmente. A gravação para sozinha depois de 5 segundos parado em pé.",
+      "repCount": "Repetições: {count}",
+      "go": "Já!",
+      "lastCue": "Último alerta: {cue}"
     },
     "errors": {
       "permission_denied": "Sem permissão para usar a câmera. Libere a câmera para este site nas configurações do navegador (ícone de cadeado ao lado do endereço) e tente de novo.",
@@ -588,6 +590,16 @@
       },
       "aiNextStep": "A nota e as dicas da IA chegam na próxima etapa.",
       "recordAgain": "Gravar de novo"
+    },
+    "cues": {
+      "shallow_depth": "Desça mais",
+      "trunk_lean_fatigue": "Peito para cima",
+      "fast_descent": "Mais devagar"
+    },
+    "sound": {
+      "on": "Alertas falados: ligados",
+      "off": "Alertas falados: desligados",
+      "unsupported": "Seu navegador não fala os alertas: eles aparecem só na tela."
     }
   }
 }

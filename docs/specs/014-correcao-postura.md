@@ -143,7 +143,7 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - [x] 5.0: spec aprovada (D1–D12), 2026-11-25
 - [x] 5.1 (2026-11-25): câmera com permissão e desligamento corretos; MediaPipe carregado sob demanda do próprio app; esqueleto na tela; guia de posicionamento; "Começar" só com corpo inteiro visível; fallbacks sem câmera, sem permissão e sem modelo; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
 - [x] 5.2 (2026-11-25): cálculo de ângulos, máquina de contagem e métricas do agachamento com testes (sequências de pontos fictícias: repetição completa, parcial, ruído, ponto pouco visível → "não avaliada"); D5 calibrada com vídeos reais do usuário (POS-001)
-- [ ] 5.3: contagem e alertas falados com intervalo mínimo, botão de som, fallback só na tela, com testes das regras
+- [x] 5.3 (2026-11-25): contagem e alertas falados com intervalo mínimo, botão de som, fallback só na tela, com testes das regras
 - [ ] 5.4: rota com 401/400/422/429/502; servidor reclassificando os erros; resposta da IA filtrada pelo vocabulário; migration com RLS testada num bloco desfeito e aplicada no Supabase; replay com erros marcados; chamada real medida
 - [ ] 5.5: histórico paginado no detalhe do exercício (com apagar + desfazer); regras do terra romeno e da remada curvada com testes
 - [ ] 5.6: teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
@@ -213,5 +213,12 @@ O servidor **recalcula** os erros de cada repetição a partir das métricas e d
 - **Observação:** "joelho passou da ponta do pé" (só informa) apareceu em quase todas as repetições; é comum no agachamento livre. Se incomodar, dá para esconder ou subir o limite depois.
 - `SQUAT_RULES_CALIBRATED = true`: profundidade e fadiga contam como "Corrigir", descida rápida como "Atenção"; tronco absoluto, joelho e calcanhar como "Para conferir". O aviso de "limites em calibração" sai do resumo.
 - **Pendências:** nenhuma. Etapa 5.2 concluída.
+
+### 2026-11-25 — 5.3 Alertas falados ao vivo + contagem
+
+- **Pedido:** etapa 5.3 (esforço `high`).
+- **Mudança:** voz do navegador em pt-BR (D7): "3" no toque em "Começar" (o toque libera a voz no iPhone), "2", "1" e "Já!"; a cada repetição o número ("3") e, se for o caso, um alerta curto ("3. Desça mais"). No máximo um alerta por repetição, escolhido por prioridade — "Desça mais" (profundidade), "Peito para cima" (tronco cansando), "Mais devagar" (descida rápida) — e nunca dois alertas com menos de 4 s entre eles (o número sempre é falado). Pontos que só informam (calcanhar, joelho, tronco absoluto) nunca são falados. O último alerta também aparece na tela. Botão "Alertas falados: ligados/desligados" (`aria-pressed`), ligado por padrão e lembrado só neste aparelho; sem voz no navegador, o botão dá lugar a "os alertas aparecem só na tela".
+- **Conferido no Chromium** (câmera falsa com fotos de domínio público, fala registrada): "3", "2", "1", "Já!", "1. Desça mais", "2", "3. Desça mais" — o alerta da 2ª foi segurado pelo intervalo mínimo. Defeito encontrado e corrigido no teste: falava "0" antes do "Já!".
+- **Pendências:** nenhuma.
 
 ## Fim da spec

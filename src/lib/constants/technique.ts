@@ -48,3 +48,10 @@ export const TECHNIQUE_EXERCISES: Readonly<Record<string, TechniqueRuleSet>> = {
 
 /** Front camera: the user sees the framing while positioning the phone. */
 export const CAMERA_FACING_MODE = "user";
+
+/** Decision D7: spoken cues use the browser voice in Brazilian Portuguese. */
+export const SPEECH_LANGUAGE = "pt-BR";
+/** At most one cue per rep, and never two cues closer than this, so the count is not drowned out (spec 014). */
+export const MIN_CUE_INTERVAL_MS = 4000;
+/** Remembered on this device only: the user switched the spoken cues off (D7). */
+export const SOUND_PREFERENCE_STORAGE_KEY = "workout.technique.soundOff";
