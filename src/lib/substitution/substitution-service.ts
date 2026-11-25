@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { z } from "zod";
 import type { AssessmentRepository } from "@/lib/assessment/assessment-repository";
 import {
@@ -7,7 +8,7 @@ import {
   SUBSTITUTION_EFFORT,
   SUBSTITUTION_OPERATION,
 } from "@/lib/constants/substitution";
-import { ExternalServiceError, InvalidInputError, NotFoundError, RateLimitExceededError, UnprocessableError } from "@/lib/errors/app-errors";
+import { ExternalServiceError, InvalidInputError, RepositoryError, NotFoundError, RateLimitExceededError, UnprocessableError } from "@/lib/errors/app-errors";
 import { translate } from "@/lib/i18n/translate";
 import type { StructuredOutputClient } from "@/lib/integrations/claude/structured-output-client";
 import type { Logger } from "@/lib/logger/logger";
@@ -15,6 +16,7 @@ import type { AdjustmentRepository } from "@/lib/readiness/adjustment-repository
 import type { PlanRepository } from "@/lib/training/plan-repository";
 import type { ActivePlan, Workout, WorkoutExercise } from "@/lib/training/plan-types";
 import { buildSubstitutionPrompt, SUBSTITUTION_SYSTEM_PROMPT } from "./substitution-prompt";
+import type { CachedSubstitutionChoice, SubstitutionCacheRepository } from "./substitution-cache-repository";
 import type { SubstitutionRepository } from "./substitution-repository";
 import { filterCandidates, findSuggestionIssues, rankCandidates } from "./substitution-rules";
 import { aiSubstitutionSchema, substitutionRequestSchema, type SubstitutionProfile, type SubstitutionRequest, type SubstitutionResult } from "./substitution-schema";
@@ -23,6 +25,7 @@ export interface SubstitutionServiceDependencies {
   planRepository: PlanRepository;
   assessmentRepository: Pick<AssessmentRepository, "findLatestAssessment">;
   substitutionRepository: SubstitutionRepository;
+  cacheRepository: SubstitutionCacheRepository;
   exerciseSource: Pick<AdjustmentRepository, "listExerciseProfiles" | "findExercisesBySlugs">;
   structuredOutputClient: StructuredOutputClient;
   logger: Logger;
@@ -89,22 +92,55 @@ function isAiFailure(error: unknown): error is ExternalServiceError | RateLimitE
   return error instanceof ExternalServiceError || error instanceof RateLimitExceededError;
 }
 
-/**
- * The AI picks among the best-ranked options; any failure or invalid answer returns null (automatic order).
- * With 3 options or fewer there is nothing to choose (it would only reorder them): no AI call (cost control).
- */
-async function chooseWithAi(dependencies: SubstitutionServiceDependencies, context: SubstitutionContext): Promise<Choice[] | null> {
-  if (context.ranked.length <= MAX_SUBSTITUTION_SUGGESTIONS) return null;
+interface AiRequest {
+  prompt: string;
+  candidateSlugs: Set<string>;
+  /** Hash of the exact AI input: same plan, equipment, reason, limitations and options → same key. */
+  cacheKey: string;
+}
+
+function buildAiRequest(context: SubstitutionContext): AiRequest {
   const candidates = context.ranked.slice(0, MAX_SUBSTITUTION_CANDIDATES_FOR_AI);
+  const prompt = buildSubstitutionPrompt({ original: context.original, prescription: context.prescription, reason: context.request.reason, limitations: context.limitations, candidates });
+  const cacheKey = createHash("sha256").update(SUBSTITUTION_SYSTEM_PROMPT).update("\n").update(prompt).digest("hex");
+  return { prompt, candidateSlugs: new Set(candidates.map((candidate) => candidate.slug)), cacheKey };
+}
+
+/** Saved choices still valid for the options (same checks as a fresh AI answer); any cache failure is a miss. */
+async function findCachedChoices(dependencies: SubstitutionServiceDependencies, request: AiRequest): Promise<Choice[] | null> {
+  try {
+    const cached = await dependencies.cacheRepository.findChoices(request.cacheKey);
+    if (!cached) return null;
+    const issues = findSuggestionIssues({ suggestions: cached.map((choice) => ({ exerciseSlug: choice.slug, reason: choice.reason })) }, request.candidateSlugs);
+    return issues.length === 0 ? cached : null;
+  } catch (error) {
+    if (!(error instanceof RepositoryError)) throw error;
+    dependencies.logger.warn("substitution cache read failed", { operation: error.operation });
+    return null;
+  }
+}
+
+/** The cache only saves money: a failed write never fails the swap. */
+async function saveCachedChoices(dependencies: SubstitutionServiceDependencies, cacheKey: string, choices: readonly CachedSubstitutionChoice[]): Promise<void> {
+  try {
+    await dependencies.cacheRepository.saveChoices(cacheKey, choices);
+  } catch (error) {
+    if (!(error instanceof RepositoryError)) throw error;
+    dependencies.logger.warn("substitution cache write failed", { operation: error.operation });
+  }
+}
+
+/** Any AI failure or invalid answer returns null (automatic order). */
+async function askAi(dependencies: SubstitutionServiceDependencies, request: AiRequest): Promise<CachedSubstitutionChoice[] | null> {
   try {
     const output = await dependencies.structuredOutputClient.generate({
       operation: SUBSTITUTION_OPERATION,
       system: SUBSTITUTION_SYSTEM_PROMPT,
-      prompt: buildSubstitutionPrompt({ original: context.original, prescription: context.prescription, reason: context.request.reason, limitations: context.limitations, candidates }),
+      prompt: request.prompt,
       schema: aiSubstitutionSchema,
       effort: SUBSTITUTION_EFFORT,
     });
-    const issues = findSuggestionIssues(output, new Set(candidates.map((candidate) => candidate.slug)));
+    const issues = findSuggestionIssues(output, request.candidateSlugs);
     if (issues.length === 0) return output.suggestions.map((suggestion) => ({ slug: suggestion.exerciseSlug, reason: suggestion.reason }));
     dependencies.logger.warn("substitution suggestions rejected", { operation: SUBSTITUTION_OPERATION, issues });
   } catch (error) {
@@ -112,6 +148,20 @@ async function chooseWithAi(dependencies: SubstitutionServiceDependencies, conte
     dependencies.logger.warn("substitution falls back to the automatic order", { operation: SUBSTITUTION_OPERATION, error: error.name });
   }
   return null;
+}
+
+/**
+ * The AI picks among the best-ranked options; the same swap again comes from the cache (SUB-001).
+ * With 3 options or fewer there is nothing to choose (it would only reorder them): no AI call (cost control).
+ */
+async function chooseWithAi(dependencies: SubstitutionServiceDependencies, context: SubstitutionContext): Promise<Choice[] | null> {
+  if (context.ranked.length <= MAX_SUBSTITUTION_SUGGESTIONS) return null;
+  const request = buildAiRequest(context);
+  const cached = await findCachedChoices(dependencies, request);
+  if (cached) return cached;
+  const choices = await askAi(dependencies, request);
+  if (choices) await saveCachedChoices(dependencies, request.cacheKey, choices);
+  return choices;
 }
 
 async function toResult(dependencies: SubstitutionServiceDependencies, choices: readonly Choice[], isAutomatic: boolean): Promise<SubstitutionResult> {

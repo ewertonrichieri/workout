@@ -5,6 +5,7 @@ import { createServerStructuredOutputClient } from "@/lib/integrations/claude/se
 import { createSupabaseAdjustmentRepository } from "@/lib/readiness/adjustment-repository";
 import { createServerSupabaseClient } from "@/lib/supabase/server-client";
 import { createSupabasePlanRepository } from "@/lib/training/plan-repository";
+import { createSupabaseSubstitutionCacheRepository } from "./substitution-cache-repository";
 import { createSupabaseSubstitutionRepository } from "./substitution-repository";
 import { createSubstitutionService, type SubstitutionService } from "./substitution-service";
 
@@ -15,6 +16,7 @@ export async function createServerSubstitutionService(): Promise<SubstitutionSer
     planRepository: createSupabasePlanRepository(supabase),
     assessmentRepository: createSupabaseAssessmentRepository(supabase),
     substitutionRepository: createSupabaseSubstitutionRepository(supabase),
+    cacheRepository: createSupabaseSubstitutionCacheRepository(supabase),
     exerciseSource: createSupabaseAdjustmentRepository(supabase),
     structuredOutputClient: createServerStructuredOutputClient(),
     logger: createServerLogger(),
