@@ -86,7 +86,7 @@ Nível de esforço a selecionar no modelo (Opus 5.5) antes de executar a etapa:
 | 4.1 | Envio de fotos + identificação de equipamentos pela IA | `xhigh` | [x] |
 | 4.2 | Revisão da lista de equipamentos + perfis prontos | `medium` | [x] |
 | 4.3 | Filtro de exercícios por equipamento na geração | `low` | [x] |
-| 4.4 | Teste de ponta a ponta da Fase 4 no navegador | `medium` | [ ] |
+| 4.4 | Teste de ponta a ponta da Fase 4 no navegador | `medium` | [x] |
 
 ## V3 — Avançado (fora do MVP; detalhar em spec ao iniciar)
 
