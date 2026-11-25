@@ -131,4 +131,12 @@ describe("AssessmentForm", () => {
     expect(screen.getByRole("checkbox", { name: "Banco" })).toBeChecked();
     expect(screen.getByLabelText("Lesões ou limitações (opcional)")).toHaveValue("Joelho");
   });
+
+  it("offers the photo identification below the equipment where the browser can prepare photos", () => {
+    vi.stubGlobal("createImageBitmap", vi.fn());
+    render(<AssessmentForm equipment={EQUIPMENT} latest={null} />);
+    const button = screen.getByRole("button", { name: "Identificar por foto" });
+    expect(button).toHaveAttribute("type", "button");
+    expect(screen.getByText(/Envie até 5 fotos dos aparelhos/)).toBeInTheDocument();
+  });
 });

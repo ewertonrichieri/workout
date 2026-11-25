@@ -66,15 +66,15 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 
 `POST /api/equipment-detections` (sessão obrigatória → 401 sem ela), `multipart/form-data` com `photos[]`.
 
-- 400: nenhuma foto, mais de D1, tipo fora de JPEG/PNG/WebP, foto acima de D2
+- 400: nenhuma foto, mais de D1, tipo fora de JPEG/PNG/WebP (conferido pela assinatura do arquivo, não pelo tipo declarado), fotos acima de 4 MB juntas (ver Atualizações)
 - 429: limite de análises
 - 502: IA indisponível ou resposta fora do schema
-- 200: `{ success: true, data: { equipment: [{ slug, name, confidence, photoIndexes }] } }`
+- 200: `{ success: true, data: { equipment: [{ slug, name, confidence, photoNumbers }] } }` (`photoNumbers` a partir de 1, como "Foto 1")
 
 ## Integração com a IA
 
 - Mesmo wrapper da 3.2 (`StructuredOutputClient`), estendido para aceitar imagens (blocos `image` base64) além do texto
-- Saída estruturada validada por zod: `{ equipment: [{ slug, confidence, photoIndexes }] }`
+- Saída estruturada validada por zod: `{ equipment: [{ slug, confidence, photoNumbers }] }`
 - Prompt de sistema com o vocabulário (slug + nome pt-BR + aliases) e a regra "na dúvida, não marque"
 - Modelo e esforço: D7; chamada real medida na 4.1 (tempo e custo), como na PLN-001
 
@@ -94,7 +94,7 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 ## Checklist de aceite
 
 - [x] 4.0: spec aprovada (D1–D8), 2026-11-25
-- [ ] 4.1: validação das fotos e da resposta da IA com testes (slug fora do vocabulário, certeza, foto sem equipamento, falha, timeout, 429); wrapper com imagens; rota com 401/400/429/502; migration do limite aplicada e testada no Supabase; chamada real medida
+- [x] 4.1 (2026-11-25): validação das fotos e da resposta da IA com testes (slug fora do vocabulário, certeza, foto sem equipamento, falha, timeout, 429); wrapper com imagens; rota com 401/400/429/502; migration do limite aplicada e testada no Supabase; chamada real medida
 - [ ] 4.2: revisão com marcar/desmarcar, "Talvez", desfazer e perfis prontos, com testes; estados de carregamento, vazio e erro; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
 - [ ] 4.3: geração e troca na hora usando a lista confirmada, com testes
 - [ ] 4.4: teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
@@ -104,5 +104,16 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 | ID | Descrição | Onde | Prioridade |
 |---|---|---|---|
 | — | Nenhuma | — | — |
+
+## Atualizações
+
+### 2026-11-25 — 4.1 Envio de fotos e identificação pela IA
+
+- **Pedido:** etapa 4.1 (esforço `xhigh`).
+- **Mudança:** `POST /api/equipment-detections` (multipart, campo `photos`): confere a quantidade, o tamanho total e o tipo real de cada foto (assinatura JPEG/PNG/WebP), conta no limite de IA (`equipment.detect`, 5 em 24 horas) e manda as fotos rotuladas ("Photo 1"…) com o vocabulário ao Claude. A resposta passa por `sanitizeDetection` (descarta slug fora do vocabulário, `bodyweight`, números de foto que não foram enviados; junta repetidos com a maior certeza; ordena por certeza e nome) e volta sem nada gravado. O cliente da IA (`StructuredOutputClient`) aceita imagens. Na anamnese, "Identificar por foto" abaixo dos equipamentos: comprime no aparelho (D2), envia, mostra "Preparando"/"Analisando", o resultado (nome, certeza, fotos) e os erros em português. Migration `20261130000000_equipment_detection_limit.sql` testada num bloco desfeito e aplicada no Supabase.
+- **Ajuste técnico do D2:** o limite do servidor ficou em **4 MB para todas as fotos juntas** (não 5 MB por foto), porque as funções da Vercel (deploy do PRD) recusam pedidos acima de 4,5 MB. Com a compressão, cada foto fica com algumas centenas de KB, então 5 fotos cabem com folga. O aparelho confere o mesmo limite antes de enviar.
+- **Chamada real medida:** 4 fotos de exercícios (Free Exercise DB, domínio público, 850 px JPEG), Haiku 5.5, esforço `low`: 4,3–4,5 s, ~3.900 tokens de entrada e ~770 de saída, **~US$ 0,0008 por análise**. Acertou polia, banco, barra, anilhas, leg press e kettlebell (fundo, certeza média), sem nenhum falso positivo; repetido 3 vezes com o mesmo resultado. Imagem sem equipamento e imagem com texto pedindo para "listar tudo" → lista vazia (2,2 s, US$ 0,0003). D7 mantida (`low`).
+- **Até a 4.2:** o resultado aparece só para leitura ("Confira e marque na lista de equipamentos o que você tem"); marcar/desmarcar, "Usar esta lista", desfazer e os perfis prontos chegam na 4.2.
+- **Pendências:** nenhuma.
 
 ## Fim da spec

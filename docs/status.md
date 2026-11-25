@@ -8,7 +8,7 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **4.1** — envio de fotos + identificação dos equipamentos pela IA (esforço `xhigh`) → `specs/013-equipamentos-por-foto.md`
+1. **4.2** — revisão da lista de equipamentos + perfis prontos (esforço `medium`) → `specs/013-equipamentos-por-foto.md`
 2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
 3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
@@ -17,6 +17,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Concluído recentemente
 
+- **4.1 Fotos + identificação pela IA** — `POST /api/equipment-detections` (até 5 fotos, 4 MB juntas, tipo real conferido, limite de 5 análises em 24 h), fotos comprimidas no aparelho e nunca gravadas, resposta da IA filtrada pelo vocabulário (sem falso positivo); "Identificar por foto" na anamnese com resultado para leitura; chamada real ~4,4 s e ~US$ 0,0008 por 4 fotos; migration aplicada no Supabase → `specs/013-equipamentos-por-foto.md`
 - **4.0 Spec da Fase 4** — `specs/013-equipamentos-por-foto.md` aprovada (D1–D8; fotos comprimidas no navegador em WebP 0,7, até 1.568 px) → `specs/013-equipamentos-por-foto.md`
 - **SUB-001 Cache das trocas** — a escolha da IA na troca na hora fica guardada por usuário e pela entrada exata da IA (hash); a mesma troca de novo não chama a IA; migration testada num bloco desfeito e aplicada no Supabase → `specs/012-treino-adaptativo.md`
 - **Controle de custo da IA** — limite por usuário em 24 horas (gerar/renovar plano: 3; ajuste do dia: 5; troca na hora sem limite por decisão do usuário, SUB-001) com HTTP 429 em português; proposta do ajuste guardada por check-in (pedir de novo não paga a IA); troca sem IA quando sobram até 3 opções; migration testada num bloco desfeito e aplicada no Supabase → `specs/011-geracao-treino-ia.md`, `specs/012-treino-adaptativo.md`
