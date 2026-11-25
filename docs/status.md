@@ -8,7 +8,7 @@
 
 Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e link.
 
-1. **4.4** — teste de ponta a ponta da Fase 4 no navegador (esforço `medium`) → `specs/013-equipamentos-por-foto.md`
+1. **Fase 5** — correção de postura (V3; spec a criar e aprovar) → `planning/001-planejamento-inicial.md`
 2. **AUTH-002** — testar o cadastro por e-mail (último item da V1) (usuário) → `specs/007-autenticacao.md`
 3. **CAT-002** — forks (usuário) → `specs/009-catalogo-exercicios.md`
 4. **TRN-001** — gravar o plano atual (3×10, sem descanso) quando a conta do usuário existir → `specs/010-treino.md`
@@ -17,6 +17,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Concluído recentemente
 
+- **4.4 Teste de ponta a ponta (Fase 4)** — perfil + desfazer, fotos reais com IA, revisão, salvar, fotos sem equipamento, plano gerado só com a lista, limite de 5 análises e teclado testados no navegador contra o Supabase real; nenhum defeito; dados temporários apagados; Fase 4 concluída → `specs/013-equipamentos-por-foto.md`
 - **4.3 Filtro por equipamento** — geração, ajuste e troca já usam a lista da anamnese; conferido no Supabase com os 4 perfis (0 exercícios fora da lista) → `specs/013-equipamentos-por-foto.md`
 - **4.2 Revisão e perfis prontos** — revisão das fotos com caixas (alta/média marcadas, "Talvez" desmarcado, peso corporal sempre disponível), "Usar esta lista" (nunca vazia), 4 perfis prontos (D5) e Desfazer; nada gravado até salvar a anamnese → `specs/013-equipamentos-por-foto.md`
 - **4.1 Fotos + identificação pela IA** — `POST /api/equipment-detections` (até 5 fotos, 4 MB juntas, tipo real conferido, limite de 5 análises em 24 h), fotos comprimidas no aparelho e nunca gravadas, resposta da IA filtrada pelo vocabulário (sem falso positivo); "Identificar por foto" na anamnese com resultado para leitura; chamada real ~4,4 s e ~US$ 0,0008 por 4 fotos; migration aplicada no Supabase → `specs/013-equipamentos-por-foto.md`

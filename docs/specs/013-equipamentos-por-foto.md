@@ -2,7 +2,7 @@
 
 **Etapas:** 4.0 a 4.4 (checklist `docs/reference/001-checklist-implementacao.md`). Promovida de `docs/planning/001-planejamento-inicial.md` (Fase 4).
 
-**Status:** aprovada. Decisões D1 a D8 confirmadas pelo usuário em 2026-11-25 (D2 com compressão pedida por ele).
+**Status:** concluída (Fase 4 testada de ponta a ponta em 2026-11-25). Aprovada: Decisões D1 a D8 confirmadas pelo usuário em 2026-11-25 (D2 com compressão pedida por ele).
 
 **Pré-requisito:** Fase 3B concluída (2026-11-24).
 
@@ -97,7 +97,7 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 - [x] 4.1 (2026-11-25): validação das fotos e da resposta da IA com testes (slug fora do vocabulário, certeza, foto sem equipamento, falha, timeout, 429); wrapper com imagens; rota com 401/400/429/502; migration do limite aplicada e testada no Supabase; chamada real medida
 - [x] 4.2 (2026-11-25): revisão com marcar/desmarcar, "Talvez", desfazer e perfis prontos, com testes; estados de carregamento, vazio e erro; acessível (teclado, foco, `aria-label`, toque ≥ 44 px)
 - [x] 4.3 (2026-11-25): geração e troca na hora usando a lista confirmada, com testes
-- [ ] 4.4: teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
+- [x] 4.4 (2026-11-25): teste de ponta a ponta no navegador contra o Supabase real (dados temporários apagados no fim)
 
 ## Pendências
 
@@ -128,6 +128,21 @@ Nenhuma tabela nova (as fotos não são guardadas e o resultado só vira lista a
 - **Pedido:** etapa 4.3 (esforço `low`).
 - **Mudança:** nenhum código novo de filtro: a geração (`list_plan_candidates`), o ajuste do dia e a troca na hora já leem `equipmentSlugs` da última anamnese, e a lista confirmada por foto ou perfil é gravada ali. Novo teste: todo slug dos perfis prontos (D5) existe no vocabulário curado.
 - **Conferido no Supabase:** `list_plan_candidates` com cada perfil — Academia completa 1.294 candidatos, básica 1.010, casa com halteres 703, só peso corporal 329 — e **0** candidatos usando equipamento fora da lista.
+- **Pendências:** nenhuma.
+
+### 2026-11-25 — 4.4 Teste de ponta a ponta
+
+Usuário temporário criado já confirmado por SQL (sem e-mail) no Supabase real; app em modo produção nesta nuvem; navegador sem tela em 375 px; IA real (Haiku 5.5). Passaram:
+- **Perfil pronto + desfazer:** "Casa com halteres" marcou banco, elástico, halteres e peso corporal, com aviso e foco em "Desfazer"; desfazer voltou à lista anterior
+- **6 fotos:** "Escolha de 1 a 5 fotos." no aparelho, sem envio
+- **4 fotos reais (IA):** ~7,6 s do toque ao resultado (5,4 s de IA); revisão com polia, banco, barra, anilhas, kettlebell, leg press e peso corporal; "Usar esta lista" substituiu as caixas
+- **Salvar anamnese:** `assessment_equipment` gravado com exatamente a lista revisada
+- **Fotos sem equipamento** (parede vazia e texto com instrução): "Não encontramos equipamentos nessas fotos", lista da anamnese intacta (1,8 s)
+- **Geração do plano (4.3):** plano em 9,7 s usando só barra, banco, peso corporal, polia e leg press — tudo dentro da lista
+- **Limite (D6):** com 5 análises nas 24 horas, a 6ª mostrou a mensagem de limite em português e a lista ficou intacta
+- **Teclado:** "Identificar por foto" alcançado com Tab
+
+Observações (não são defeitos): a IA marcou "Barra" também na foto do leg press (há barras de outros aparelhos ao fundo) — a revisão permite desmarcar; o aviso "Lista de equipamentos restaurada." continua visível enquanto a revisão das fotos aparece. Usuário e todos os dados dele apagados ao final (contagens zeradas).
 - **Pendências:** nenhuma.
 
 ## Fim da spec
