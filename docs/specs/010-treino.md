@@ -153,4 +153,10 @@ Usuário temporário confirmado pela API + plano fictício (2 exercícios do pla
 - A sugestão só preenche o campo de um rascunho ainda não editado e continua editável; o card diz o motivo: "Você fez {reps} repetições em todas as séries com {de} kg. Sugestão: {para} kg."
 - Nunca é automática no plano: a prescrição não muda; é só o valor inicial do campo
 
+### 2026-11-26 — Tela simplificada (spec 015)
+
+- **Pedido:** deixar a tela de treino mais simples.
+- **Mudança:** ver `specs/015-treino-simplificado.md` (regras de negócio, API e banco sem mudança).
+- **Pendências:** nenhuma
+
 ## Fim da spec

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ExerciseCover } from "@/components/exercises/exercise-cover";
-import { buildProgressHref } from "@/components/history/history-labels";
 import { buildExerciseDetailHref } from "@/components/exercises/exercise-search-href";
 import { translate } from "@/lib/i18n/translate";
 import type { LoadAdjustment } from "@/lib/training/load-adjustments";
@@ -8,11 +7,10 @@ import type { DailyChange, WorkoutExercise } from "@/lib/training/plan-types";
 import { formatLoadInput, isExerciseCompleted, type SetEntry } from "@/lib/training/set-log-draft";
 import { SubstitutionControl } from "@/components/substitution/substitution-control";
 import type { DraftSubstitution } from "@/lib/substitution/substitution-schema";
-import { AnalyzeTechniqueLink } from "@/components/technique/analyze-technique-link";
-import { ExerciseDemoDisclosure } from "./exercise-demo-disclosure";
+import { ExerciseMoreOptions } from "./exercise-more-options";
 import { SetLogList } from "./set-log-list";
 import { TrackProgressionSwitch } from "./track-progression-switch";
-import { describeRepsTarget, describeRest, describeSetsAndReps } from "./workout-labels";
+import { describePrescription, describeRepsTarget } from "./workout-labels";
 
 interface WorkoutExerciseCardProps {
   workoutExercise: WorkoutExercise;
@@ -26,12 +24,8 @@ interface WorkoutExerciseCardProps {
   substitution?: { excludeSlugs: readonly string[]; onChange: (substitution: DraftSubstitution | null) => void };
 }
 
-const PROGRESS_LINK_CLASS =
-  "flex min-h-11 items-center self-start font-medium text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong";
-
-function PrescriptionSummary({ workoutExercise }: { workoutExercise: WorkoutExercise }) {
+function PrescriptionSummary({ workoutExercise, isCompleted }: { workoutExercise: WorkoutExercise; isCompleted: boolean }) {
   const { exercise, notes } = workoutExercise;
-  const rest = describeRest(workoutExercise.restSeconds);
   return (
     <div className="flex min-w-0 flex-col gap-1">
       <Link
@@ -40,14 +34,13 @@ function PrescriptionSummary({ workoutExercise }: { workoutExercise: WorkoutExer
       >
         {exercise.name}
       </Link>
-      <p className="text-sm">{describeSetsAndReps(workoutExercise)}</p>
-      {rest && <p className="text-sm text-muted">{rest}</p>}
+      <p className="text-sm">{describePrescription(workoutExercise)}</p>
       {notes && <p className="text-sm text-muted">{notes}</p>}
+      {isCompleted && <p className="text-sm font-semibold text-accent-strong">{translate("training.exerciseCompleted")}</p>}
     </div>
   );
 }
 
-/** One prescribed exercise: prescription, demonstration and set logging. */
 /** The card always says why the load changes or holds (steps 3.5, 3B.3). */
 function describeAdjustment(adjustment: LoadAdjustment): string {
   if (adjustment.kind === "hold") return translate("training.progression.holdNotice", { load: formatLoadInput(adjustment.loadKg) });
@@ -56,10 +49,6 @@ function describeAdjustment(adjustment: LoadAdjustment): string {
   return translate("training.progression.increaseNotice", { reps: adjustment.reps, ...loads });
 }
 
-function SuggestionNotice({ hasSuggestedLoad, loadAdjustment }: { hasSuggestedLoad: boolean; loadAdjustment?: LoadAdjustment }) {
-  if (loadAdjustment) return <p className="text-sm font-medium text-accent-strong">{describeAdjustment(loadAdjustment)}</p>;
-  return hasSuggestedLoad ? <p className="text-sm text-muted">{translate("training.progression.suggestedNotice")}</p> : null;
-}
 
 /** Today-only change: AI adjustment (3B.2) or swap on the spot (3B.4). */
 function describeDailyChange(change: DailyChange): string {
@@ -69,10 +58,21 @@ function describeDailyChange(change: DailyChange): string {
   return translate("readiness.adjustment.cardReduced", { reason });
 }
 
-function DailyChangeNotice({ change }: { change: DailyChange }) {
-  return <p className="text-sm font-medium text-accent-strong">{describeDailyChange(change)}</p>;
+type NoticeProps = Pick<WorkoutExerciseCardProps, "hasSuggestedLoad" | "loadAdjustment"> & { dailyChange?: DailyChange };
+
+/** At most one notice (spec 015): today's change, else why the load changes, else the suggested load. */
+function CardNotice({ dailyChange, loadAdjustment, hasSuggestedLoad }: NoticeProps) {
+  if (dailyChange) return <p className="text-sm font-medium text-accent-strong">{describeDailyChange(dailyChange)}</p>;
+  if (loadAdjustment) return <p className="text-sm font-medium text-accent-strong">{describeAdjustment(loadAdjustment)}</p>;
+  return hasSuggestedLoad ? <p className="text-sm text-muted">{translate("training.progression.suggestedNotice")}</p> : null;
 }
 
+/** Fixed prescription ("10") fills an empty first set; a range ("8 a 12") does not (spec 015). */
+function fixedRepsOf({ repsMin, repsMax }: WorkoutExercise): number | null {
+  return repsMin === repsMax ? repsMin : null;
+}
+
+/** One prescribed exercise: prescription, set logging and, under "Mais opções", the rest (spec 015). */
 export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, loadAdjustment, onSetChange, substitution }: WorkoutExerciseCardProps) {
   const { exercise, dailyChange } = workoutExercise;
   const isCompleted = isExerciseCompleted(sets);
@@ -84,21 +84,16 @@ export function WorkoutExerciseCard({ workoutExercise, sets, hasSuggestedLoad, l
     <article className={`flex flex-col gap-3 rounded-2xl border bg-surface p-3 ${isCompleted ? "border-accent-strong" : "border-border"}`}>
       <div className="flex items-center gap-4">
         <ExerciseCover media={exercise.coverMedia} />
-        <PrescriptionSummary workoutExercise={workoutExercise} />
+        <PrescriptionSummary workoutExercise={workoutExercise} isCompleted={isCompleted} />
       </div>
-      {dailyChange && <DailyChangeNotice change={dailyChange} />}
-      {isCompleted && <p className="text-sm font-semibold text-accent-strong">{translate("training.exerciseCompleted")}</p>}
-      <SuggestionNotice hasSuggestedLoad={hasSuggestedLoad} loadAdjustment={loadAdjustment} />
-      <SetLogList exerciseName={exercise.name} repsTarget={describeRepsTarget(workoutExercise)} sets={sets} onSetChange={onSetChange} />
-      {!isReplacedToday && (
-        <TrackProgressionSwitch workoutExerciseId={workoutExercise.id} exerciseName={exercise.name} isTracked={workoutExercise.trackProgression} />
-      )}
-      {canSwap && <SubstitutionControl key={exercise.slug} workoutExercise={workoutExercise} excludeSlugs={substitution.excludeSlugs} onChange={substitution.onChange} />}
-      <ExerciseDemoDisclosure exercise={exercise} />
-      <AnalyzeTechniqueLink exerciseSlug={exercise.slug} />
-      <Link href={buildProgressHref(exercise.slug)} className={PROGRESS_LINK_CLASS}>
-        {translate("history.progressLink")}
-      </Link>
+      <CardNotice dailyChange={dailyChange} loadAdjustment={loadAdjustment} hasSuggestedLoad={hasSuggestedLoad} />
+      <SetLogList exerciseName={exercise.name} repsTarget={describeRepsTarget(workoutExercise)} fixedReps={fixedRepsOf(workoutExercise)} sets={sets} onSetChange={onSetChange} />
+      <ExerciseMoreOptions exercise={exercise}>
+        {canSwap && <SubstitutionControl key={exercise.slug} workoutExercise={workoutExercise} excludeSlugs={substitution.excludeSlugs} onChange={substitution.onChange} />}
+        {!isReplacedToday && (
+          <TrackProgressionSwitch workoutExerciseId={workoutExercise.id} exerciseName={exercise.name} isTracked={workoutExercise.trackProgression} />
+        )}
+      </ExerciseMoreOptions>
     </article>
   );
 }

@@ -7,8 +7,9 @@ import {
   MAX_PLAN_REST_SECONDS,
   MAX_PLAN_SETS,
 } from "@/lib/constants/plan-generation";
+import { describePrescription } from "@/components/workout/workout-labels";
 import { translate, type TranslationKey } from "@/lib/i18n/translate";
-import type { DraftExercise, DraftTextField } from "@/lib/training/workout-edit-draft";
+import { parseDraftExercise, type DraftExercise, type DraftTextField } from "@/lib/training/workout-edit-draft";
 import type { EditedExerciseField } from "@/lib/training/workout-edit-schema";
 import { EDIT_BUTTON_CLASS, EDIT_INPUT_CLASS } from "./plan-edit-styles";
 
@@ -21,20 +22,24 @@ interface FieldSpec {
 
 const NUMBER_FIELDS: FieldSpec[] = [
   { field: "sets", labelKey: "planEdit.setsField", isNumber: true, max: MAX_PLAN_SETS },
+  { field: "restSeconds", labelKey: "planEdit.restField", isNumber: true, max: MAX_PLAN_REST_SECONDS },
   { field: "repsMin", labelKey: "planEdit.repsMinField", isNumber: true, max: MAX_PLAN_REPS },
   { field: "repsMax", labelKey: "planEdit.repsMaxField", isNumber: true, max: MAX_PLAN_REPS },
-  { field: "restSeconds", labelKey: "planEdit.restField", isNumber: true, max: MAX_PLAN_REST_SECONDS },
 ];
 const TEXT_FIELDS: FieldSpec[] = [
   { field: "category", labelKey: "planEdit.categoryField", isNumber: false, max: MAX_CATEGORY_LENGTH },
   { field: "notes", labelKey: "planEdit.notesField", isNumber: false, max: MAX_EXERCISE_NOTES_LENGTH },
 ];
+const SUMMARY_CLASS =
+  "flex min-h-11 cursor-pointer items-center text-sm font-medium text-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong";
 
 export interface EditExerciseCardProps {
   item: DraftExercise;
   isFirst: boolean;
   isLast: boolean;
+  isExpanded: boolean;
   errors: readonly EditedExerciseField[];
+  onToggle: () => void;
   onChange: (field: DraftTextField, value: string) => void;
   onMove: (direction: -1 | 1) => void;
   onRemove: () => void;
@@ -64,7 +69,7 @@ function DraftField({ spec, item, hasError, onChange }: { spec: FieldSpec; item:
   );
 }
 
-function CardActions({ item, isFirst, isLast, onMove, onRemove, onReplace }: Omit<EditExerciseCardProps, "errors" | "onChange">) {
+function CardActions({ item, isFirst, isLast, onMove, onRemove, onReplace }: Pick<EditExerciseCardProps, "item" | "isFirst" | "isLast" | "onMove" | "onRemove" | "onReplace">) {
   const name = item.exercise.name;
   const action = (labelKey: TranslationKey, textKey: TranslationKey, onClick: () => void, disabled = false) => (
     <button type="button" onClick={onClick} disabled={disabled} aria-label={translate(labelKey, { name })} className={EDIT_BUTTON_CLASS}>
@@ -81,17 +86,59 @@ function CardActions({ item, isFirst, isLast, onMove, onRemove, onReplace }: Omi
   );
 }
 
-/** One editable exercise: prescription fields with per-field errors and row actions. */
-export function EditExerciseCard(props: EditExerciseCardProps) {
-  const { item, errors, onChange } = props;
-  const renderField = (spec: FieldSpec) => <DraftField key={spec.field} spec={spec} item={item} hasError={errors.includes(spec.field)} onChange={onChange} />;
+/** "3 séries · 8 a 12 repetições · Descanso: 1 min", or a warning while a value is invalid. */
+function describeDraftPrescription(item: DraftExercise): string {
+  const parsed = parseDraftExercise(item);
+  return parsed ? describePrescription(parsed) : translate("planEdit.summaryInvalid");
+}
+
+function CardHeader({ item, isExpanded, onToggle, panelId }: Pick<EditExerciseCardProps, "item" | "isExpanded" | "onToggle"> & { panelId: string }) {
+  const name = item.exercise.name;
   return (
-    <li className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4">
-      <h3 className="font-semibold">{item.exercise.name}</h3>
+    <div className="flex items-start justify-between gap-3">
+      <div className="flex min-w-0 flex-col gap-1">
+        <h3 className="font-semibold">{name}</h3>
+        <p className="text-sm text-muted">{describeDraftPrescription(item)}</p>
+      </div>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isExpanded}
+        aria-controls={panelId}
+        aria-label={translate(isExpanded ? "planEdit.closeLabel" : "planEdit.editLabel", { name })}
+        className={EDIT_BUTTON_CLASS}
+      >
+        {translate(isExpanded ? "planEdit.closeButton" : "planEdit.editButton")}
+      </button>
+    </div>
+  );
+}
+
+/** Open row: the main prescription fields, category and notes under "Mais opções", and the row actions. */
+function CardPanel(props: EditExerciseCardProps & { panelId: string }) {
+  const { item, errors, onChange, panelId } = props;
+  const renderField = (spec: FieldSpec) => <DraftField key={spec.field} spec={spec} item={item} hasError={errors.includes(spec.field)} onChange={onChange} />;
+  const hasTextError = TEXT_FIELDS.some((spec) => errors.includes(spec.field));
+  return (
+    <div id={panelId} className="flex flex-col gap-3">
       {errors.includes("exerciseSlug") && <p className="text-sm font-medium text-accent-strong">{translate("planEdit.fieldErrors.exerciseSlug")}</p>}
       <div className="grid grid-cols-2 gap-3">{NUMBER_FIELDS.map(renderField)}</div>
-      {TEXT_FIELDS.map(renderField)}
+      <details open={hasTextError || undefined}>
+        <summary className={SUMMARY_CLASS}>{translate("planEdit.moreOptions")}</summary>
+        <div className="flex flex-col gap-3 pt-2">{TEXT_FIELDS.map(renderField)}</div>
+      </details>
       <CardActions {...props} />
+    </div>
+  );
+}
+
+/** One exercise of the editor: closed it shows only the summary; "Editar" opens the fields (spec 015). */
+export function EditExerciseCard(props: EditExerciseCardProps) {
+  const panelId = `${props.item.key}-panel`;
+  return (
+    <li className="flex flex-col gap-3 rounded-2xl border border-border bg-surface p-4">
+      <CardHeader item={props.item} isExpanded={props.isExpanded} onToggle={props.onToggle} panelId={panelId} />
+      {props.isExpanded && <CardPanel {...props} panelId={panelId} />}
     </li>
   );
 }

@@ -30,6 +30,11 @@ function savedBody(fetchMock: ReturnType<typeof mockFetch>) {
   return call ? JSON.parse(String(call[1]?.body)) : null;
 }
 
+/** Rows start closed (spec 015). */
+function openRow(name: string) {
+  fireEvent.click(screen.getByRole("button", { name: `Editar ${name}` }));
+}
+
 afterEach(() => {
   vi.unstubAllGlobals();
   push.mockReset();
@@ -39,6 +44,8 @@ describe("WorkoutEditor", () => {
   it("saves edited fields and the new order, then returns to the workout", async () => {
     const fetchMock = mockFetch(() => json(200, { success: true, data: { workoutId: WORKOUT.id } }));
     render(<WorkoutEditor workout={WORKOUT} />);
+    openRow(NAME_1);
+    openRow(NAME_2);
     fireEvent.change(screen.getByLabelText(`Séries de ${NAME_1}`), { target: { value: "5" } });
     fireEvent.change(screen.getByLabelText(`Observação de ${NAME_1}`), { target: { value: "Desça devagar" } });
     fireEvent.click(screen.getByRole("button", { name: `Subir ${NAME_2}` }));
@@ -55,6 +62,7 @@ describe("WorkoutEditor", () => {
   it("removes an exercise and can discard every change", () => {
     mockFetch(() => json(200, {}));
     render(<WorkoutEditor workout={WORKOUT} />);
+    openRow(NAME_1);
     fireEvent.click(screen.getByRole("button", { name: `Remover ${NAME_1}` }));
     expect(screen.queryByText(NAME_1)).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Descartar alterações" }));
@@ -64,6 +72,7 @@ describe("WorkoutEditor", () => {
   it("shows field errors and sends nothing while a value is invalid", () => {
     const fetchMock = mockFetch(() => json(200, {}));
     render(<WorkoutEditor workout={WORKOUT} />);
+    openRow(NAME_1);
     fireEvent.change(screen.getByLabelText(`Séries de ${NAME_1}`), { target: { value: "0" } });
     fireEvent.click(screen.getByRole("button", { name: "Salvar alterações" }));
     expect(screen.getByLabelText(`Séries de ${NAME_1}`)).toHaveAttribute("aria-invalid", "true");
@@ -95,6 +104,7 @@ describe("WorkoutEditor", () => {
   it("keeps the changes on screen when saving fails", async () => {
     mockFetch(() => json(500, { success: false, error: "Ocorreu um erro inesperado. Tente novamente." }));
     render(<WorkoutEditor workout={WORKOUT} />);
+    openRow(NAME_1);
     fireEvent.change(screen.getByLabelText(`Séries de ${NAME_1}`), { target: { value: "4" } });
     fireEvent.click(screen.getByRole("button", { name: "Salvar alterações" }));
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent("Ocorreu um erro inesperado."));
@@ -109,6 +119,7 @@ describe("WorkoutEditor", () => {
         : json(200, { success: true, data: { workoutId: WORKOUT.id } }),
     );
     render(<WorkoutEditor workout={WORKOUT} />);
+    openRow(NAME_1);
     fireEvent.click(screen.getByRole("button", { name: `Trocar ${NAME_1}` }));
     fireEvent.click(screen.getByRole("button", { name: "Buscar" }));
     fireEvent.click(await screen.findByRole("button", { name: "Escolher Agachamento goblet" }));

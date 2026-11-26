@@ -181,7 +181,9 @@
       "label": "Esforço da série {number} de {name}",
       "easy": "Fácil",
       "ok": "Ok",
-      "max": "No limite"
+      "max": "No limite",
+      "chosen": "Esforço: {effort}",
+      "changeLabel": "Esforço da série {number} de {name}: {effort}. Alterar"
     },
     "substitution": {
       "noCandidates": "Nenhum exercício equivalente com o seu equipamento. Siga com o exercício do plano ou pule-o hoje.",
@@ -203,7 +205,9 @@
       "cancelButton": "Cancelar",
       "undoButton": "Desfazer troca",
       "cardNotice": "No lugar de {original} hoje"
-    }
+    },
+    "moreOptions": "Mais opções",
+    "moreOptionsLabel": "Mais opções de {name}"
   },
   "common": {
     "retryButton": "Tentar novamente"
@@ -376,7 +380,16 @@
       "repsMax": "Use um número inteiro de 1 a {max}, maior ou igual ao mínimo.",
       "restSeconds": "Deixe vazio ou use de 0 a {max} segundos.",
       "notes": "Use no máximo {max} caracteres."
-    }
+    },
+    "editButton": "Editar",
+    "editLabel": "Editar {name}",
+    "closeButton": "Fechar",
+    "closeLabel": "Fechar edição de {name}",
+    "moreOptions": "Mais opções",
+    "summaryInvalid": "Valores a conferir",
+    "removedNotice": "{name} removido do treino.",
+    "undoRemove": "Desfazer",
+    "undoRemoveLabel": "Desfazer remoção de {name}"
   },
   "health": {
     "title": "Aviso de saúde",

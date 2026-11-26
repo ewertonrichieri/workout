@@ -1,6 +1,6 @@
 # Status Geral — Workout (Personal Trainer com IA)
 
-**Data da última atualização:** 2026-11-25
+**Data da última atualização:** 2026-11-26
 
 ---
 
@@ -17,6 +17,7 @@ Lista priorizada (spec, bug, técnico, melhoria). Uma linha por item com ID e li
 
 ## Concluído recentemente
 
+- **Treino e edição simplificados** — card do treino com a prescrição em uma linha, no máximo um aviso e o resto em "Mais opções"; série marcada em um toque com o valor sugerido (série anterior ou prescrição fixa; a 1ª série de uma faixa continua digitada); esforço escolhido vira um botão; editor com exercícios recolhidos ("Editar"), categoria/observação em "Mais opções", abre nos erros e remover com desfazer; sem mudar regra, API ou banco → `specs/015-treino-simplificado.md`
 - **5.7 Análise por padrão de movimento** — agachar, dobrar o quadril (terra romeno, stiff) e puxar (remadas); regras comparando com a 1ª repetição, validadas com o vídeo do usuário (12/12 e 14 puxadas com os avisos certos); referências da literatura só como "Para conferir"; métricas por padrão na API e no banco (migration testada num bloco desfeito e aplicada); Fase 5 concluída → `specs/014-correcao-postura.md`
 - **5.5 Histórico de técnica** — completa com as regras novas da 5.7 (POS-002 fechada) → `specs/014-correcao-postura.md`
 - **5.6 Teste de ponta a ponta (Fase 5)** — login, 401/400/422, câmera, voz, parada automática, análise real da IA, banco, histórico com desfazer e apagar testados no navegador contra o Supabase real; 3 defeitos de texto da IA corrigidos; dados temporários apagados → `specs/014-correcao-postura.md`

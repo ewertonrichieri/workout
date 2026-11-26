@@ -69,6 +69,28 @@ export function canCompleteSet(entry: SetEntry): boolean {
   return reps.isValid && reps.value !== null && parseLoadKg(entry.load).isValid;
 }
 
+/** Values a set takes when checked with empty fields (spec 015); shown as placeholders. */
+export type SetDefaults = Pick<SetEntry, "repsDone" | "load">;
+
+function validTypedValue(text: string | undefined, parse: (input: string) => ParsedNumber): string {
+  if (text === undefined) return "";
+  const parsed = parse(text);
+  return parsed.isValid && parsed.value !== null ? text.trim() : "";
+}
+
+/** Previous set of the same exercise first; for reps, the fixed prescription (null for a range) next. */
+export function resolveSetDefaults(sets: readonly SetEntry[], setIndex: number, fixedReps: number | null): SetDefaults {
+  const previous = sets[setIndex - 1];
+  const previousReps = validTypedValue(previous?.repsDone, parseRepsDone);
+  const fallbackReps = fixedReps === null ? "" : String(fixedReps);
+  return { repsDone: previousReps || fallbackReps, load: validTypedValue(previous?.load, parseLoadKg) };
+}
+
+/** Empty fields take the defaults; typed values are never replaced. */
+export function fillWithDefaults(entry: SetEntry, defaults: SetDefaults): SetEntry {
+  return { ...entry, repsDone: entry.repsDone.trim() === "" ? defaults.repsDone : entry.repsDone, load: entry.load.trim() === "" ? defaults.load : entry.load };
+}
+
 const DECIMAL_POINT = ".";
 const DECIMAL_COMMA = ",";
 
