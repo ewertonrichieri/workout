@@ -1,10 +1,12 @@
 import { translate, type TranslationKey } from "@/lib/i18n/translate";
-import type { SetEntry } from "@/lib/training/set-log-draft";
+import { resolveSetDefaults, type SetEntry } from "@/lib/training/set-log-draft";
 import { SetLogRow } from "./set-log-row";
 
 interface SetLogListProps {
   exerciseName: string;
   repsTarget: string;
+  /** Fixed prescription that fills an empty first set; null for a range (spec 015). */
+  fixedReps: number | null;
   sets: readonly SetEntry[];
   onSetChange: (setIndex: number, patch: Partial<SetEntry>) => void;
 }
@@ -21,13 +23,21 @@ function SetColumnHeaders() {
   );
 }
 
-export function SetLogList({ exerciseName, repsTarget, sets, onSetChange }: SetLogListProps) {
+export function SetLogList({ exerciseName, repsTarget, fixedReps, sets, onSetChange }: SetLogListProps) {
   return (
     <div className="flex flex-col gap-2">
       <SetColumnHeaders />
       <ol aria-label={translate("training.setsLabel", { name: exerciseName })} className="flex flex-col gap-2">
         {sets.map((entry, index) => (
-          <SetLogRow key={index} setNumber={index + FIRST_SET_NUMBER} exerciseName={exerciseName} entry={entry} repsTarget={repsTarget} onChange={(patch) => onSetChange(index, patch)} />
+          <SetLogRow
+            key={index}
+            setNumber={index + FIRST_SET_NUMBER}
+            exerciseName={exerciseName}
+            entry={entry}
+            defaults={resolveSetDefaults(sets, index, fixedReps)}
+            repsTarget={repsTarget}
+            onChange={(patch) => onSetChange(index, patch)}
+          />
         ))}
       </ol>
     </div>

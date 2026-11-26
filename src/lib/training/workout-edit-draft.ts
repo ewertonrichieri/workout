@@ -64,6 +64,12 @@ export function replaceDraftExercise(draft: DraftExercise[], key: string, exerci
   return draft.map((item) => (item.key === key ? { ...item, exercise } : item));
 }
 
+/** Undo of a removal: back at its former position (or at the end when the list became shorter). */
+export function restoreDraftExercise(draft: DraftExercise[], item: DraftExercise, index: number): DraftExercise[] {
+  const position = Math.min(index, draft.length);
+  return [...draft.slice(0, position), item, ...draft.slice(position)];
+}
+
 export function addDraftExercise(draft: DraftExercise[], exercise: DraftExerciseInfo, key: string): DraftExercise[] {
   const reps = String(NEW_EXERCISE_DEFAULT_REPS);
   return [...draft, { key, id: null, exercise, category: "", sets: String(NEW_EXERCISE_DEFAULT_SETS), repsMin: reps, repsMax: reps, restSeconds: "", notes: "" }];
@@ -90,6 +96,12 @@ function toRawItem(item: DraftExercise) {
     restSeconds: item.restSeconds.trim() === "" ? null : parseInteger(item.restSeconds),
     notes: item.notes,
   };
+}
+
+/** Parsed row, or null while some value is invalid (used by the editor summary, spec 015). */
+export function parseDraftExercise(item: DraftExercise): EditedExercise | null {
+  const parsed = editedExerciseSchema.safeParse(toRawItem(item));
+  return parsed.success ? parsed.data : null;
 }
 
 function findListError(count: number): DraftValidation["listError"] {

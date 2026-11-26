@@ -282,4 +282,10 @@ Catálogo real do Supabase (`list_plan_candidates` com barra, banco, peso corpor
 - Conta toda chamada que vai à IA, inclusive as que falham (elas também custam); recusas baratas (sem anamnese, plano ativo sem confirmação, sem candidatos) não contam
 - O usuário só lê e insere os próprios registros (RLS); não pode apagar para zerar o contador
 
+### 2026-11-26 — Tela simplificada (spec 015)
+
+- **Pedido:** deixar a edição do treino mais simples.
+- **Mudança:** ver `specs/015-treino-simplificado.md` (regras de negócio, API e banco sem mudança).
+- **Pendências:** nenhuma
+
 ## Fim da spec

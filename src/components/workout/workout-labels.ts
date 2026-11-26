@@ -36,6 +36,12 @@ function formatDuration(totalSeconds: number): string {
   return translate("training.durationMinutesSeconds", { minutes, seconds });
 }
 
+/** Whole prescription in one line: "3 séries · 8 a 12 repetições · Descanso: 1 min" (spec 015). */
+export function describePrescription(prescription: Prescription & Pick<WorkoutExercise, "restSeconds">): string {
+  const rest = describeRest(prescription.restSeconds);
+  return rest ? [describeSetsAndReps(prescription), rest].join(DETAIL_SEPARATOR) : describeSetsAndReps(prescription);
+}
+
 /** Prescribed rest as information only (no timer, see spec 010); `null` when not prescribed. */
 export function describeRest(restSeconds: number | null): string | null {
   return restSeconds === null ? null : translate("training.rest", { duration: formatDuration(restSeconds) });

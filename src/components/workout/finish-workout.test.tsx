@@ -61,7 +61,7 @@ describe("Finalizar treino", () => {
     const effort = screen.getByRole("radiogroup", { name: `Esforço da série 1 de ${NAME}` });
     expect(within(effort).getAllByRole("radio").map((radio) => radio.closest("label")?.textContent)).toEqual(["Fácil", "Ok", "No limite"]);
     fireEvent.click(within(effort).getByRole("radio", { name: "No limite" }));
-    expect(within(effort).getByRole("radio", { name: "No limite" })).toBeChecked();
+    expect(screen.getByRole("button", { name: `Esforço da série 1 de ${NAME}: No limite. Alterar` })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Finalizar treino" }));
     fireEvent.click(screen.getByRole("button", { name: "Finalizar mesmo assim" }));
     await screen.findByText("Treino finalizado e salvo.");

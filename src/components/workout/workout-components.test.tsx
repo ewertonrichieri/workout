@@ -69,8 +69,7 @@ describe("WorkoutPlanView", () => {
     render(<WorkoutPlanView overview={buildPlanOverview([WORKOUT_A])} />);
     const group = screen.getByRole("region", { name: "Neuromuscular" });
     expect(within(group).getByRole("link", { name: "Exercício falso 1" })).toHaveAttribute("href", "/exercises/fake-exercise-1");
-    expect(within(group).getByText("3 séries · 10 repetições")).toBeInTheDocument();
-    expect(within(group).getByText("Descanso: 1 min 30 s")).toBeInTheDocument();
+    expect(within(group).getByText("3 séries · 10 repetições · Descanso: 1 min 30 s")).toBeInTheDocument();
     expect(within(group).getByText("Cadência lenta")).toBeInTheDocument();
     const strength = screen.getByRole("region", { name: "Força" });
     expect(within(strength).queryByText(/Descanso/)).not.toBeInTheDocument();

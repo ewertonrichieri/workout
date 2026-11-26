@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildWorkoutHref,
+  describePrescription,
   describeRest,
   describeSetsAndReps,
   describeValidity,
@@ -42,5 +43,15 @@ describe("workout labels", () => {
   it("builds the workout tab link", () => {
     expect(buildWorkoutHref("B")).toBe("/workout?workout=B");
     expect(buildWorkoutHref("Full body")).toBe("/workout?workout=Full+body");
+  });
+});
+
+describe("describePrescription", () => {
+  it("joins sets, reps and rest in one line", () => {
+    expect(describePrescription({ sets: 3, repsMin: 8, repsMax: 12, restSeconds: 60 })).toBe("3 séries · 8 a 12 repetições · Descanso: 1 min");
+  });
+
+  it("leaves the rest out when it is not prescribed", () => {
+    expect(describePrescription({ sets: 1, repsMin: 10, repsMax: 10, restSeconds: null })).toBe("1 série · 10 repetições");
   });
 });
